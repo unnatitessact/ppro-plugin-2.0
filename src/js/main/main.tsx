@@ -32,52 +32,16 @@ const Main = () => {
   const handleVideoClick = (videoSrc: string, videoName: string) => {
     if (isUploading) return; // Don't allow clicking while already uploading
 
-    setCurrentVideo(videoSrc);
-    setIsUploading(true);
-    setUploadStatus(`Importing ${videoName} to timeline...`);
+    // setCurrentVideo(videoSrc);
+    // setIsUploading(true);
+    // setUploadStatus(`Importing ${videoName} to timeline...`);
 
-    // Use the direct URL for the video
-    const videoUrl = videoSrc;
+    // // Escape any special characters in the URL
+    // const escapedUrl = videoSrc.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
-    // Use the video name as filename
-    const filename = videoName;
+    evalES(`downloadFile("${videoSrc}", "${videoName}")`);
 
-    // Escape any special characters in the URL to prevent JavaScript errors
-    const escapedUrl = videoUrl.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-
-    alert(escapedUrl);
-
-    // Call our ExtendScript function to download and import the file using evalES
-    evalES(`
-      var result = downloadAndImportToTimeline("${escapedUrl}", "${filename}");
-      JSON.stringify(result);
-    `)
-      .then((resultStr) => {
-        try {
-          const result = JSON.parse(resultStr) as ImportResult;
-          if (result && result.status === "success") {
-            setUploadStatus(`Success: ${videoName} added to timeline`);
-            // Add to recent imports
-            setRecentImports((prev) => [
-              { name: filename, date: new Date().toLocaleTimeString() },
-              ...prev.slice(0, 4), // Keep only the 5 most recent imports
-            ]);
-          } else {
-            alert(`Error: ${result.message || "Unknown error"}`);
-            setUploadStatus(`Error: ${result.message || "Unknown error"}`);
-          }
-        } catch (e) {
-          alert(`JSON main error: ${e}`);
-          setUploadStatus(`Error parsing result: ${resultStr}`);
-        }
-      })
-      .catch((error) => {
-        setUploadStatus(`Error: ${error.toString()}`);
-      })
-      .finally(() => {
-        setIsUploading(false);
-        setCurrentVideo(null);
-      });
+    // Call the ExtendScript function
   };
 
   useEffect(() => {
