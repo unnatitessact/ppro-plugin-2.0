@@ -6,10 +6,14 @@ import { ReviewPage } from "../../pages/ReviewPage"; // Corrected path
 import LoginPage from "../auth/Auth"; // Corrected path
 import { AuthPage } from "../../pages/AuthPage";
 
+import { useHotkeys } from "react-hotkeys-hook";
+
 // Define the possible page names
 type PageName = "library" | "review" | "auth";
 
 import useAuth from "../../hooks/useAuth";
+
+import { useTheme } from "../../context/ThemeContext";
 
 export const Layout = () => {
   // State to manage the currently active page
@@ -36,6 +40,12 @@ export const Layout = () => {
   const handleNavigate = (page: PageName) => {
     setCurrentPage(page);
   };
+
+  const { theme, toggleTheme } = useTheme();
+
+  useHotkeys("ctrl+i", () => {
+    toggleTheme();
+  });
 
   return (
     <div className="flex h-screen bg-gray-100">
