@@ -1,5 +1,38 @@
-import { Button } from "../ui/Button";
 import { ListSparkle, DotGrid1X3Horizontal } from "@tessact/icons";
+
+import { Button } from "../ui/Button";
+
+const files = [
+  {
+    id: 1,
+    name: "File 1",
+    type: "file",
+    createdAt: "2021-01-01",
+    updatedAt: "2021-01-01",
+    size: 100,
+    path: "/file1",
+    content: "File 1 content",
+  },
+  {
+    id: 2,
+    name: "File 2",
+    type: "file",
+    createdAt: "2021-01-01",
+    updatedAt: "2021-01-01",
+    size: 100,
+    path: "/file2",
+  },
+  {
+    id: 3,
+    type: "folder",
+    name: "Folder 1",
+    createdAt: "2021-01-01",
+    updatedAt: "2021-01-01",
+    size: 100,
+    path: "/folder1",
+    content: "Folder 1 content",
+  },
+];
 
 export const Library = () => {
   return (
@@ -17,6 +50,14 @@ export const Library = () => {
           </Button>
         </div>
       </nav>
+
+      {/* <LibraryRoomProvider
+      id={`library:${workspace.id}:root`}
+      initialPresence={{}}
+      initialStorage={{}}
+    > */}
+      {/* <LibraryPage /> */}
+      {/* </LibraryRoomProvider> */}
     </div>
   );
 };

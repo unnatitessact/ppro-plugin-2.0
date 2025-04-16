@@ -13,6 +13,8 @@ import { useClickOutside } from "@mantine/hooks";
 import { Avatar, Badge, cn, user } from "@nextui-org/react";
 import { isMobile } from "react-device-detect";
 
+import useAuth from "../../hooks/useAuth";
+
 import {
   ArrowBoxLeftThin,
   MacbookThin,
@@ -62,12 +64,14 @@ export const Navbar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const { setAuth, auth } = useAuth();
+
   const userObject = {
-    email: "unnati@tessact.com",
-    first_name: "Unnati",
-    last_name: "Bamania",
-    display_name: "https://github.com/unnati2000.png",
-    profile_picture: "https://github.com/unnati2000.png",
+    email: auth.user.email,
+    first_name: auth.user.first_name,
+    last_name: auth.user.last_name,
+    display_name: auth.user.display_name,
+    profile_picture: auth.user.profile_picture,
   };
 
   // const router = useRouter();
@@ -184,6 +188,12 @@ export const Navbar = () => {
                   onSelect={async (event) => {
                     event.preventDefault();
                     location.reload();
+
+                    setAuth({
+                      accessToken: null,
+                      refreshToken: null,
+                      user: null,
+                    });
                   }}
                 >
                   <div className="flex w-full justify-between">Logout</div>

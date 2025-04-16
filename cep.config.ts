@@ -1,7 +1,6 @@
 import { CEP_Config } from "vite-cep-plugin";
 import { version } from "./package.json";
 
-
 const config: CEP_Config = {
   version,
   id: "com.tessact-plugin.cep",
@@ -41,8 +40,9 @@ const config: CEP_Config = {
       autoVisible: true,
       width: 600,
       height: 650,
+      maxWidth: 600,
+      maxHeight: 650,
     },
-
   ],
   build: {
     jsxBin: "off",

@@ -1,13 +1,13 @@
-import type { InputProps } from '@nextui-org/input';
+import type { InputProps } from "@nextui-org/input";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { forwardRef } from '@nextui-org/react';
+import { forwardRef } from "@nextui-org/react";
 
-import { EyeClosed, EyeOpen } from '@tessact/icons';
+import { EyeClosed, EyeOpen } from "@tessact/icons";
 
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 export const PasswordInput = forwardRef(function CustomInput(
   { label, ...props }: InputProps & { label?: string },
@@ -17,9 +17,9 @@ export const PasswordInput = forwardRef(function CustomInput(
   return (
     <Input
       ref={ref}
-      label={label || 'Password'}
+      label={label || "Password"}
       placeholder="******"
-      type={visible ? 'text' : 'password'}
+      type={visible ? "text" : "password"}
       endContent={
         <Button
           isIconOnly

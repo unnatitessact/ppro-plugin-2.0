@@ -12,21 +12,26 @@
     "delsymlink": "cross-env ACTION=delsymlink vite"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@mantine/hooks": "^7.17.4",
     "@nextui-org/react": "2.4.6",
     "@radix-ui/react-dropdown-menu": "^2.1.7",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.8.4",
     "framer-motion": "^12.6.3",
     "lucide-react": "^0.488.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.55.0",
     "react-hotkeys-hook": "^5.0.1",
+    "react-otp-input": "^3.1.1",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "3",
     "tailwindcss-3d": "^1.0.7",
-    "tailwindcss-react-aria-components": "^2.0.0"
+    "tailwindcss-react-aria-components": "^2.0.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",

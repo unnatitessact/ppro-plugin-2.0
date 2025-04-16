@@ -19,18 +19,19 @@ import bolt from "../assets/bolt-cep.svg";
 
 import "./main.css";
 import { NextUIProvider } from "@nextui-org/react";
-import { Button } from "../components/ui/Button";
-import { Library } from "../components/library/Library";
 import { Layout } from "../components/layout/Layout";
 import { ThemeProvider } from "../context/ThemeContext";
+import { AuthProvider } from "../context/AuthContext";
 
 const Main = () => {
   return (
-    <ThemeProvider>
-      <NextUIProvider>
-        <Layout />
-      </NextUIProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <NextUIProvider>
+          <Layout />
+        </NextUIProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 };
 
