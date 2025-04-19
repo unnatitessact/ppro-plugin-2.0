@@ -8,6 +8,10 @@ import { AuthPage } from "../../pages/AuthPage";
 
 import { useHotkeys } from "react-hotkeys-hook";
 
+import { useSidebarStore } from "../../store/sidebar-store";
+
+import { Drawer } from "vaul";
+
 // Define the possible page names
 type PageName = "library" | "review" | "auth";
 
@@ -21,6 +25,8 @@ export const Layout = () => {
   const [currentPage, setCurrentPage] = useState<PageName>("library");
 
   const { auth } = useAuth();
+
+  const { isOpen: isSidebarOpen } = useSidebarStore();
 
   const renderPage = () => {
     switch (currentPage) {
@@ -48,20 +54,22 @@ export const Layout = () => {
   });
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {auth.accessToken ? (
-        <>
-          <Sidebar /> {/* We can pass handleNavigate here later */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <Navbar />
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4">
-              {renderPage()}
-            </main>
-          </div>
-        </>
-      ) : (
-        <LoginPage />
-      )}
+    <div className="flex h-screen bg-default-50">
+      <Drawer.Root direction="left">
+        {auth.accessToken ? (
+          <>
+            {isSidebarOpen && <Sidebar />}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <Navbar />
+              <main className="flex-1 overflow-x-hidden overflow-y-auto  p-4">
+                {renderPage()}
+              </main>
+            </div>
+          </>
+        ) : (
+          <LoginPage />
+        )}
+      </Drawer.Root>
     </div>
   );
 };

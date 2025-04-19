@@ -1,10 +1,10 @@
-import { CSSProperties } from 'react';
+import { CSSProperties } from "react";
 
-import NextImage from 'next/image';
+// import NextImage from 'next/image';
 
-import { cn } from '@nextui-org/react';
+import { cn } from "@nextui-org/react";
 
-import UserFallback, { UserFallbackProps } from '@/components/ui/UserFallback';
+import UserFallback, { UserFallbackProps } from "./UserFallback";
 
 interface NextAvatarProps {
   src?: string;
@@ -25,28 +25,30 @@ export const NextAvatar = ({
   userFallbackProps,
   style,
   nextImageStyle,
-  unoptimized = true
+  unoptimized = true,
 }: NextAvatarProps) => {
   return (
     <div
-      className={cn('flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full')}
+      className={cn(
+        "flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full"
+      )}
       style={{
         height: height ?? 24,
         width: width ?? 24,
-        ...style
+        ...style,
       }}
     >
       {src ? (
-        <NextImage
-          unoptimized={unoptimized}
+        <img
+          // unoptimized={unoptimized}
           className="h-full w-full rounded-full"
-          quality={100}
+          // quality={100}
           alt={alt}
           src={src}
           width={width ?? 24}
           height={height ?? 24}
           style={{
-            ...nextImageStyle
+            ...nextImageStyle,
           }}
         />
       ) : (

@@ -1,12 +1,12 @@
 // import { Dispatch, SetStateAction } from 'react';
 
 // import { SortParams } from '@/app/(protected)/(user-management)/admin/users/page';
-import { cn } from '@nextui-org/react';
-import { flexRender, Header } from '@tanstack/react-table';
+import { cn } from "@nextui-org/react";
+import { flexRender, Header } from "@tanstack/react-table";
 // import Icon from '@tessact/central-icons';
-import { Column, ColumnResizer } from 'react-aria-components';
+import { Column, ColumnResizer } from "react-aria-components";
 
-import { Checkbox } from '@/components/ui/Checkbox';
+import { Checkbox } from "./Checkbox";
 
 interface DataTableColumnProps<T> {
   header: Header<T, unknown>;
@@ -25,18 +25,18 @@ export const DataTableColumn = <T extends object>({
   onValueChange,
   areSomeRowsSelected,
   allRowsSelected,
-  isLastColumn
-  // sortParams,
-  // setSortParams
-}: DataTableColumnProps<T>) => {
+  isLastColumn,
+}: // sortParams,
+// setSortParams
+DataTableColumnProps<T>) => {
   return (
     <Column
       minWidth={200}
       maxWidth={800}
       key={header.id}
-      className={cn('group/column p-6 pr-0', {
-        'rounded-tl-xl': index === 0,
-        'rounded-tr-xl': isLastColumn
+      className={cn("group/column p-6 pr-0", {
+        "rounded-tl-xl": index === 0,
+        "rounded-tr-xl": isLastColumn,
       })}
       isRowHeader={index === 0}
     >
@@ -53,10 +53,10 @@ export const DataTableColumn = <T extends object>({
           ) : null}
           <div
             className={cn(
-              'text-secondary-30 flex items-center gap-4 text-sm font-medium text-default-400',
+              "text-secondary-30 flex items-center gap-4 text-sm font-medium text-default-400",
               {
-                'flex translate-x-8 items-center gap-4 text-default-400 transition-all duration-300':
-                  (areSomeRowsSelected || allRowsSelected) && index === 0
+                "flex translate-x-8 items-center gap-4 text-default-400 transition-all duration-300":
+                  (areSomeRowsSelected || allRowsSelected) && index === 0,
               }
             )}
           >

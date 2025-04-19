@@ -1,75 +1,81 @@
-'use client';
+("");
 
-import type { DropdownMenuProps } from '@nextui-org/dropdown';
+import type { DropdownMenuProps } from "@nextui-org/dropdown";
 
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 
 import {
   Dropdown as NextUIDropdown,
   DropdownItem as NextUIDropdownItem,
   DropdownMenu as NextUIDropdownMenu,
   DropdownSection as NextUIDropdownSection,
-  DropdownTrigger as NextUIDropdownTrigger
-} from '@nextui-org/dropdown';
-import { extendVariants } from '@nextui-org/react';
+  DropdownTrigger as NextUIDropdownTrigger,
+} from "@nextui-org/dropdown";
+import { extendVariants } from "@nextui-org/react";
 
-import { containerClassnames, itemClassnames, sectionClassNames } from '@/components/ui/Listbox';
+import {
+  containerClassnames,
+  itemClassnames,
+  sectionClassNames,
+} from "./Listbox";
 
 export const Dropdown = extendVariants(NextUIDropdown, {
   defaultVariants: {
-    variant: 'default',
-    radius: 'md'
+    variant: "default",
+    radius: "md",
   },
   variants: {
     variant: {
       default: {
-        content: 'bg-ds-menu-bg border-ds-menu-border border-1'
-      }
-    }
-  }
+        content: "bg-ds-menu-bg border-ds-menu-border border-1",
+      },
+    },
+  },
 });
 
 export const DropdownTrigger = extendVariants(NextUIDropdownTrigger, {
-  defaultVariants: {}
+  defaultVariants: {},
 });
 
-const StyledDropdownMenu = forwardRef<HTMLDivElement, DropdownMenuProps>((props, ref) => {
-  return (
-    <NextUIDropdownMenu
-      ref={ref}
-      classNames={containerClassnames}
-      itemClasses={itemClassnames}
-      {...props}
-    >
-      {props.children}
-    </NextUIDropdownMenu>
-  );
-});
+const StyledDropdownMenu = forwardRef<HTMLDivElement, DropdownMenuProps>(
+  (props, ref) => {
+    return (
+      <NextUIDropdownMenu
+        ref={ref}
+        classNames={containerClassnames}
+        itemClasses={itemClassnames}
+        {...props}
+      >
+        {props.children}
+      </NextUIDropdownMenu>
+    );
+  }
+);
 
-StyledDropdownMenu.displayName = 'StyledDropdownMenu';
+StyledDropdownMenu.displayName = "StyledDropdownMenu";
 
 export const DropdownMenu = extendVariants(StyledDropdownMenu, {
-  defaultVariants: {}
+  defaultVariants: {},
 });
 
 export const DropdownItem = extendVariants(NextUIDropdownItem, {
   defaultVariants: {
-    variant: 'default'
+    variant: "default",
   },
   variants: {
     variant: {
-      default: itemClassnames
-    }
-  }
+      default: itemClassnames,
+    },
+  },
 });
 
 export const DropdownSection = extendVariants(NextUIDropdownSection, {
   defaultVariants: {
-    variant: 'default'
+    variant: "default",
   },
   variants: {
     variant: {
-      default: sectionClassNames
-    }
-  }
+      default: sectionClassNames,
+    },
+  },
 });

@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { cn } from '@nextui-org/react';
+import { cn } from "@nextui-org/react";
 
-import { Avatar } from '@/components/ui/Avatar';
-import { Badge } from '@/components/ui/Badge';
-import UserFallback from '@/components/ui/UserFallback';
+import { Avatar } from "./Avatar";
+import { Badge } from "./Badge";
+import UserFallback from "./UserFallback";
 
-import { PROFILE_COMBINATIONS } from '@/data/colors';
+import { PROFILE_COMBINATIONS } from "../../constants/data-colors/data-colors";
 
 interface CardProps {
   data: {
@@ -22,28 +22,33 @@ interface CardProps {
   removePadding?: boolean;
 }
 
-const ProfileCard = ({ data, primaryText, secondaryText, removePadding }: CardProps) => {
+const ProfileCard = ({
+  data,
+  primaryText,
+  secondaryText,
+  removePadding,
+}: CardProps) => {
   const profileColorClass = PROFILE_COMBINATIONS[data.color || 0];
   return (
     <div
       className={cn(
-        'flex items-center gap-2 rounded-lg  text-sm font-medium',
-        removePadding ? 'p-0' : 'p-2'
+        "flex items-center gap-2 rounded-lg  text-sm font-medium",
+        removePadding ? "p-0" : "p-2"
       )}
     >
       <Badge placement="bottom-right" color="success" size="xs" content="">
         <Avatar
-          className={cn('h-7 w-7 border-none', profileColorClass)}
-          src={data.profilePicture ?? ''}
+          className={cn("h-7 w-7 border-none", profileColorClass)}
+          src={data.profilePicture ?? ""}
           showFallback
           classNames={{
-            fallback: 'w-full h-full flex items-center justify-center'
+            fallback: "w-full h-full flex items-center justify-center",
           }}
           fallback={
             <UserFallback
-              firstName={data.firstName ?? ''}
-              lastName={data.lastName ?? ''}
-              displayName={data.displayName ?? ''}
+              firstName={data.firstName ?? ""}
+              lastName={data.lastName ?? ""}
+              displayName={data.displayName ?? ""}
               email={data.email}
               color={data.color}
               className="text-sm"
@@ -52,8 +57,10 @@ const ProfileCard = ({ data, primaryText, secondaryText, removePadding }: CardPr
         />
       </Badge>
       <div className="flex flex-col font-medium">
-        <p className={cn('text-ds-menu-text-primary')}>{primaryText}</p>
-        {secondaryText && <p className="text-xs text-ds-text-secondary">{secondaryText}</p>}
+        <p className={cn("text-ds-menu-text-primary")}>{primaryText}</p>
+        {secondaryText && (
+          <p className="text-xs text-ds-text-secondary">{secondaryText}</p>
+        )}
       </div>
     </div>
   );

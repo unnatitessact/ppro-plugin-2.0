@@ -22,13 +22,17 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Layout } from "../components/layout/Layout";
 import { ThemeProvider } from "../context/ThemeContext";
 import { AuthProvider } from "../context/AuthContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const Main = () => {
+  const queryClient = new QueryClient();
   return (
     <AuthProvider>
       <ThemeProvider>
         <NextUIProvider>
-          <Layout />
+          <QueryClientProvider client={queryClient}>
+            <Layout />
+          </QueryClientProvider>
         </NextUIProvider>
       </ThemeProvider>
     </AuthProvider>

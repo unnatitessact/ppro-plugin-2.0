@@ -1,10 +1,10 @@
-import React, { forwardRef, ReactNode } from 'react';
+import React, { forwardRef, ReactNode } from "react";
 
-import { ButtonProps, cn } from '@nextui-org/react';
+import { ButtonProps, cn } from "@nextui-org/react";
 
-import { ChevronDownSmall } from '@tessact/icons';
+import { ChevronDownSmall } from "@tessact/icons";
 
-import { Button } from '@/components/ui/Button';
+import { Button } from "./Button";
 
 interface ButtonWithNumberProps {
   showPlus?: boolean;
@@ -14,11 +14,17 @@ interface ButtonWithNumberProps {
 }
 
 const hoverClassnames =
-  'bg-ds-button-secondary-bg transition-transform-colors-opacity group-hover:bg-ds-button-secondary-bg-hover group-aria-expanded:bg-ds-button-secondary-bg-hover group-hover:opacity-hover';
+  "bg-ds-button-secondary-bg transition-transform-colors-opacity group-hover:bg-ds-button-secondary-bg-hover group-aria-expanded:bg-ds-button-secondary-bg-hover group-hover:opacity-hover";
 
 const ButtonWithNumber = forwardRef<HTMLButtonElement, ButtonWithNumberProps>(
   (
-    { showPlus = true, number, icon, customString, ...rest }: ButtonWithNumberProps & ButtonProps,
+    {
+      showPlus = true,
+      number,
+      icon,
+      customString,
+      ...rest
+    }: ButtonWithNumberProps & ButtonProps,
     ref
   ) => {
     return (
@@ -32,8 +38,8 @@ const ButtonWithNumber = forwardRef<HTMLButtonElement, ButtonWithNumberProps>(
         <div className="flex h-8 gap-px">
           <div
             className={cn(
-              'flex h-8 w-full max-w-40 items-center justify-center  rounded-bl-xl rounded-tl-xl px-3 py-0',
-              !number && !customString && 'hidden',
+              "flex h-8 w-full max-w-40 items-center justify-center  rounded-bl-xl rounded-tl-xl px-3 py-0",
+              !number && !customString && "hidden",
               hoverClassnames
             )}
           >
@@ -42,14 +48,14 @@ const ButtonWithNumber = forwardRef<HTMLButtonElement, ButtonWithNumberProps>(
                 {customString}
               </div>
             ) : (
-              `${showPlus ? '+' : ''}${number}`
+              `${showPlus ? "+" : ""}${number}`
             )}
           </div>
 
           <div
             className={cn(
-              'flex h-8 items-center justify-center rounded-br-xl rounded-tr-xl  py-0 pl-1',
-              number ? 'pr-2' : 'px-1.5',
+              "flex h-8 items-center justify-center rounded-br-xl rounded-tr-xl  py-0 pl-1",
+              number ? "pr-2" : "px-1.5",
               hoverClassnames
             )}
           >
@@ -61,6 +67,6 @@ const ButtonWithNumber = forwardRef<HTMLButtonElement, ButtonWithNumberProps>(
   }
 );
 
-ButtonWithNumber.displayName = 'ButtonWithNumber';
+ButtonWithNumber.displayName = "ButtonWithNumber";
 
 export default ButtonWithNumber;

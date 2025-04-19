@@ -1,4 +1,4 @@
-import { ListSparkle, DotGrid1X3Horizontal } from "@tessact/icons";
+import { DotGrid1X3Horizontal, BulletList } from "@tessact/icons";
 
 import { Button } from "../ui/Button";
 
@@ -36,16 +36,16 @@ const files = [
 
 export const Library = () => {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full bg-transparent">
       <nav className="flex items-center justify-between gap-2 p-2">
         <p>Library</p>
 
         <div className="flex items-center gap-2">
-          <Button isIconOnly>
-            <ListSparkle size={20} />
+          <Button isIconOnly variant="light">
+            <BulletList size={20} />
           </Button>
 
-          <Button isIconOnly>
+          <Button isIconOnly variant="light">
             <DotGrid1X3Horizontal size={20} />
           </Button>
         </div>

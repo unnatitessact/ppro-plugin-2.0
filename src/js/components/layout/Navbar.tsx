@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 
 import { LayoutLeft } from "@tessact/icons";
@@ -23,6 +21,8 @@ import {
 } from "@tessact/icons";
 
 import { Divider } from "../ui/Divider";
+
+import { useSidebarStore } from "../../store/sidebar-store";
 // import { Link } from '@/components/ui/NextLink';
 import {
   DropdownMenu,
@@ -44,6 +44,8 @@ import { NotificationBellWithRoomProvider } from "../notification/NotificationBe
 
 import { Kbd } from "../ui/Kbd";
 
+import { Drawer } from "vaul";
+
 export const Navbar = () => {
   // const { session } = useAuth();
   // const user = session?.user;
@@ -63,6 +65,8 @@ export const Navbar = () => {
   // };
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const { toggleSidebar } = useSidebarStore();
 
   const { setAuth, auth } = useAuth();
 
@@ -103,8 +107,10 @@ export const Navbar = () => {
   // );
 
   return (
-    <div className="flex items-center px-3 py-2 justify-between">
-      <LayoutLeft />
+    <div className="flex bg-transparent items-center px-3 py-2 justify-between">
+      <Drawer.Trigger>
+        <LayoutLeft onClick={toggleSidebar} />
+      </Drawer.Trigger>
       <div className="flex items-center">
         {!isMobile && <Divider orientation="vertical" className="mx-2 h-4" />}
         <div

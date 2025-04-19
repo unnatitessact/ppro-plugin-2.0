@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { cn } from '@nextui-org/react';
-import { flexRender, Row as RowType } from '@tanstack/react-table';
-import { motion } from 'framer-motion';
-import { Cell, Row } from 'react-aria-components';
+import { cn } from "@nextui-org/react";
+import { flexRender, Row as RowType } from "@tanstack/react-table";
+import { motion } from "framer-motion";
+import { Cell, Row } from "react-aria-components";
 
-import { Checkbox } from '@/components/ui/Checkbox';
+import { Checkbox } from "./Checkbox";
 
 interface DataTableRowProps<T extends object> {
   row: RowType<T>;
@@ -26,14 +26,16 @@ export const DataTableRow = <T extends { id: string }>({
   setSelectedData,
   selectedData,
   isSelectionEnabled,
-  isHoverEnabled
+  isHoverEnabled,
 }: DataTableRowProps<T>) => {
   useEffect(() => {
     if (isRowSelected) {
       const newData = [...selectedData, row.original]; // Assuming row.original is of type T or T[]
       setSelectedData(newData);
     } else {
-      const filteredData = selectedData.filter((item) => item.id !== row.original.id); // You need to have access to `prev` here
+      const filteredData = selectedData.filter(
+        (item) => item.id !== row.original.id
+      ); // You need to have access to `prev` here
       setSelectedData(filteredData);
     }
   }, [isRowSelected]);
@@ -41,34 +43,40 @@ export const DataTableRow = <T extends { id: string }>({
   return (
     <Row
       key={row.id}
-      className={cn('rounded-e-xl border-x border-ds-table-row-border', {
-        'bg-ds-table-row-bg-selected': isRowSelected,
-        'hover:bg-default-100': !isRowSelected && isHoverEnabled
+      className={cn("rounded-e-xl border-x border-ds-table-row-border", {
+        "bg-ds-table-row-bg-selected": isRowSelected,
+        "hover:bg-default-100": !isRowSelected && isHoverEnabled,
       })}
     >
       {row.getVisibleCells().map((cell, index) => (
-        <Cell className={'border-b border-ds-table-row-border p-6'} key={cell.id}>
+        <Cell
+          className={"border-b border-ds-table-row-border p-6"}
+          key={cell.id}
+        >
           {isSelectionEnabled ? (
             <motion.div
               initial={{
                 x: 10,
-                opacity: 0
+                opacity: 0,
               }}
               animate={{
                 x: 0,
                 opacity: 1,
                 transition: {
-                  duration: 0.3
-                }
+                  duration: 0.3,
+                },
               }}
               exit={{
                 x: -10,
-                opacity: 0
+                opacity: 0,
               }}
               className="group relative flex items-center gap-2"
             >
               {index === 0 && isSomeRowsSelected ? (
-                <Checkbox onValueChange={onValueChange} isSelected={isRowSelected} />
+                <Checkbox
+                  onValueChange={onValueChange}
+                  isSelected={isRowSelected}
+                />
               ) : null}
 
               {index === 0 && !isSomeRowsSelected ? (
@@ -79,8 +87,8 @@ export const DataTableRow = <T extends { id: string }>({
               <div
                 className={cn(
                   !isSomeRowsSelected && index === 0
-                    ? 'transition-all duration-200 group-hover:translate-x-8'
-                    : ''
+                    ? "transition-all duration-200 group-hover:translate-x-8"
+                    : ""
                 )}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -90,8 +98,8 @@ export const DataTableRow = <T extends { id: string }>({
             <div
               className={cn(
                 !isSomeRowsSelected && index === 0
-                  ? 'transition-all duration-200 group-hover:translate-x-8'
-                  : ''
+                  ? "transition-all duration-200 group-hover:translate-x-8"
+                  : ""
               )}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
