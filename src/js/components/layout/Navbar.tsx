@@ -22,7 +22,7 @@ import {
 
 import { Divider } from "../ui/Divider";
 
-import { useSidebarStore } from "../../store/sidebar-store";
+import { useSidebarStore } from "../../stores/sidebar-store";
 // import { Link } from '@/components/ui/NextLink';
 import {
   DropdownMenu,

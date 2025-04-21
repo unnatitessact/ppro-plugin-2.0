@@ -10,7 +10,7 @@ import { PasswordInput } from "../ui/PasswordInput";
 
 import FormHeading from "./FormHeading";
 
-import { loginWithEmailPassword } from "../../mutations/auth";
+import { loginWithEmailPassword } from "../../api-integration/mutations/auth";
 
 import useAuth from "../../hooks/useAuth";
 

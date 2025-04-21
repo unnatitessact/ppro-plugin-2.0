@@ -8,7 +8,7 @@ import { AuthPage } from "../../pages/AuthPage";
 
 import { useHotkeys } from "react-hotkeys-hook";
 
-import { useSidebarStore } from "../../store/sidebar-store";
+import { useSidebarStore } from "../../stores/sidebar-store";
 
 import { Drawer } from "vaul";
 

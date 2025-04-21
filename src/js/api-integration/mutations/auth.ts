@@ -1,4 +1,4 @@
-import { api } from "../lib/axios";
+import { api } from "../../lib/axios";
 
 // Define a type for the user data returned by /users/me/
 // Replace 'any' with a more specific interface based on your actual API response
