@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { useElementSize } from "@mantine/hooks";
 import { motion } from "framer-motion";
@@ -7,8 +7,9 @@ import InfiniteScroll from "react-infinite-scroller";
 import { ScrollShadow } from "../ui/ScrollShadow";
 
 import { SidebarFilePill } from "./SidebarFilePill";
-
+// import { SidebarFilePill } from "../library/";
 import { TreeNode } from "../library/TreeNode";
+// import { transition } from "../layout/Sidebar";
 
 import {
   useAIViewContentsQuery,
@@ -42,8 +43,6 @@ export const LibrarySidebar = () => {
 
   const { ref, width } = useElementSize();
 
-  const InfiniteScrollComponent = InfiniteScroll as any;
-
   return (
     <motion.div
       className="flex min-h-0 flex-col gap-3"
@@ -65,14 +64,16 @@ export const LibrarySidebar = () => {
               ref={scrollParentRef}
               scrollRestorationKey="library-sidebar"
             >
-              <InfiniteScrollComponent
-                hasMore={hasNextPage}
-                loadMore={() => fetchNextPage()}
-                useWindow={false}
-                ref={scrollParentRef}
-                getScrollParent={() => scrollParentRef.current}
-                // className=""
-              >
+              {/* Assert type to any to resolve TS error */}
+              {React.createElement(
+                InfiniteScroll as any,
+                {
+                  hasMore: hasNextPage,
+                  loadMore: () => fetchNextPage(),
+                  useWindow: false,
+                  getScrollParent: () => scrollParentRef.current,
+                  about: "",
+                },
                 <div className="pb-8">
                   {allNodes.map((node) => {
                     if (node.resourcetype === "VersionStack") {
@@ -105,7 +106,7 @@ export const LibrarySidebar = () => {
                     );
                   })}
                 </div>
-              </InfiniteScrollComponent>
+              )}
             </ScrollShadow>
           </div>
         ))}
@@ -119,13 +120,16 @@ export const LibrarySidebar = () => {
               ref={scrollParentRef}
               scrollRestorationKey="library-sidebar-ai-view"
             >
-              <InfiniteScrollComponent
-                hasMore={hasNextAiViewPage}
-                loadMore={() => fetchNextAiViewPage()}
-                useWindow={false}
-                getScrollParent={() => scrollParentRef.current}
-                // className=""
-              >
+              {/* Assert type to any to resolve TS error */}
+              {React.createElement(
+                InfiniteScroll as any,
+                {
+                  hasMore: hasNextAiViewPage,
+                  loadMore: () => fetchNextAiViewPage(),
+                  useWindow: false,
+                  ref: scrollParentRef,
+                  getScrollParent: () => scrollParentRef.current,
+                },
                 <div className="pb-8">
                   {allResults?.map((item, i) => {
                     return (
@@ -139,7 +143,7 @@ export const LibrarySidebar = () => {
                     );
                   })}
                 </div>
-              </InfiniteScrollComponent>
+              )}
             </ScrollShadow>
           </div>
         ))}

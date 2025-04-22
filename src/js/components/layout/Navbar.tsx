@@ -108,9 +108,7 @@ export const Navbar = () => {
 
   return (
     <div className="flex bg-transparent items-center px-3 py-2 justify-between">
-      <Drawer.Trigger>
-        <LayoutLeft onClick={toggleSidebar} />
-      </Drawer.Trigger>
+      <LayoutLeft onClick={toggleSidebar} />
       <div className="flex items-center">
         {!isMobile && <Divider orientation="vertical" className="mx-2 h-4" />}
         <div

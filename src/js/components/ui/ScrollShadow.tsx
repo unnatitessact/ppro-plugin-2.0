@@ -1,18 +1,18 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef } from "react";
 
-import { useMergedRef } from '@mantine/hooks';
-import { cn, extendVariants } from '@nextui-org/react';
-import { ScrollShadow as NextScrollShadow } from '@nextui-org/scroll-shadow';
-import { useScrollRestoration } from 'use-scroll-restoration';
+import { useMergedRef } from "@mantine/hooks";
+import { cn, extendVariants } from "@nextui-org/react";
+import { ScrollShadow as NextScrollShadow } from "@nextui-org/scroll-shadow";
+import { useScrollRestoration } from "use-scroll-restoration";
 
 export const ScrollShadowNextPrimitive = extendVariants(NextScrollShadow, {
   defaultVariants: {
     // hideScrollBar: 'false',
     // offset: 0,
-    size: 0
+    size: 0,
     // visibility: 'none',
     // isEnabled: 'false' // * We need this offset because ScrollShadow bottom shadow is not working properly
-  }
+  },
 });
 
 // export const
@@ -30,7 +30,15 @@ export const ScrollShadowPrimitive = React.forwardRef<
   }
 >(
   (
-    { children, className, showTopBorder = true, showBottomBorder = false, id, style, ...props },
+    {
+      children,
+      className,
+      showTopBorder = true,
+      showBottomBorder = false,
+      id,
+      style,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -40,11 +48,11 @@ export const ScrollShadowPrimitive = React.forwardRef<
         // visibility="none"
         id={id}
         className={cn(
-          'border-transparent',
+          "border-transparent",
           showTopBorder &&
-            'border-t data-[top-bottom-scroll=true]:border-t-default-200 data-[top-scroll=true]:border-t-default-200',
+            "border-t data-[top-bottom-scroll=true]:border-t-default-200 data-[top-scroll=true]:border-t-default-200",
           showBottomBorder &&
-            'border-b data-[bottom-scroll=false]:border-b-transparent data-[bottom-scroll=true]:border-b-default-200 data-[top-bottom-scroll=true]:border-b-default-200 data-[top-scroll=true]:border-b-transparent',
+            "border-b data-[bottom-scroll=false]:border-b-transparent data-[bottom-scroll=true]:border-b-default-200 data-[top-bottom-scroll=true]:border-b-default-200 data-[top-scroll=true]:border-b-transparent",
           className
         )}
         style={style}
@@ -56,9 +64,11 @@ export const ScrollShadowPrimitive = React.forwardRef<
   }
 );
 
-ScrollShadowPrimitive.displayName = 'ScrollShadowPrimitive';
+ScrollShadowPrimitive.displayName = "ScrollShadowPrimitive";
 
-type ScrollShadowPrimitiveProps = React.ComponentPropsWithoutRef<typeof ScrollShadowPrimitive>;
+type ScrollShadowPrimitiveProps = React.ComponentPropsWithoutRef<
+  typeof ScrollShadowPrimitive
+>;
 type ScrollShadowScrollRestoredProps = ScrollShadowPrimitiveProps & {
   scrollRestorationKey: string;
 };
@@ -69,7 +79,7 @@ export const ScrollShadowScrollRestored = forwardRef<
 >(({ scrollRestorationKey, ...props }, ref) => {
   const { ref: scrollRef } = useScrollRestoration(scrollRestorationKey, {
     debounceTime: 200,
-    persist: 'sessionStorage'
+    persist: "sessionStorage",
   });
 
   const mergedRef = useMergedRef(ref, scrollRef);
@@ -77,26 +87,30 @@ export const ScrollShadowScrollRestored = forwardRef<
   return <ScrollShadowPrimitive {...props} ref={mergedRef} />;
 });
 
-ScrollShadowScrollRestored.displayName = 'ScrollShadowScrollRestored';
+ScrollShadowScrollRestored.displayName = "ScrollShadowScrollRestored";
 
-type ScrollShadowCustomProps = Omit<ScrollShadowPrimitiveProps, 'scrollRestorationKey'> & {
+type ScrollShadowCustomProps = Omit<
+  ScrollShadowPrimitiveProps,
+  "scrollRestorationKey"
+> & {
   scrollRestorationKey?: string;
 };
 
-export const ScrollShadow = forwardRef<HTMLElement | HTMLDivElement, ScrollShadowCustomProps>(
-  ({ scrollRestorationKey, ...props }, ref) => {
-    if (scrollRestorationKey) {
-      return (
-        <ScrollShadowScrollRestored
-          ref={ref}
-          scrollRestorationKey={scrollRestorationKey}
-          {...props}
-        />
-      );
-    }
-
-    return <ScrollShadowPrimitive {...props} ref={ref} />;
+export const ScrollShadow = forwardRef<
+  HTMLElement | HTMLDivElement,
+  ScrollShadowCustomProps
+>(({ scrollRestorationKey, ...props }, ref) => {
+  if (scrollRestorationKey) {
+    return (
+      <ScrollShadowScrollRestored
+        ref={ref}
+        scrollRestorationKey={scrollRestorationKey}
+        {...props}
+      />
+    );
   }
-);
 
-ScrollShadow.displayName = 'ScrollShadow';
+  return <ScrollShadowPrimitive {...props} ref={ref} />;
+});
+
+ScrollShadow.displayName = "ScrollShadow";
