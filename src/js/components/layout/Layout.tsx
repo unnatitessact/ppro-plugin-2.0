@@ -56,7 +56,7 @@ export const Layout = () => {
       {auth.accessToken ? (
         <>
           {isSidebarOpen && <Sidebar />}
-          <div className="flex-1 bg-red-400 flex flex-col overflow-hidden">
+          <div className="flex-1  flex flex-col overflow-hidden">
             <Navbar />
             <main className="flex-1 overflow-x-hidden overflow-y-auto  p-4">
               {renderPage()}

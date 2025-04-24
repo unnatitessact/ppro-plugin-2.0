@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { PermissionPayload } from "../components/security-groups/files-folders/PermissionDropdown";
+import { PermissionPayload } from "../api-integration/types/library";
+
+// import { PermissionPayload } from "../components/security-groups/files-folders/PermissionDropdown";
 
 import { CompositionOutput } from "../api-integration/types/ai";
 import {

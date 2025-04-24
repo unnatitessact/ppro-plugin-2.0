@@ -1,6 +1,6 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { Filter, Sort } from './library-store';
+import { Filter, Sort } from "./library-store";
 
 // Type definitions for folder-specific filter state
 export type FolderFilterState = {
@@ -20,27 +20,27 @@ export type FilterStore = {
 };
 
 // Zustand store for persistent filter states across navigation
-export const useFilterStore = create<FilterStore>((set) => ({
+export const useLibraryFilterStore = create<FilterStore>((set) => ({
   folderStates: {},
   setFolderState: (folderId, state) =>
     set((store) => ({
       folderStates: {
         ...store.folderStates,
-        [folderId]: state
-      }
+        [folderId]: state,
+      },
     })),
   updateFolderState: (folderId, updater) =>
     set((store) => {
       const currentState = store.folderStates[folderId] || {
         filters: [],
         sorts: [],
-        searchQuery: ''
+        searchQuery: "",
       };
       return {
         folderStates: {
           ...store.folderStates,
-          [folderId]: updater(currentState)
-        }
+          [folderId]: updater(currentState),
+        },
       };
-    })
+    }),
 }));
