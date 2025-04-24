@@ -20,7 +20,7 @@ import { AssetCardSkeleton } from "../skeletons/AssetCardSkeleton";
 import { AssetCardFetchingSkeleton } from "../skeletons/AssetCardSkeleton";
 // import { useFilterStore } from "@/stores/library-filter-store";
 
-// import { ResourceCard } from "@/components/library/asset/ResourceCard";
+import { ResourceCard } from "@/components/library/asset/ResourceCard";
 
 import { useFileUpload } from "@/hooks/useFileUpload";
 // import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
@@ -233,11 +233,7 @@ export const Library = () => {
                         <AssetCardSkeleton key={index} />
                       ))
                     : allResults.map((resource) => (
-                        // <ResourceCard key={resource?.id} resource={resource} />
-                        <div key={resource?.id}>
-                          {resource.name}
-                          {/* <ResourceCard resource={resource} /> */}
-                        </div>
+                        <ResourceCard key={resource?.id} resource={resource} />
                       ))}
                   {isFetchingNextPage &&
                     Array.from({ length: 10 }).map((_, index) => (
