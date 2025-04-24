@@ -1,4 +1,4 @@
-import type { MediaPlayerInstance } from '@vidstack/react';
+import type { MediaPlayerInstance } from "@vidstack/react";
 
 import {
   createContext,
@@ -9,15 +9,15 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState
-} from 'react';
+  useState,
+} from "react";
 
 export interface TimeSelection {
   startTime: number;
   endTime: number;
 }
 
-export type TimeCodeType = 'default' | 'hms' | 'frames';
+export type TimeCodeType = "default" | "hms" | "frames";
 export type Scrub = {
   url?: string;
   height: number;
@@ -25,7 +25,7 @@ export type Scrub = {
 };
 
 // Make sure social aspect ratios start with 'social-'
-export type AspectRatio = '16:9' | '4:3' | '1:1' | '9:16';
+export type AspectRatio = "16:9" | "4:3" | "1:1" | "9:16";
 // | 'social-insta-post'
 // | 'social-insta-reel'
 // | 'social-yt-video'
@@ -77,7 +77,7 @@ export interface PlayerContextValue {
 export const PlayerContext = createContext<PlayerContextValue>({
   player: null,
   playerState: {
-    timeFormat: 'default',
+    timeFormat: "default",
     setTimeFormat: () => {},
     // currentTime: 0,
     // currentTimeFloored: 0,
@@ -87,7 +87,7 @@ export const PlayerContext = createContext<PlayerContextValue>({
     resolution: { width: 0, height: 0 },
     setResolution: () => {},
     visualVideoDimensions: { width: 0, height: 0 },
-    scrub: { url: '', height: 240, width: 426 },
+    scrub: { url: "", height: 240, width: 426 },
     setScrub: () => {},
     fps: 24,
     hotkeyPlaybackRate: null,
@@ -107,12 +107,16 @@ export const PlayerContext = createContext<PlayerContextValue>({
     setShouldSyncEndTimeWithCurrentTime: () => {},
     resetTimeSelectionStates: () => {},
     aspectRatio: null,
-    setAspectRatio: () => {}
+    setAspectRatio: () => {},
   },
-  setPlayer: () => {}
+  setPlayer: () => {},
 });
 
-export const PlayerContextProvider = ({ children }: { children: ReactNode }) => {
+export const PlayerContextProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [player, setPlayer] = useState<MediaPlayerInstance | null>(null);
   // This state is used to keep track of the current time of the video.
   // It does not control the video player itself, it is derived from the player's state.
@@ -122,37 +126,55 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
 
   const [fps, setFps] = useState<number>(24);
 
-  const [hotkeyPlaybackRate, setHotkeyPlaybackRate] = useState<HotkeyPlaybackRate | null>(null);
+  const [hotkeyPlaybackRate, setHotkeyPlaybackRate] =
+    useState<HotkeyPlaybackRate | null>(null);
 
-  const [timeFormat, setTimeFormat] = useState<TimeCodeType>('default');
+  const [timeFormat, setTimeFormat] = useState<TimeCodeType>("default");
 
   // The size of the <video> element in pixels.
-  const [videoDimensions, setVideoDimensions] = useState<{ width: number; height: number }>({
+  const [videoDimensions, setVideoDimensions] = useState<{
+    width: number;
+    height: number;
+  }>({
     width: 0,
-    height: 0
+    height: 0,
   });
 
-  const [resolution, setResolution] = useState<{ width: number; height: number }>({
+  const [resolution, setResolution] = useState<{
+    width: number;
+    height: number;
+  }>({
     width: 0,
-    height: 0
+    height: 0,
   });
 
   const [scrub, setScrub] = useState<Scrub>({
-    url: '',
+    url: "",
     width: 426,
-    height: 240
+    height: 240,
   });
 
   const [isLoopingEnabled, setIsLoopingEnabled] = useState(false);
 
-  const [timeSelection, setTimeSelection] = useState<TimeSelection | null>(null);
+  const [timeSelection, setTimeSelection] = useState<TimeSelection | null>(
+    null
+  );
 
-  const [timeSelectionPreview, setTimeSelectionPreview] = useState<TimeSelection | null>(null);
+  const [timeSelectionPreview, setTimeSelectionPreview] =
+    useState<TimeSelection | null>(null);
 
-  const [isDraggingTimeSelectionLeftHandle, setIsDraggingTimeSelectionLeftHandle] = useState(false);
-  const [isDraggingTimeSelectionRightHandle, setIsDraggingTimeSelectionRightHandle] =
-    useState(false);
-  const [shouldSyncEndTimeWithCurrentTime, setShouldSyncEndTimeWithCurrentTime] = useState(true);
+  const [
+    isDraggingTimeSelectionLeftHandle,
+    setIsDraggingTimeSelectionLeftHandle,
+  ] = useState(false);
+  const [
+    isDraggingTimeSelectionRightHandle,
+    setIsDraggingTimeSelectionRightHandle,
+  ] = useState(false);
+  const [
+    shouldSyncEndTimeWithCurrentTime,
+    setShouldSyncEndTimeWithCurrentTime,
+  ] = useState(true);
 
   const [aspectRatio, setAspectRatio] = useState<AspectRatio | null>(null);
 
@@ -168,7 +190,7 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
 
   useEffect(() => {
     if (player) {
-      player.qualities.switch = 'next'; //  Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
+      player.qualities.switch = "next"; //  Trigger a quality level switch for next fragment. This could eventually flush already buffered next fragment.
     }
   }, [player]);
 
@@ -197,7 +219,7 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
     if (resolution.width === 0 || resolution.height === 0) {
       return {
         visualVideoWidth,
-        visualVideoHeight
+        visualVideoHeight,
       };
     }
 
@@ -216,9 +238,14 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
     visualVideoHeight = Math.floor(visualVideoHeight);
     return {
       visualVideoWidth,
-      visualVideoHeight
+      visualVideoHeight,
     };
-  }, [resolution.width, resolution.height, videoDimensions?.height, videoDimensions?.width]);
+  }, [
+    resolution.width,
+    resolution.height,
+    videoDimensions?.height,
+    videoDimensions?.width,
+  ]);
 
   return (
     <PlayerContext.Provider
@@ -236,7 +263,7 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
           setResolution,
           visualVideoDimensions: {
             width: visualVideoWidth,
-            height: visualVideoHeight
+            height: visualVideoHeight,
           },
           hotkeyPlaybackRate,
           setHotkeyPlaybackRate,
@@ -258,9 +285,9 @@ export const PlayerContextProvider = ({ children }: { children: ReactNode }) => 
           setShouldSyncEndTimeWithCurrentTime,
           resetTimeSelectionStates,
           aspectRatio,
-          setAspectRatio
+          setAspectRatio,
         },
-        setPlayer
+        setPlayer,
       }}
     >
       {children}

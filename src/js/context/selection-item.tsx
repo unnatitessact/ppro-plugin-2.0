@@ -1,12 +1,12 @@
-import { useSelectionContext } from '@/context/selection';
+import { useSelectionContext } from "../context/selection";
 
-import { useSelected } from '@/hooks/useAreaSelection';
+import { useSelected } from "../hooks/useAreaSelection";
 
 export const SelectionItemWrapper = ({
   children,
   boxRef,
   isSelected,
-  handleSelected
+  handleSelected,
 }: {
   children: React.ReactNode;
   boxRef: React.RefObject<HTMLDivElement>;

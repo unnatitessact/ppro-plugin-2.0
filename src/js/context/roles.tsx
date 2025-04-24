@@ -1,12 +1,14 @@
-import type { GetRolesResponse } from '@/api-integration/types/user-management';
+import type { GetRolesResponse } from "../api-integration/types/user-management";
 
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext } from "react";
 
-import { useOrganization } from '@/hooks/useOrganization';
+import { useOrganization } from "../hooks/useOrganization";
 
-import { useRolesQuery } from '@/api-integration/queries/user-management';
+import { useRolesQuery } from "../api-integration/queries/user-management";
 
-import { RoleType } from '@/types/user-management';
+import { RoleType } from "../types/user-management";
+
+// import { RoleType } from "../api-integration/types/user-management";
 
 type RolesContextType = {
   [role in RoleType]: {
@@ -18,49 +20,45 @@ type RolesContextType = {
 const RolesContext = createContext<RolesContextType>({
   organization: {
     roles: [],
-    isLoading: false
+    isLoading: false,
   },
   workspace: {
     roles: [],
-    isLoading: false
+    isLoading: false,
   },
   team: {
     roles: [],
-    isLoading: false
-  }
+    isLoading: false,
+  },
 });
 
 export function RolesProvider({ children }: { children: ReactNode }) {
   const organization = useOrganization();
 
-  const { data: organizationRolesList, isLoading: isLoadingOrganizationRolesList } = useRolesQuery(
-    'organization',
-    organization?.id
-  );
-  const { data: workspaceRolesList, isLoading: isLoadingWorkspaceRolesList } = useRolesQuery(
-    'workspace',
-    organization?.id
-  );
-  const { data: teamRolesList, isLoading: isLoadingTeamRolesList } = useRolesQuery(
-    'team',
-    organization?.id
-  );
+  const {
+    data: organizationRolesList,
+    isLoading: isLoadingOrganizationRolesList,
+  } = useRolesQuery("organization", organization?.id);
+  const { data: workspaceRolesList, isLoading: isLoadingWorkspaceRolesList } =
+    useRolesQuery("workspace", organization?.id);
+  const { data: teamRolesList, isLoading: isLoadingTeamRolesList } =
+    useRolesQuery("team", organization?.id);
 
   return (
     <RolesContext.Provider
       value={{
         organization: {
           roles: organizationRolesList || [],
-          isLoading: isLoadingOrganizationRolesList
+          isLoading: isLoadingOrganizationRolesList,
         },
         workspace: {
           roles: workspaceRolesList || [],
-          isLoading: isLoadingWorkspaceRolesList
+          isLoading: isLoadingWorkspaceRolesList,
         },
         team: {
           roles: teamRolesList || [],
-          isLoading: isLoadingTeamRolesList
-        }
+          isLoading: isLoadingTeamRolesList,
+        },
       }}
     >
       {children}

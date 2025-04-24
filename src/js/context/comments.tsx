@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import type { ReviewCommentSort, Tag } from '@/api-integration/types/review';
-import type { FilterCollection } from '@/components/review/ReviewFilterDropdown/ReviewFilterDropdown';
+import type { ReviewCommentSort, Tag } from "../api-integration/types/review";
+import { FilterCollection } from "../types/review";
+// import type { FilterCollection } from "../components/review/ReviewFilterDropdown/";
 
 import {
   createContext,
@@ -13,28 +14,33 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
-} from 'react';
+  useState,
+} from "react";
 
-import { useSearchParams } from 'next/navigation';
+// import { useSearchParams } from "next/navigation";
 
-import { usePlayerContext } from '@/context/player';
-import { useEventListener, useIsInsideRoom } from '@/liveblocks.config';
-import { useLocalStorage } from '@mantine/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { useMediaRemote } from '@vidstack/react';
+import { usePlayerContext } from "../context/player";
+import { useEventListener, useIsInsideRoom } from "../../../liveblocks.config";
+import { useLocalStorage } from "@mantine/hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMediaRemote } from "@vidstack/react";
 
-import { useWorkspace } from '@/hooks/useWorkspace';
+import { useWorkspace } from "../hooks/useWorkspace";
 
-import { useUpdateReviewCommentsAsRead } from '@/api-integration/mutations/review';
-import { reviewCommentsQueryKey, useReviewHashtagsQuery } from '@/api-integration/queries/review';
-import { useWorkspaceUsersQuery } from '@/api-integration/queries/user-management';
-import { User } from '@/api-integration/types/auth';
-import { ResourceType } from '@/api-integration/types/library';
-import { ResourceType as ProjectResourceType } from '@/api-integration/types/projects';
+// import { useUpdateReviewCommentsAsRead } from "../api-integration/mutations/review";
+// import useUpdateRev
+import {
+  reviewCommentsQueryKey,
+  useReviewHashtagsQuery,
+} from "../api-integration/queries/review";
+import { useWorkspaceUsersQuery } from "../api-integration/queries/user-management";
+import { User } from "../api-integration/types/auth";
+import { ResourceType } from "../api-integration/types/library";
+import { ResourceType as ProjectResourceType } from "../api-integration/types/projects";
 
-import { useReviewStore } from '@/stores/review-store';
-import { useSearchActionsStore } from '@/stores/search-actions-store';
+import { useReviewStore } from "../stores/review-store";
+import { useSearchActionsStore } from "../stores/search-actions-store";
+import { useUpdateReviewCommentsAsRead } from "../api-integration/mutations/review";
 
 export const emptyFilterState = {
   attachments: false,
@@ -43,7 +49,7 @@ export const emptyFilterState = {
   tags: [],
   mentions: [],
   commenter: [],
-  createdDate: null
+  createdDate: null,
 };
 
 interface CommentsContextType {
@@ -74,7 +80,9 @@ interface CommentsContextType {
   isLoopSelectionEnabled: boolean;
   setIsLoopSelectionEnabled: (isLoopSelectionEnabled: boolean) => void;
   isTimeInAndTimeOutSelectionEnabled: boolean;
-  setIsTimeInAndTimeOutSelectionEnabled: (isTimeInAndTimeOutSelectionEnabled: boolean) => void;
+  setIsTimeInAndTimeOutSelectionEnabled: (
+    isTimeInAndTimeOutSelectionEnabled: boolean
+  ) => void;
   selectionWidth: number;
   setSelectionWidth: (selectionWidth: number) => void;
 }
@@ -82,23 +90,23 @@ interface CommentsContextType {
 const CommentsContext = createContext<CommentsContextType>({
   workspaceUsers: [],
   hashtags: [],
-  fileId: '',
-  fileName: '',
-  fileType: 'File',
+  fileId: "",
+  fileName: "",
+  fileType: "File",
   isTimedAsset: false,
   appliedFilters: emptyFilterState,
   setAppliedFilters: () => {},
   isSearchOpen: false,
   setIsSearchOpen: () => {},
   toggleIsSearchOpen: () => {},
-  appliedSort: 'in_time',
+  appliedSort: "in_time",
   setAppliedSort: () => {},
   addCommentToBeMarkedAsRead: () => {},
   timeIn: null,
   timeOut: null,
   setTimeIn: () => {},
   setTimeOut: () => {},
-  keyPress: { key: '', time: Date.now() },
+  keyPress: { key: "", time: Date.now() },
   setKeyPress: () => {},
   isTimeInSelected: false,
   setIsTimeInSelected: () => {},
@@ -109,14 +117,14 @@ const CommentsContext = createContext<CommentsContextType>({
   isTimeInAndTimeOutSelectionEnabled: true,
   setIsTimeInAndTimeOutSelectionEnabled: () => {},
   selectionWidth: 16,
-  setSelectionWidth: () => {}
+  setSelectionWidth: () => {},
 });
 
 export function CommentsProvider({
   children,
   fileId,
   fileName,
-  fileType
+  fileType,
 }: {
   children: ReactNode;
   fileId: string;
@@ -132,8 +140,8 @@ export function CommentsProvider({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    isSuccess
-  } = useWorkspaceUsersQuery(workspace?.id, '');
+    isSuccess,
+  } = useWorkspaceUsersQuery(workspace?.id, "");
 
   const workspaceUsers = useMemo(
     () => workspaceUsersPaginated?.pages?.flatMap((page) => page.results) || [],
@@ -146,37 +154,47 @@ export function CommentsProvider({
     }
   }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSuccess]);
 
-  const { mutate: updateReviewCommentsAsRead } = useUpdateReviewCommentsAsRead();
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get('query')?.toString() ?? '';
+  const { mutate: updateReviewCommentsAsRead } =
+    useUpdateReviewCommentsAsRead();
 
-  const [appliedFilters, setAppliedFilters] = useState<FilterCollection>(emptyFilterState);
-  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(searchQuery.length > 0);
+  // const searchParams = useSearchParams();
+  const searchQuery = "";
 
-  const { setAppliedFilters: setStoreAppliedFilters, setAppliedSort: setStoreAppliedSort } =
-    useReviewStore();
+  const [appliedFilters, setAppliedFilters] =
+    useState<FilterCollection>(emptyFilterState);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(
+    searchQuery.length > 0
+  );
 
-  const isTimedAsset = fileType == 'VideoFile' || fileType === 'ProjectVideoFile';
+  const {
+    setAppliedFilters: setStoreAppliedFilters,
+    setAppliedSort: setStoreAppliedSort,
+  } = useReviewStore();
+
+  const isTimedAsset =
+    fileType == "VideoFile" || fileType === "ProjectVideoFile";
 
   // const [appliedSort, setAppliedSort] = useState<ReviewCommentSort>('in_time');
 
   const [appliedSort, setAppliedSort] = useLocalStorage<ReviewCommentSort>({
-    key: 'appliedSort',
-    defaultValue: 'in_time'
+    key: "appliedSort",
+    defaultValue: "in_time",
   });
 
   const [timeIn, setTimeIn] = useState<number | null>(null);
   const [timeOut, setTimeOut] = useState<number | null>(null);
   const [keyPress, setKeyPress] = useState<{ key: string; time: number }>({
-    key: '',
-    time: Date.now()
+    key: "",
+    time: Date.now(),
   });
   const [isTimeInSelected, setIsTimeInSelected] = useState(false);
   const [isTimeOutSelected, setIsTimeOutSelected] = useState(false);
   const [isLoopSelectionEnabled, setIsLoopSelectionEnabled] = useState(false);
 
-  const [isTimeInAndTimeOutSelectionEnabled, setIsTimeInAndTimeOutSelectionEnabled] =
-    useState(false);
+  const [
+    isTimeInAndTimeOutSelectionEnabled,
+    setIsTimeInAndTimeOutSelectionEnabled,
+  ] = useState(false);
 
   const [selectionWidth, setSelectionWidth] = useState(16);
 
@@ -196,7 +214,7 @@ export function CommentsProvider({
       updateReviewCommentsAsRead(ids, {
         onSuccess: () => {
           commentsToBeMarkedAsReadRef.current = [];
-        }
+        },
       });
     },
     [updateReviewCommentsAsRead]
@@ -219,7 +237,12 @@ export function CommentsProvider({
   useEffect(() => {
     setStoreAppliedFilters(appliedFilters);
     setStoreAppliedSort(appliedSort);
-  }, [appliedFilters, appliedSort, setStoreAppliedFilters, setStoreAppliedSort]);
+  }, [
+    appliedFilters,
+    appliedSort,
+    setStoreAppliedFilters,
+    setStoreAppliedSort,
+  ]);
 
   const isInsideRoom = useIsInsideRoom();
   return (
@@ -254,7 +277,7 @@ export function CommentsProvider({
         isTimeInAndTimeOutSelectionEnabled,
         setIsTimeInAndTimeOutSelectionEnabled,
         selectionWidth,
-        setSelectionWidth
+        setSelectionWidth,
       }}
     >
       {children}
@@ -273,7 +296,12 @@ const CommentsPlayerStateBridge = () => {
 
   const {
     player,
-    playerState: { timeSelection, setTimeSelection, setTimeSelectionPreview, setIsLoopingEnabled }
+    playerState: {
+      timeSelection,
+      setTimeSelection,
+      setTimeSelectionPreview,
+      setIsLoopingEnabled,
+    },
   } = usePlayerContext();
   const { selectedComment } = useReviewStore();
   const { setIsTimeInAndTimeOutSelectionEnabled } = useComments();
@@ -302,7 +330,7 @@ const CommentsPlayerStateBridge = () => {
         if (selectedComment?.out_time !== null) {
           setTimeSelectionPreview({
             startTime: selectedComment.in_time ?? 0,
-            endTime: selectedComment.out_time ?? 0
+            endTime: selectedComment.out_time ?? 0,
           });
           setIsLoopingEnabled(true);
         }
@@ -322,7 +350,7 @@ const CommentsPlayerStateBridge = () => {
     setTimeSelectionPreview,
     setIsLoopingEnabled,
     setTimeSelection,
-    setIsMarkersVisible
+    setIsMarkersVisible,
   ]);
 
   return <></>;
@@ -332,11 +360,11 @@ const CommentsLiveblocksBridge = (props: { fileId: string }) => {
   const queryClient = useQueryClient();
 
   useEventListener(({ event }) => {
-    if (event.type === 'COMMENTS_UPDATED') {
+    if (event.type === "COMMENTS_UPDATED") {
       queryClient.invalidateQueries({
         queryKey: reviewCommentsQueryKey({
-          file_id: props.fileId
-        })
+          file_id: props.fileId,
+        }),
       });
     }
   });

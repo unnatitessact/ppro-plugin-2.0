@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
 import { useApi } from "../../hooks/useApi";
-import { useLibraryFilterState } from "../../hooks/useLibraryFilterState";
+// import { useLibraryFilterState } from "../../hooks/useLibraryFilterState";
 import { useWorkspace } from "../../hooks/useWorkspace";
 
 // import { useGetLibraryContentPermissions } from '@/api-integration/mutations/library';
@@ -140,15 +140,15 @@ export const useLibraryContentsQueryKey = (parentId: string | null) => {
   const { workspace } = useWorkspace();
 
   // const { search } = useLibraryStore();
-  const { filters, filterMatchType, isFlattened, sorts, search } =
-    useLibraryFilterState();
+  // const { filters, filterMatchType, isFlattened, sorts, search } =
+  //   useLibraryFilterState();
 
   const queryParams = generateLibraryQueryParams({
-    filters,
-    sorts,
-    flatten: isFlattened ?? false,
-    searchQuery: search,
-    matchType: filterMatchType,
+    filters: [],
+    sorts: [],
+    flatten: false,
+    searchQuery: "",
+    matchType: "all",
   });
 
   return [...getLibraryContentsQueryKey(workspace.id, parentId), queryParams];

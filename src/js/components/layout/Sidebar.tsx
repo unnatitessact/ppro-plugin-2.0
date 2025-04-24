@@ -25,18 +25,18 @@ export const Sidebar = () => {
   return (
     <AnimatePresence initial={false}>
       <Drawer direction="left" open={isOpen} onOpenChange={toggle}>
-        <DrawerContent className="!inset-y-0 !left-0 !mt-0 h-full w-[280px] rounded-none ">
-          <aside className="flex h-full flex-col justify-between">
+        <DrawerContent className="!inset-y-0 !left-0 !mt-0 !h-full  w-[280px] rounded-none ">
+          <div className="flex !h-full min-h-full flex-col justify-between">
             <div id="custom-drag-sidebar" className="h-4 max-w-20" />
-            <section className="flex min-h-0 w-full flex-1 flex-col gap-5 overflow-hidden">
+            <section className="flex min-h-0 h-full w-full flex-1 flex-col gap-5 overflow-hidden">
               {/* <div> */}
               <WorkspaceSwitcher />
               {/* </div> */}
-              <div className="relative flex h-full min-h-0 left-0 top-0 max-w-20 flex-col overflow-hidden">
+              <div className="relative flex h-full min-h-0 left-0 top-0 flex-col overflow-hidden">
                 <LibrarySidebar />
               </div>
             </section>
-          </aside>
+          </div>
         </DrawerContent>
       </Drawer>
     </AnimatePresence>

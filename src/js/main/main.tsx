@@ -31,11 +31,11 @@ const Main = () => {
     <AuthProvider>
       <ThemeProvider>
         <NextUIProvider>
-          <WorkspacesProvider>
-            <QueryClientProvider client={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <WorkspacesProvider>
               <Layout />
-            </QueryClientProvider>
-          </WorkspacesProvider>
+            </WorkspacesProvider>
+          </QueryClientProvider>
         </NextUIProvider>
       </ThemeProvider>
     </AuthProvider>

@@ -16,7 +16,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@esTypes/*": ["./src/jsx"]
+      "@esTypes/*": ["./src/js/types"],
+      "@/*": ["./src/js/*"]
     }
   },
   "include": ["./src"],

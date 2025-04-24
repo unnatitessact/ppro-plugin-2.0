@@ -6,7 +6,7 @@ const config: CEP_Config = {
   id: "com.tessact-plugin.cep",
   displayName: "Tessact Plugin",
   symlink: "local",
-  port: 3002,
+  port: 3001,
   servePort: 5000,
   startingDebugPort: 8860,
   extensionManifestVersion: 6.0,

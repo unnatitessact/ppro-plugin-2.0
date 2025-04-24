@@ -7,7 +7,10 @@ import { motion } from "framer-motion";
 
 import { FileBendFilled } from "@tessact/icons";
 
-import { useLibraryState } from "../../stores/library-state";
+// import { useLibraryStore } from "../../stores/library-store";
+
+import { useParamsStateStore } from "../../stores/params-state-store";
+// import { useLibraryStore } from "../../stores/library-store";
 
 // import { Link } from '@/components/ui/NextLink';
 
@@ -27,9 +30,9 @@ export const SidebarFilePill = ({
   const [isHovered, setIsHovered] = useState(false);
   //   const { assetId } = useParams() as { assetId: string };
 
-  const { assetId } = useLibraryState();
+  const { selectedAssetId } = useParamsStateStore();
 
-  const isActive = assetId === fileId;
+  const isActive = selectedAssetId === fileId;
   return (
     <motion.div
       className={cn(

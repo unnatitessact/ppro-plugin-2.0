@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext } from "react";
 
-import { usePreferencesQuery } from '@/api-integration/queries/preferences';
-import { GetPreferencesResponse } from '@/api-integration/types/preferences';
+import { usePreferencesQuery } from "../api-integration/queries/preferences";
+import { GetPreferencesResponse } from "../api-integration/types/preferences";
 
 interface PreferencesContextType {
   preferences: GetPreferencesResponse | undefined;
@@ -10,17 +10,18 @@ interface PreferencesContextType {
 
 const PreferencesContext = createContext<PreferencesContextType>({
   preferences: undefined,
-  isLoadingPreferences: false
+  isLoadingPreferences: false,
 });
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const { data: preferences, isLoading: isLoadingPreferences } = usePreferencesQuery();
+  const { data: preferences, isLoading: isLoadingPreferences } =
+    usePreferencesQuery();
 
   return (
     <PreferencesContext.Provider
       value={{
         preferences,
-        isLoadingPreferences
+        isLoadingPreferences,
       }}
     >
       {children}

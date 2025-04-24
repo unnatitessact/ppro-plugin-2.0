@@ -1,52 +1,57 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { PermissionPayload } from '@/components/security-groups/files-folders/PermissionDropdown';
+// import { PermissionPayload } from "@/components/security-groups/files-folders/PermissionDropdown";
 
-import { FieldOption, MetadataFieldType } from '@/api-integration/types/metadata';
+import { FieldOption, MetadataFieldType } from "../types/metadata";
 
-import { CreateFolderSchema } from '@/schemas/library/folders';
+import { CreateFolderSchema } from "@/schema/library/folders";
 
-import { PaginatedLibraryResult } from '@/types/api';
+import { PaginatedLibraryResult } from "@/types/api";
 
-import { UserMeta } from './meta';
-import { ExternalUser } from '@/api-integration/types/review';
+import { UserMeta } from "./meta";
+import { ExternalUser } from "./review";
+
+export type PermissionPayload =
+  | "can_view_asset"
+  | "can_edit_asset"
+  | "can_delete_asset";
 
 export type ResourceType =
-  | 'ImageFile'
-  | 'AudioFile'
-  | 'Folder'
-  | 'VideoFile'
-  | 'File'
-  | 'PhysicalAsset'
-  | 'VersionStack';
+  | "ImageFile"
+  | "AudioFile"
+  | "Folder"
+  | "VideoFile"
+  | "File"
+  | "PhysicalAsset"
+  | "VersionStack";
 
 export type FileStatus =
   // | 'inactive'
-  | 'not_started'
+  | "not_started"
   // | 'waiting'
-  | 'needs_edit'
-  | 'processed'
-  | 'in_progress'
-  | 'approved'
-  | 'rejected';
+  | "needs_edit"
+  | "processed"
+  | "in_progress"
+  | "approved"
+  | "rejected";
 
 export type IndexStatus =
-  | 'not_started'
-  | 'queued'
-  | 'in_progress'
-  | 'completed'
-  | 'failed'
-  | 'transcoding'
-  | 'corrupted';
+  | "not_started"
+  | "queued"
+  | "in_progress"
+  | "completed"
+  | "failed"
+  | "transcoding"
+  | "corrupted";
 
 export type TaggingStatus =
-  | 'not_yet_ready'
-  | 'ready_for_tagging'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled';
+  | "not_yet_ready"
+  | "ready_for_tagging"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 
-export type SharedStatus = 'public' | 'private' | 'public_and_private';
+export type SharedStatus = "public" | "private" | "public_and_private";
 export interface BaseAsset {
   id: string;
   name: string;
@@ -64,16 +69,16 @@ export interface BaseAsset {
   //   file_type: string;
 }
 
-export type BaseAssetMinimal = Omit<BaseAsset, 'permissions'>;
+export type BaseAssetMinimal = Omit<BaseAsset, "permissions">;
 
 export interface FileAsset extends BaseAsset {
-  resourcetype: 'File';
+  resourcetype: "File";
 }
 
-export type FileAssetMinimal = Omit<FileAsset, 'permissions'>;
+export type FileAssetMinimal = Omit<FileAsset, "permissions">;
 
 export interface VideoAsset extends BaseAsset {
-  resourcetype: 'VideoFile';
+  resourcetype: "VideoFile";
   duration: number;
   video_width: number;
   video_height: number;
@@ -88,19 +93,19 @@ export interface VideoAsset extends BaseAsset {
   url: string;
 }
 
-export type VideoAssetMinimal = Omit<VideoAsset, 'permissions'>;
+export type VideoAssetMinimal = Omit<VideoAsset, "permissions">;
 
 export interface AudioAsset extends BaseAsset {
-  resourcetype: 'AudioFile';
+  resourcetype: "AudioFile";
   duration: number;
   wave_form: string;
   codec: string;
 }
 
-export type AudioAssetMinimal = Omit<AudioAsset, 'permissions'>;
+export type AudioAssetMinimal = Omit<AudioAsset, "permissions">;
 
 export interface ImageAsset extends BaseAsset {
-  resourcetype: 'ImageFile';
+  resourcetype: "ImageFile";
   resolution:
     | {
         width: number;
@@ -110,20 +115,20 @@ export interface ImageAsset extends BaseAsset {
   thumbnail: string | null;
 }
 
-export type ImageAssetMinimal = Omit<ImageAsset, 'permissions'>;
+export type ImageAssetMinimal = Omit<ImageAsset, "permissions">;
 
 export interface PhysicalAsset extends BaseAsset {
   id: string;
   name: string;
   parent: string | null;
   created_on: string;
-  resourcetype: 'PhysicalAsset';
+  resourcetype: "PhysicalAsset";
   barcode: string;
   asset_image: string | null;
   location: string;
 }
 
-export type PhysicalAssetMinimal = Omit<PhysicalAsset, 'permissions'>;
+export type PhysicalAssetMinimal = Omit<PhysicalAsset, "permissions">;
 
 export interface VersionStackItem {
   id: string;
@@ -132,7 +137,7 @@ export interface VersionStackItem {
   created_on: string;
 }
 
-export type VersionStackItemMinimal = Omit<VersionStackItem, 'permissions'>;
+export type VersionStackItemMinimal = Omit<VersionStackItem, "permissions">;
 
 export interface VersionStackItemDetailed {
   id: string;
@@ -144,34 +149,34 @@ export interface VersionStackItemDetailed {
 export interface VersionStackAsset extends BaseAsset {
   id: string;
   name: string;
-  resourcetype: 'VersionStack';
+  resourcetype: "VersionStack";
   versions: VersionStackItem[];
 }
 
-export type VersionStackAssetMinimal = Omit<VersionStackAsset, 'permissions'>;
+export type VersionStackAssetMinimal = Omit<VersionStackAsset, "permissions">;
 
 export interface BaseSubContent {
   id: string;
-  type: 'video' | 'image' | 'audio' | 'physical_asset' | 'folder';
+  type: "video" | "image" | "audio" | "physical_asset" | "folder";
 }
 
 export interface VideoSubContent extends BaseSubContent {
-  type: 'video';
+  type: "video";
   thumbnail: string | null;
 }
 
 export interface ImageSubContent extends BaseSubContent {
-  type: 'image';
+  type: "image";
   thumbnail: string | null;
 }
 
 export interface AudioSubContent extends BaseSubContent {
-  type: 'audio';
+  type: "audio";
   wave_form: string;
 }
 
 export interface PhysicalAssetSubContent extends BaseSubContent {
-  type: 'physical_asset';
+  type: "physical_asset";
   barcode: string;
   asset_image: string | null;
 }
@@ -181,8 +186,7 @@ export type FolderSubContent =
   | VideoSubContent
   | ImageSubContent
   | AudioSubContent
-  | PhysicalAssetSubContent;  
-
+  | PhysicalAssetSubContent;
 
 export interface Folder {
   id: string;
@@ -191,12 +195,12 @@ export interface Folder {
   created_on: string;
   children_count: number;
   sub_contents: FolderSubContent[];
-  resourcetype: 'Folder';
+  resourcetype: "Folder";
   connection_id?: string | null;
   permissions?: PermissionPayload[];
 }
 
-export type FolderMinimal = Omit<Folder, 'permissions' | 'sub_contents'>;
+export type FolderMinimal = Omit<Folder, "permissions" | "sub_contents">;
 
 export type LibraryAsset =
   | VideoAsset
@@ -248,14 +252,14 @@ interface BaseDetails {
 }
 
 export interface FolderDetails extends BaseDetails {
-  resourcetype: 'Folder';
+  resourcetype: "Folder";
   total_files: number;
   total_folders: number;
   total_size: number;
 }
 
 export interface FileDetails extends BaseDetails {
-  resourcetype: 'File';
+  resourcetype: "File";
   size: number;
   file_extension: string;
   technical_metadata: Record<string, string>;
@@ -263,7 +267,7 @@ export interface FileDetails extends BaseDetails {
 }
 
 export interface VideoDetails extends BaseDetails {
-  resourcetype: 'VideoFile';
+  resourcetype: "VideoFile";
   size: number;
   file_extension: string;
   technical_metadata: Record<string, string>;
@@ -287,7 +291,7 @@ export interface VideoDetails extends BaseDetails {
 }
 
 export interface AudioDetails extends BaseDetails {
-  resourcetype: 'AudioFile';
+  resourcetype: "AudioFile";
   size: number;
   file_extension: string;
   technical_metadata: Record<string, string>;
@@ -296,7 +300,7 @@ export interface AudioDetails extends BaseDetails {
 }
 
 export interface ImageDetails extends BaseDetails {
-  resourcetype: 'ImageFile';
+  resourcetype: "ImageFile";
   size: number;
   file_extension: string;
   technical_metadata: Record<string, string>;
@@ -309,14 +313,14 @@ export interface ImageDetails extends BaseDetails {
 }
 
 export interface PhysicalAssetDetails extends BaseDetails {
-  resourcetype: 'PhysicalAsset';
+  resourcetype: "PhysicalAsset";
   barcode: string;
   asset_image: string | null;
   location: string;
 }
 
 export interface VersionStackAssetDetails extends BaseDetails {
-  resourcetype: 'VersionStack';
+  resourcetype: "VersionStack";
   versions: VersionStackItemDetailed[];
 }
 

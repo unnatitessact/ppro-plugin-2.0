@@ -1,6 +1,6 @@
 import { cn } from "@nextui-org/react";
 
-import { COLORS_TO_TAILWIND } from "../../constants/data-colors/data-colors";
+import { COLORS_TO_TAILWIND } from "@/constants/data-colors/data-colors";
 
 // import { COMBINATIONS } from '@/data/colors';
 

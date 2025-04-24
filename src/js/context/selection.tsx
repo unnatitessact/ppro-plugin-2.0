@@ -1,6 +1,6 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext } from "react";
 
-import { DrawnArea, useAreaSelection } from '@/hooks/useAreaSelection';
+import { DrawnArea, useAreaSelection } from "../hooks/useAreaSelection";
 
 interface SelectionContextProps {
   selection: DOMRect | null;
@@ -11,7 +11,7 @@ interface SelectionContextProps {
 const SelectionContext = createContext<SelectionContextProps>({
   selection: null,
   drawArea: { start: undefined, end: undefined },
-  mouseDown: false
+  mouseDown: false,
 });
 
 export const useSelectionContext = () => useContext(SelectionContext);
@@ -19,7 +19,7 @@ export const useSelectionContext = () => useContext(SelectionContext);
 export const SelectionProvider = ({
   children,
   selectionContainerRef,
-  containerIds
+  containerIds,
 }: {
   children: React.ReactNode;
   selectionContainerRef: React.RefObject<HTMLElement> | undefined;
@@ -27,14 +27,14 @@ export const SelectionProvider = ({
 }) => {
   const { selection, drawArea, mouseDown } = useAreaSelection({
     container: selectionContainerRef,
-    containerIds
+    containerIds,
   });
   return (
     <SelectionContext.Provider
       value={{
         drawArea,
         mouseDown,
-        selection
+        selection,
       }}
     >
       {children}

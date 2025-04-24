@@ -1,32 +1,34 @@
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from "react";
 
-import { useAuth } from '@/context/auth';
+// import { useAuth } from "../context/auth";
 
-import { useUserFeatureFlagDetails } from '@/api-integration/queries/feature-flags';
+import useAuth from "../hooks/useAuth";
+
+import { useUserFeatureFlagDetails } from "../api-integration/queries/feature-flags";
 
 interface FeatureFlagsContextType {
   featureFlags: Record<string, boolean>;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
-  featureFlags: {}
+  featureFlags: {},
 });
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   const { data: featureFlags, refetch } = useUserFeatureFlagDetails();
 
-  const { session } = useAuth();
+  const { auth } = useAuth();
 
   useEffect(() => {
-    if (session) {
+    if (auth) {
       refetch();
     }
-  }, [session, refetch]);
+  }, [auth, refetch]);
 
   return (
     <FeatureFlagsContext.Provider
       value={{
-        featureFlags: featureFlags || {}
+        featureFlags: featureFlags || {},
       }}
     >
       {children}

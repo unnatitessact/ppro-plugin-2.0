@@ -47,7 +47,7 @@ export const LibrarySidebar = () => {
 
   return (
     <motion.div
-      className="flex min-h-0 flex-col gap-3"
+      className="flex min-h-0 h-full flex-col w-full gap-3"
       initial={{ opacity: 0, x: "100%" }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: "100%", position: "absolute" }}
@@ -91,6 +91,7 @@ export const LibrarySidebar = () => {
                           isOnRoot
                           parent={node.parent}
                         />
+                        // <div>{node.name}</div>
                       );
                     }
                     return (
@@ -105,6 +106,7 @@ export const LibrarySidebar = () => {
                         parent={node.parent}
                         fileExtension={node.file_extension}
                       />
+                      // <div>{node.name}</div>
                     );
                   })}
                 </div>

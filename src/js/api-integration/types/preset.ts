@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { UserMeta } from '@/api-integration/types/meta';
+import { UserMeta } from "../types/meta";
 
-import { PaginatedAPIResponse } from '@/types/api';
+import { PaginatedAPIResponse } from "../../types/api";
 
-import { CodeOutput, TextOutput, TransitionOutput, VideoOutput } from './ai';
+import { CodeOutput, TextOutput, TransitionOutput, VideoOutput } from "./ai";
 
 export interface PresetCreationPayload {
   title: string;
@@ -99,7 +99,9 @@ export interface GetGeneratedPromptMutation {
   transition_instructions: string;
 }
 
-export type PresetVersionUpdateMutation = PresetVersion & { create_new_version: boolean };
+export type PresetVersionUpdateMutation = PresetVersion & {
+  create_new_version: boolean;
+};
 
 export type PresetListResponse = PaginatedAPIResponse<Preset>;
 export type PresetCreationMutation = PresetCreationPayload;
@@ -108,18 +110,18 @@ export type PresetDuplicateMutation = PresetDuplicatePayload;
 export type DeleteMultiplePresetsMutation = PresetsDeleteMultiplePayload;
 
 export const presetFormSchema = z.object({
-  model: z.string().min(1, 'Model is required'),
-  role: z.string().min(1, 'Role is required'),
-  instructions: z.string().min(1, 'Instructions are required'),
+  model: z.string().min(1, "Model is required"),
+  role: z.string().min(1, "Role is required"),
+  instructions: z.string().min(1, "Instructions are required"),
   ragPrompt: z.string(),
   codeOutput: z.boolean(),
   example: z.string().optional(),
   fields: z.array(z.number()),
   possibleOutputTypes: z.array(z.string()),
-  keywords: z.string().min(1, 'Keywords are required'),
+  keywords: z.string().min(1, "Keywords are required"),
   create_new_version: z.boolean().optional(),
   enabledTransitions: z.boolean(),
-  transitionsInstructions: z.string().optional()
+  transitionsInstructions: z.string().optional(),
 });
 
 export type PresetFormValues = z.infer<typeof presetFormSchema>;

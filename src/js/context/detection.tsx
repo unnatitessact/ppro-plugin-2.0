@@ -7,21 +7,21 @@ import {
   useEffect,
   useMemo,
   useState,
-  useTransition
-} from 'react';
+  useTransition,
+} from "react";
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 
-import { detectionCategoryMetadataQueryKey } from '@/api-integration/queries/detection';
+import { detectionCategoryMetadataQueryKey } from "../api-integration/queries/detection";
 import {
   DetectedEntityDetailed,
   DetectionCategory,
-  GetDetectionCategoryMetadataResponse
-} from '@/api-integration/types/detection';
-import { ResourceType } from '@/api-integration/types/library';
-import { ResourceType as ProjectResourceType } from '@/api-integration/types/projects';
+  GetDetectionCategoryMetadataResponse,
+} from "../api-integration/types/detection";
+import { ResourceType } from "../api-integration/types/library";
+import { ResourceType as ProjectResourceType } from "../api-integration/types/projects";
 
-export type DetectionTab = 'video' | 'audio';
+export type DetectionTab = "video" | "audio";
 // export type DetectionCategory =
 //   | 'faces'
 //   | 'emotions'
@@ -64,10 +64,10 @@ interface DetectionContextInterface {
 }
 
 const DetectionContext = createContext<DetectionContextInterface>({
-  fileId: '',
-  fileName: '',
-  fileType: 'File',
-  selectedDetectionTab: 'video',
+  fileId: "",
+  fileName: "",
+  fileType: "File",
+  selectedDetectionTab: "video",
   setSelectedDetectionTab: () => {},
   selectedCategory: null,
   setSelectedCategory: () => {},
@@ -75,14 +75,14 @@ const DetectionContext = createContext<DetectionContextInterface>({
   setSelectedEntities: () => {},
   selectedEntitiesPopulated: [],
   playingEntity: null,
-  setPlayingEntity: () => {}
+  setPlayingEntity: () => {},
 });
 
 export function DetectionProvider({
   children,
   fileId,
   fileName,
-  fileType
+  fileType,
 }: {
   children: ReactNode;
   fileId: string;
@@ -92,8 +92,10 @@ export function DetectionProvider({
 }) {
   const queryClient = useQueryClient();
 
-  const [selectedDetectionTab, setSelectedDetectionTab] = useState<DetectionTab>('video');
-  const [selectedCategory, setSelectedCategoryState] = useState<DetectionCategory | null>(null);
+  const [selectedDetectionTab, setSelectedDetectionTab] =
+    useState<DetectionTab>("video");
+  const [selectedCategory, setSelectedCategoryState] =
+    useState<DetectionCategory | null>(null);
 
   const [, startTransition] = useTransition();
   const setSelectedCategory = (category: DetectionCategory | null) => {
@@ -102,53 +104,55 @@ export function DetectionProvider({
     });
   };
 
-  const [selectedEntities, setSelectedEntities] = useState<Set<string>>(new Set([]));
+  const [selectedEntities, setSelectedEntities] = useState<Set<string>>(
+    new Set([])
+  );
   const [playingEntity, setPlayingEntity] = useState<string | null>(null);
 
   const selectedEntitiesPopulated = useMemo(() => {
     const ad_recommendations =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'ad_recommendations')
+        detectionCategoryMetadataQueryKey(fileId, "ad_recommendations")
       ) ?? [];
 
     const scenes =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'scenes')
+        detectionCategoryMetadataQueryKey(fileId, "scenes")
       ) ?? [];
 
     const persons =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'persons')
+        detectionCategoryMetadataQueryKey(fileId, "persons")
       ) ?? [];
 
     const emotions =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'emotions')
+        detectionCategoryMetadataQueryKey(fileId, "emotions")
       ) ?? [];
 
     const objects =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'objects')
+        detectionCategoryMetadataQueryKey(fileId, "objects")
       ) ?? [];
 
     const brands =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'brands')
+        detectionCategoryMetadataQueryKey(fileId, "brands")
       ) ?? [];
 
     const locations =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'locations')
+        detectionCategoryMetadataQueryKey(fileId, "locations")
       ) ?? [];
 
     const events =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'time_stamped_events')
+        detectionCategoryMetadataQueryKey(fileId, "time_stamped_events")
       ) ?? [];
 
     const ocr =
       queryClient.getQueryData<GetDetectionCategoryMetadataResponse>(
-        detectionCategoryMetadataQueryKey(fileId, 'ocr_text')
+        detectionCategoryMetadataQueryKey(fileId, "ocr_text")
       ) ?? [];
 
     return (
@@ -161,7 +165,7 @@ export function DetectionProvider({
         ...brands,
         ...locations,
         ...events,
-        ...ocr
+        ...ocr,
       ].filter((entity) => selectedEntities?.has(entity.id)) ?? []
     );
   }, [selectedEntities, fileId, queryClient]);
@@ -187,7 +191,7 @@ export function DetectionProvider({
         setSelectedEntities,
         selectedEntitiesPopulated,
         playingEntity,
-        setPlayingEntity
+        setPlayingEntity,
       }}
     >
       {children}

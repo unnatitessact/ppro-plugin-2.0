@@ -66,7 +66,7 @@ export const Navbar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const { toggleSidebar } = useSidebarStore();
+  const { toggle } = useSidebarStore();
 
   const { setAuth, auth } = useAuth();
 
@@ -108,7 +108,7 @@ export const Navbar = () => {
 
   return (
     <div className="flex bg-transparent items-center px-3 py-2 justify-between">
-      <LayoutLeft onClick={toggleSidebar} />
+      <LayoutLeft onClick={toggle} />
       <div className="flex items-center">
         {!isMobile && <Divider orientation="vertical" className="mx-2 h-4" />}
         <div

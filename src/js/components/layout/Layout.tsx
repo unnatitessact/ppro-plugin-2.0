@@ -51,13 +51,12 @@ export const Layout = () => {
     toggleTheme();
   });
 
-  console.log("isSidebarOpen", isSidebarOpen);
   return (
     <div className="flex h-screen bg-default-50">
       {auth.accessToken ? (
         <>
           {isSidebarOpen && <Sidebar />}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 bg-red-400 flex flex-col overflow-hidden">
             <Navbar />
             <main className="flex-1 overflow-x-hidden overflow-y-auto  p-4">
               {renderPage()}

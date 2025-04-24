@@ -1,6 +1,8 @@
 import { api } from "../lib/axios"; // Adjust the import path if needed
 import useAuth from "./useAuth";
 
+import axios from "axios";
+
 // Custom hook to get the configured Axios instance
 export const useApi = (options?: { skipToken?: boolean }) => {
   const skipToken = options?.skipToken ?? false;
@@ -24,4 +26,22 @@ export const useApi = (options?: { skipToken?: boolean }) => {
 export const useAccessToken = () => {
   const { auth } = useAuth();
   return auth?.accessToken;
+};
+
+export const useAxios = () => {
+  const accessToken = useAccessToken();
+
+  const axiosAPI = axios.create({
+    baseURL: "https://dev-api.tessact.com",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  axiosAPI.defaults.baseURL = "https://dev-api.tessact.com";
+  if (accessToken) {
+    axiosAPI.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  }
+
+  return axiosAPI;
 };
