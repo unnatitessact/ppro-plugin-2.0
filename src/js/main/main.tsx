@@ -23,6 +23,7 @@ import { Layout } from "../components/layout/Layout";
 import { ThemeProvider } from "../context/ThemeContext";
 import { AuthProvider } from "../context/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WorkspacesProvider } from "../context/workspaces";
 
 const Main = () => {
   const queryClient = new QueryClient();
@@ -30,9 +31,11 @@ const Main = () => {
     <AuthProvider>
       <ThemeProvider>
         <NextUIProvider>
-          <QueryClientProvider client={queryClient}>
-            <Layout />
-          </QueryClientProvider>
+          <WorkspacesProvider>
+            <QueryClientProvider client={queryClient}>
+              <Layout />
+            </QueryClientProvider>
+          </WorkspacesProvider>
         </NextUIProvider>
       </ThemeProvider>
     </AuthProvider>

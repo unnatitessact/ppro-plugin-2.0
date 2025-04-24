@@ -2,11 +2,11 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
 import { useApi } from "../../hooks/useApi";
-// import { useLibraryFilterState } from '../../hooks/useLibraryFilterState';
+import { useLibraryFilterState } from "../../hooks/useLibraryFilterState";
 import { useWorkspace } from "../../hooks/useWorkspace";
 
 // import { useGetLibraryContentPermissions } from '@/api-integration/mutations/library';
-// import { generateLibraryQueryParams } from "../queries/utils";
+import { generateLibraryQueryParams } from "../queries/utils";
 import { ConnectionResults } from "../types/connected-folders";
 import {
   AIGeneratedFiltersResponse,
@@ -20,12 +20,12 @@ import {
   ResourceType,
   SpriteSheet,
   View,
-} from "../types/library/library";
+} from "../types/library";
 import { TreeFolderResult, TreeResult } from "../types/tree";
 
-// import { Filter, Sort } from "@/stores/library-store";
+import { Filter, Sort } from "../../stores/library-store";
 
-// import { createUrlParams } from "./review";
+import { createUrlParams } from "./review";
 
 // Query Keys
 export const getLibraryContentsQueryKey = (
@@ -128,8 +128,8 @@ export const getDeleteAccessQueryKey = (
 };
 
 export type LibraryContentsQueryParams = {
-  filters: [];
-  sorts: [];
+  filters: Filter[];
+  sorts: Sort[];
   flatten: boolean;
   searchQuery: string;
   matchType: "all" | "any";
@@ -140,18 +140,18 @@ export const useLibraryContentsQueryKey = (parentId: string | null) => {
   const { workspace } = useWorkspace();
 
   // const { search } = useLibraryStore();
-  //   const { filters, filterMatchType, isFlattened, sorts, search } =
-  //     useLibraryFilterState();
+  const { filters, filterMatchType, isFlattened, sorts, search } =
+    useLibraryFilterState();
 
-  //   const queryParams = generateLibraryQueryParams({
-  //     filters,
-  //     sorts,
-  //     flatten: isFlattened ?? false,
-  //     searchQuery: search,
-  //     matchType: filterMatchType,
-  //   });
+  const queryParams = generateLibraryQueryParams({
+    filters,
+    sorts,
+    flatten: isFlattened ?? false,
+    searchQuery: search,
+    matchType: filterMatchType,
+  });
 
-  return [...getLibraryContentsQueryKey(workspace.id, parentId)];
+  return [...getLibraryContentsQueryKey(workspace.id, parentId), queryParams];
 };
 
 // Queries
@@ -173,17 +173,17 @@ export const useLibraryContentsQuery = (
   // const { mutate: getLibraryContentPermissions } = useGetLibraryContentPermissions();
   // const { mutate: getLibraryContentSubContents } = useGetLibraryContentSubContents();
 
-  // const queryParams = generateLibraryQueryParams({
-  //   filters,
-  //   sorts,
-  //   flatten,
-  //   searchQuery,
-  //   matchType,
-  // });
+  const queryParams = generateLibraryQueryParams({
+    filters,
+    sorts,
+    flatten,
+    searchQuery,
+    matchType,
+  });
 
   const queryKey = [
     ...getLibraryContentsQueryKey(workspace.id, parentId),
-    // queryParams,
+    queryParams,
   ];
 
   return useInfiniteQuery({
@@ -192,7 +192,7 @@ export const useLibraryContentsQuery = (
       const { data } = await api.get<LibraryResults>(
         `/api/v1/library/?workspace=${workspace.id}${
           parentId ? `&parent=${parentId}` : ""
-        }&page=${pageParam}`
+        }&page=${pageParam}${queryParams}`
       );
 
       // const assets = data.data.results.map((asset) => ({
@@ -358,14 +358,14 @@ export const useFoldersQuery = (
   return useInfiniteQuery({
     queryKey: getFoldersQueryKey(workspace.id, parentId),
     queryFn: async ({ pageParam }) => {
-      //   const params = createUrlParams({
-      //     ...(parentId ? { parent: parentId } : {}),
-      //     workspace: workspace?.id,
-      //     page: `${pageParam}`,
-      //   });
+      const params = createUrlParams({
+        ...(parentId ? { parent: parentId } : {}),
+        workspace: workspace?.id,
+        page: `${pageParam}`,
+      });
 
       const { data } = await api.get<TreeFolderResult>(
-        `/api/v1/library/list_folders/`
+        `/api/v1/library/list_folders/?${params.toString()}`
       );
       return data.data;
     },

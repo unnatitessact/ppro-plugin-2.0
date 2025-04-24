@@ -1,4 +1,4 @@
-import { UserMeta } from "./meta";
+import { UserMeta } from "../types/meta";
 
 export type ConnectionProvider = "s3" | "azure" | "google" | "minio";
 

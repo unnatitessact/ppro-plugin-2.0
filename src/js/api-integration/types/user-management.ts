@@ -1,5 +1,5 @@
-import type { User } from "./auth";
-import type { PaginatedAPIResponse } from "./api";
+import type { User } from "../types/auth";
+import type { PaginatedAPIResponse } from "../types/api";
 import type {
   RoleType,
   WorkspaceWithTeams,

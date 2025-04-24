@@ -39,10 +39,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { accessToken, refreshToken, user };
   });
 
-  console.log({
-    authInAuthcontext: auth,
-  });
-
   // Effect to sync auth state changes TO localStorage
   useEffect(() => {
     // console.log("AuthContext: Syncing state to localStorage", auth); // Debug log

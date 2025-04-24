@@ -1,5 +1,3 @@
-// import { useParams } from 'next/navigation';
-
 import {
   InfiniteData,
   QueryKey,
@@ -7,10 +5,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-// import fileDownload from 'js-file-download';
+import fileDownload from "js-file-download";
 import { toast } from "sonner";
 
-// import { useActionsToasts } from '@/hooks/useActionsToasts';
+import { useActionsToasts } from "../../hooks/useActionsToasts";
 import { useApi } from "../../hooks/useApi";
 import { useWorkspace } from "../../hooks/useWorkspace";
 
@@ -23,7 +21,6 @@ import {
   getViewsQueryKey,
   useLibraryContentsQueryKey,
 } from "../queries/library";
-
 import { ConnectionPayload } from "../types/connected-folders";
 import {
   AddFileToVersionStackPayload,
@@ -40,14 +37,17 @@ import {
   ReorderVersionStackPayload,
   ResourceType,
   VersionStackItem,
-} from "../types/library/library";
+  LibraryAsset,
+} from "../types/library";
+
+import { useParamsStateStore } from "../../stores/params-state-store";
 
 export const useCreateFolder = (parentId: string | null) => {
   const api = useApi();
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  //   const { showToast } = useActionsToasts();
+  const { showToast } = useActionsToasts();
 
   return useMutation({
     mutationFn: async (folder: CreateFolderPayload) => {
@@ -65,7 +65,7 @@ export const useCreateFolder = (parentId: string | null) => {
       await queryClient.invalidateQueries({
         queryKey: getTreeQueryKey(workspace.id, parentId),
       });
-      //   showToast('on_folder_creation', parentId);
+      showToast("on_folder_creation", parentId);
     },
   });
 };
@@ -75,11 +75,9 @@ export const useRenameAsset = (assetId: string) => {
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
 
   const parentId = folderId ? folderId : null;
-
-  //   const parentId = folderId ? folderId : null;
 
   const libraryContentQueryKey = useLibraryContentsQueryKey(parentId);
   const treeContentQueryKey = getTreeQueryKey(workspace?.id, parentId);
@@ -118,15 +116,17 @@ export const useRenameAsset = (assetId: string) => {
             pages: prevData.pages.map((page) => {
               return {
                 ...page,
-                results: page.results.map((result) => {
-                  if (result.id === assetId) {
-                    return {
-                      ...result,
-                      name: payload,
-                    };
-                  }
-                  return result;
-                }),
+                results: page.results
+                  .map((result: LibraryAsset) => {
+                    if (result.id === assetId) {
+                      return {
+                        ...result,
+                        name: payload,
+                      };
+                    }
+                    return result;
+                  })
+                  .filter((item: LibraryAsset | null) => item !== null),
               };
             }),
           };
@@ -174,8 +174,7 @@ export const useRenameTableAsset = () => {
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
 
   const parentId = folderId ? folderId : null;
 
@@ -222,15 +221,17 @@ export const useRenameTableAsset = () => {
             pages: prevData.pages.map((page) => {
               return {
                 ...page,
-                results: page.results.map((result) => {
-                  if (result.id === payload?.assetId) {
-                    return {
-                      ...result,
-                      name: payload?.newName,
-                    };
-                  }
-                  return result;
-                }),
+                results: page.results
+                  .map((result: LibraryAsset) => {
+                    if (result.id === payload?.assetId) {
+                      return {
+                        ...result,
+                        name: payload?.newName,
+                      };
+                    }
+                    return result;
+                  })
+                  .filter((item: LibraryAsset | null) => item !== null),
               };
             }),
           };
@@ -278,8 +279,7 @@ export const useDeleteAsset = (assetId: string) => {
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
   const parentId = folderId ? folderId : null;
 
   const libraryContentQueryKey = useLibraryContentsQueryKey(parentId);
@@ -365,8 +365,7 @@ export const useDeleteTableAsset = () => {
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
   const parentId = folderId ? folderId : null;
 
   const libraryContentQueryKey = useLibraryContentsQueryKey(parentId);
@@ -447,8 +446,7 @@ export const useDeleteAssets = () => {
   const { workspace } = useWorkspace();
   const queryClient = useQueryClient();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
   const parentId = folderId ? folderId : null;
 
   const libraryContentQueryKey = useLibraryContentsQueryKey(parentId);
@@ -883,18 +881,21 @@ export const useUpdateView = (viewId: string) => {
   });
 };
 
-// export const useDownloadMetadata = (assetId: string) => {
-//   const api = useApi();
+export const useDownloadMetadata = (assetId: string) => {
+  const api = useApi();
 
-//   return useMutation({
-//     mutationFn: async () => {
-//       const { data } = await api.get(`/api/v1/library/${assetId}/metadata_report/`, {
-//         responseType: 'blob'
-//       });
-//       fileDownload(data, `metadata-${assetId}.xlsx`);
-//     }
-//   });
-// };
+  return useMutation({
+    mutationFn: async () => {
+      const { data } = await api.get(
+        `/api/v1/library/${assetId}/metadata_report/`,
+        {
+          responseType: "blob",
+        }
+      );
+      fileDownload(data, `metadata-${assetId}.xlsx`);
+    },
+  });
+};
 
 export const useCreateDocument = (parentId: string | null) => {
   const api = useApi();
@@ -980,9 +981,8 @@ export const useCreateVersionStack = () => {
 
   const { workspace } = useWorkspace();
 
-  //   const { folderId } = useParams() as { folderId?: string };
+  const { folderId } = useParamsStateStore();
 
-  const folderId = null;
   const parentId = folderId ? folderId : null;
 
   return useMutation({
@@ -1013,8 +1013,8 @@ export const useAddToVersionStack = () => {
 
   const { workspace } = useWorkspace();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
+
   const parentId = folderId ? folderId : null;
 
   return useMutation({
@@ -1044,8 +1044,8 @@ export const useRemoveFromVersionStack = () => {
 
   const { workspace } = useWorkspace();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
+
   const parentId = folderId ? folderId : null;
 
   return useMutation({
@@ -1077,8 +1077,8 @@ export const useReorderVersionStack = () => {
 
   const { workspace } = useWorkspace();
 
-  //   const { folderId } = useParams() as { folderId?: string };
-  const folderId = null;
+  const { folderId } = useParamsStateStore();
+
   const parentId = folderId ? folderId : null;
 
   const libraryContentQueryKey = useLibraryContentsQueryKey(parentId);
@@ -1121,31 +1121,35 @@ export const useReorderVersionStack = () => {
             pages: prevData.pages.map((page) => {
               return {
                 ...page,
-                results: page.results.map((result) => {
-                  if (
-                    result.resourcetype === "VersionStack" &&
-                    result.id === payload.version_stack_id
-                  ) {
-                    const newVersionOrderWithObjects: VersionStackItem[] = [];
-                    payload.new_order.forEach((new_order_file_id, index) => {
-                      const newVersionOrderObject = result.versions.find(
-                        (version) => version.file.id === new_order_file_id
-                      );
+                results: page.results
+                  .map((result: LibraryAsset) => {
+                    if (
+                      result.resourcetype === "VersionStack" &&
+                      result.id === payload.version_stack_id
+                    ) {
+                      const newVersionOrderWithObjects: VersionStackItem[] = [];
+                      payload.new_order.forEach((new_order_file_id, index) => {
+                        const newVersionOrderObject = result.versions.find(
+                          (version) => version.file.id === new_order_file_id
+                        );
 
-                      if (newVersionOrderObject) {
-                        newVersionOrderObject.version_number =
-                          payload.new_order.length - index;
-                        newVersionOrderWithObjects.push(newVersionOrderObject);
-                      }
-                    });
+                        if (newVersionOrderObject) {
+                          newVersionOrderObject.version_number =
+                            payload.new_order.length - index;
+                          newVersionOrderWithObjects.push(
+                            newVersionOrderObject
+                          );
+                        }
+                      });
 
-                    return {
-                      ...result,
-                      versions: newVersionOrderWithObjects,
-                    };
-                  }
-                  return result;
-                }),
+                      return {
+                        ...result,
+                        versions: newVersionOrderWithObjects,
+                      };
+                    }
+                    return result;
+                  })
+                  .filter((item: LibraryAsset | null) => item !== null),
               };
             }),
           };
@@ -1246,20 +1250,22 @@ export const useGetLibraryContentPermissions = () => {
           // Update results for all pages
           newLibraryContent.pages = newLibraryContent.pages.map((page) => ({
             ...page,
-            results: page.results.map((result) => {
-              const contains = variables.items.some(
-                (item) => item.id === result.id
-              );
-              if (contains) {
-                return {
-                  ...result,
-                  permissions: data.permissions[result.id],
-                  sub_contents: data.subContents[result.id],
-                };
-              }
-              // Preserve existing permissions and sub_contents if they exist
-              return result;
-            }),
+            results: page.results
+              .map((result: LibraryAsset) => {
+                const contains = variables.items.some(
+                  (item) => item.id === result.id
+                );
+                if (contains) {
+                  return {
+                    ...result,
+                    permissions: data.permissions[result.id],
+                    sub_contents: data.subContents[result.id],
+                  };
+                }
+                // Preserve existing permissions and sub_contents if they exist
+                return result;
+              })
+              .filter((item: LibraryAsset | null) => item !== null),
           }));
 
           return newLibraryContent;

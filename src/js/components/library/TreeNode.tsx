@@ -2,7 +2,7 @@
 
 import { Key, useEffect, useMemo, useRef, useState } from "react";
 
-// import { useParams, usePathname, useRouter } from 'next/navigation';
+// import { useParams, usePathname, useRouter } from 'next/navigation'; // Commented out
 
 import { cn, Skeleton, useDisclosure } from "@nextui-org/react";
 import * as ContextMenu from "@radix-ui/react-context-menu";
@@ -15,19 +15,20 @@ import {
   Folder1Filled,
 } from "@tessact/icons";
 
-import { Listbox, ListboxItem } from "../ui/Listbox";
-import { AlertModal } from "../ui/modal/AlertModal";
-import { Tooltip } from "../ui/Tooltip";
+import { Listbox, ListboxItem } from "../ui/Listbox"; // Fixed path
+import { AlertModal } from "../ui/modal/AlertModal"; // Fixed path
+// import { Link } from '../ui/NextLink'; // Fixed path & Commented out
+import { Tooltip } from "../ui/Tooltip"; // Fixed path
 
-import { useLibraryState } from "../../stores/library-state";
-// import { useFileUpload } from "../../hooks/useFileUpload";
+import { useFileUpload } from "../../hooks/useFileUpload"; // Fixed path
 
 import {
   useDeleteAsset,
   useRenameAsset,
-} from "../../api-integration/mutations/library";
-import { useTreeQuery } from "../../api-integration/queries/library";
-import { ResourceType } from "../../api-integration/types/library/library";
+} from "../../api-integration/mutations/library"; // Fixed path
+import { useTreeQuery } from "../../api-integration/queries/library"; // Fixed path
+import { ResourceType } from "../../api-integration/types/library"; // Fixed path
+import { useParamsStateStore } from "../../stores/params-state-store"; // Import store
 
 interface TreeNodeProps {
   nodeId: string;
@@ -59,12 +60,8 @@ export const TreeNode = ({
   parent,
   fileExtension,
 }: TreeNodeProps) => {
-  //   const { folderId, assetId } = useParams() as {
-  //     folderId: string;
-  //     assetId: string;
-  //   };
-
-  const { folderId, setFolderId, assetId } = useLibraryState();
+  const { folderId, selectedAssetId: assetId } = useParamsStateStore(); // Use store, correct name
+  // const { folderId, assetId } = useParams() as { folderId: string; assetId: string };
 
   const {
     isOpen: isRenameModalOpen,
@@ -79,16 +76,16 @@ export const TreeNode = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // const { uploadFile } = useFileUpload("library", nodeId);
+  const { uploadFile } = useFileUpload("library", nodeId);
 
   const { mutateAsync: renameAsset } = useRenameAsset(nodeId);
   const { mutateAsync: deleteAsset } = useDeleteAsset(nodeId);
 
   const uploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    // if (files) {
-    //   Array.from(files).forEach((file) => uploadFile(file));
-    // }
+    if (files) {
+      Array.from(files).forEach((file) => uploadFile(file));
+    }
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -102,7 +99,8 @@ export const TreeNode = ({
   // const router = useRouter();
   // const pathname = usePathname();
 
-  // const isOnTaggingScreen = pathname.includes("/tagging");
+  const isOnTaggingScreen = false; // Defaulted as pathname is commented out - Adjust as needed
+  // const isOnTaggingScreen = pathname.includes('/tagging');
 
   const {
     data: children,
@@ -140,13 +138,13 @@ export const TreeNode = ({
   const href = useMemo(() => {
     if (resourcetype === "Folder") {
       return `/library/folder/${nodeId}`;
-    } else if (resourcetype === "VideoFile") {
+    } else if (resourcetype === "VideoFile" && isOnTaggingScreen) {
       return `/tagging/asset/${nodeId}`;
     } else if (resourcetype === "File" && fileExtension === ".tdraft") {
       return `/library/video/${nodeId}`;
     }
     return `/library/asset/${nodeId}`;
-  }, [resourcetype, nodeId, fileExtension]);
+  }, [resourcetype, nodeId, fileExtension, isOnTaggingScreen]);
 
   return (
     <>
@@ -177,12 +175,16 @@ export const TreeNode = ({
                 <div className="absolute -left-6 top-1 -z-10 h-3 w-2 rounded-bl-md border-b border-l border-ds-link-tree-lines" />
               )}
               {/* <Link href={href} className="w-full"> */}
-              <motion.div
+              <div // Changed from motion.div as Link is commented out
                 className={cn(
                   "relative flex cursor-pointer items-center gap-2 rounded-xl px-1.5 py-2"
                 )}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                onClick={() => {
+                  // Basic navigation attempt - replace with proper method if needed
+                  window.location.href = href;
+                }}
               >
                 <span className="flex-shrink-0">
                   {getIconFromResourceType(resourcetype)}
@@ -219,7 +221,7 @@ export const TreeNode = ({
                     className="absolute inset-0 -z-10 h-9 w-full rounded-xl bg-ds-link-bg-selected"
                   ></motion.div>
                 )}
-              </motion.div>
+              </div>
               {/* </Link> */}
               {isExpanded ? (
                 isLoading ? (
@@ -314,13 +316,13 @@ export const TreeNode = ({
           await deleteAsset(void 0, {
             onSuccess: () => {
               // If one the same page, redirect to the parent folder
-              // if (pathname.includes(nodeId)) {
-              //   if (parent) {
-              //     router.push(`/library/folder/${parent}`);
-              //   } else {
-              //     router.push("/library");
-              //   }
-              // }
+              if (window.location.pathname.includes(nodeId)) {
+                if (parent) {
+                  window.location.href = `/library/folder/${parent}`;
+                } else {
+                  window.location.href = "/library";
+                }
+              }
             },
           });
         }}

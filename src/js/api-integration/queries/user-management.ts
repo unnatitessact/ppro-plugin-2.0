@@ -15,7 +15,8 @@ import type {
   GetWorkspaceUsersResponse,
   SelectedTeamUsersResponse,
 } from "../types/user-management";
-import type { RoleType } from "../../types/user-management";
+
+import { RoleType } from "../../types/user-management";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
@@ -23,7 +24,7 @@ import { isAxiosError } from "axios";
 import { useApi } from "../../hooks/useApi";
 import { useOrganization } from "../../hooks/useOrganization";
 
-// import { createUrlParams } from "../utils/revi";
+import { createUrlParams } from "./review";
 
 export const appendOptionalKeys = (
   queryKey: string[],
@@ -289,17 +290,15 @@ export const useOrganizationUsersQuery = (
       sortColumn
     ),
     queryFn: async ({ pageParam }) => {
-      //   const urlParams = createUrlParams({
-      //     search: searchQuery,
-      //     page: `${pageParam}`,
-      //     ...(sortColumn && {
-      //       sort: `${sortColumn.order === "desc" ? "-" : ""}${
-      //         sortColumn.key === "name" ? "profile__display_name" : sortColumn.key
-      //       }`,
-      //     }),
-      //   });
-
-      const urlParams = "";
+      const urlParams = createUrlParams({
+        search: searchQuery,
+        page: `${pageParam}`,
+        ...(sortColumn && {
+          sort: `${sortColumn.order === "desc" ? "-" : ""}${
+            sortColumn.key === "name" ? "profile__display_name" : sortColumn.key
+          }`,
+        }),
+      });
 
       // const { data } = await api.get<GetOrganizationUsersResponse>(
       //   `/api/v1/organizations/${organizationId}/users/?search=${searchQuery ?? ''}&page=${pageParam ?? ''}` +

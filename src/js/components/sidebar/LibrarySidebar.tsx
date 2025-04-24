@@ -43,6 +43,8 @@ export const LibrarySidebar = () => {
 
   const { ref, width } = useElementSize();
 
+  console.log({ allResults });
+
   return (
     <motion.div
       className="flex min-h-0 flex-col gap-3"

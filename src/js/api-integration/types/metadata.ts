@@ -1,79 +1,29 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-export const subtitle_language_codes = [
-  "english",
-  "english_uk",
-  "spanish",
-  "french",
-  "german",
-  "bengali",
-  "hindi",
-  "malayalam",
-  "gujarati",
-  "kannada",
-  "marathi",
-  "punjabi",
-  "tamil",
-  "telugu",
-  "urdu",
-  "arabic",
-  "chinese",
-  "japanese",
-  "korean",
-  "portuguese",
-  "russian",
-  "turkish",
-  "italian",
-  "greek",
-  "dutch",
-  "polish",
-  "romanian",
-  "swedish",
-  "norwegian",
-  "finnish",
-  "danish",
-] as const;
+import { UserMeta } from '@/api-integration/types/meta';
+import { SubtitleLanguageCode } from '@/api-integration/types/video';
 
-export type SubtitleLanguageCode =
-  | (typeof subtitle_language_codes)[number]
-  | "source"
-  | "";
+import { CreateMetadataTemplateSchema } from '@/schemas/library/metadata';
 
-import { CreateMetadataTemplateSchema } from "../../schema/library/library";
-
-import { PaginatedAPIResponse } from "./api";
-
-export interface Profile {
-  color: string;
-  first_name: string;
-  last_name: string;
-  display_name: string;
-  profile_picture: string;
-}
-
-export interface UserMeta {
-  id: string;
-  email: string;
-  profile: Profile;
-}
+import { PaginatedAPIResponse } from '@/types/api';
 
 export type MetadataFieldType =
-  | "text"
-  | "number"
-  | "date"
-  | "text_area"
-  | "person"
-  | "location"
-  | "timecode"
-  | "timecode_range"
-  | "select"
-  | "multiselect"
-  | "rating"
-  | "toggle"
-  | "attachment"
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'text_area'
+  | 'person'
+  | 'location'
+  | 'timecode'
+  | 'timecode_range'
+  | 'select'
+  | 'multiselect'
+  | 'rating'
+  | 'toggle'
+  | 'attachment'
   // Remove these two when we have a better way to handle file status
-  | "file_status"
-  | "tagging_status";
+  | 'file_status'
+  | 'tagging_status';
 
 export interface MetadataFieldInfo {
   id: string;
@@ -82,8 +32,7 @@ export interface MetadataFieldInfo {
   options: FieldOption[];
 }
 
-export type GetMetadataFieldInfoResponse =
-  PaginatedAPIResponse<MetadataFieldInfo>;
+export type GetMetadataFieldInfoResponse = PaginatedAPIResponse<MetadataFieldInfo>;
 
 export interface MetadataTemplateSummary {
   id: string;
@@ -175,8 +124,7 @@ export interface MetadataTableRow {
   value_instances: MetadataTableRowValueInstance[];
 }
 
-interface MetadataTemplateKeyValueCategory
-  extends BaseMetadataTemplateCategory {
+interface MetadataTemplateKeyValueCategory extends BaseMetadataTemplateCategory {
   is_table: false;
   field_memberships: FieldMembership[];
 }
@@ -241,12 +189,12 @@ export interface AutoTranslateMetadataField {
 export interface AutoTranslateProjectMetadataField {
   language_code: string;
   instance_id: string;
-  instance_type: "project" | "file";
+  instance_type: 'project' | 'file';
 }
 
 export interface AutoFillProjectMetadataField {
   instance_id: string;
-  instance_type: "project" | "file";
+  instance_type: 'project' | 'file';
   select_all: boolean;
   value_instance_ids: string[];
 }
@@ -260,12 +208,12 @@ export type SelectOption = {
 
 export type ActiveTranslationJob = {
   instance_id: string;
-  instance_type: "project" | "file";
-  status: "in_progress";
+  instance_type: 'project' | 'file';
+  status: 'in_progress';
   language_code: SubtitleLanguageCode;
   error_message: string;
   eta: number;
-  translation_job_type: "library_ai_metadata_translation";
+  translation_job_type: 'library_ai_metadata_translation';
 };
 
 export type GetSelectOptionsResponse = SelectOption[];
@@ -273,13 +221,10 @@ export type GetSelectOptionsResponse = SelectOption[];
 export type ActiveTranslationJobList = ActiveTranslationJob[];
 
 // Payload
-export type CreateMetadataTemplatePayload = z.infer<
-  typeof CreateMetadataTemplateSchema
->;
+export type CreateMetadataTemplatePayload = z.infer<typeof CreateMetadataTemplateSchema>;
 
 export type CreateMetadataCategoryPayload = { name: string; isTable: boolean };
 export type AutoFillMetadataFieldPayload = AutoFillMetadataField;
 export type AutoTranslateMetadataFieldPayload = AutoTranslateMetadataField;
-export type AutoTranslateProjectMetadataFieldPayload =
-  AutoTranslateProjectMetadataField;
+export type AutoTranslateProjectMetadataFieldPayload = AutoTranslateProjectMetadataField;
 export type AutoFillProjectMetadataFieldPayload = AutoFillProjectMetadataField;

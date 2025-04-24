@@ -1,6 +1,18 @@
-import React from "react";
-import { Library } from "../components/library/Library"; // Reuse existing component
+import { Library } from "../components/library/Library";
+
+import { useWorkspace } from "../hooks/useWorkspace";
+import { LibraryRoomProvider } from "../../../liveblocks.config";
 
 export const LibraryPage = () => {
-  return <Library />;
+  const workspace = useWorkspace();
+
+  return (
+    <LibraryRoomProvider
+      id={`library:${workspace?.workspace?.id}:root`}
+      initialPresence={{}}
+      initialStorage={{}}
+    >
+      <Library />
+    </LibraryRoomProvider>
+  );
 };

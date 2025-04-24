@@ -1,4 +1,4 @@
-export type RoleType = "organization" | "workspace" | "team";
+export type RoleType = 'organization' | 'workspace' | 'team';
 
 export interface Team {
   id: string;
@@ -21,8 +21,8 @@ export interface WorkspaceWithTeams {
   teams: Team[];
 }
 export interface WorkspaceWithTeamsListItem
-  extends Omit<WorkspaceWithTeams, "image" | "name" | "teams"> {
+  extends Omit<WorkspaceWithTeams, 'image' | 'name' | 'teams'> {
   title: string;
   display_image: string;
-  teams: (Omit<Team, "name"> & { title: string })[];
+  teams: (Omit<Team, 'name'> & { title: string })[];
 }

@@ -7,13 +7,13 @@ import {
   getSecurityGroupsQueryKey,
   getUserSecurityGroupListQueryKey,
   // libraryTreeQueryKey
-} from "../queries/security-group";
+} from "../queries/security-groups";
 import {
   AssignPermissionsToSecurityGroupMutation,
   AssignPersonToAssetMutation,
   CreateSecurityGroupMutation,
   EditSecurityGroupMutation,
-} from "../types/security-group";
+} from "../types/security-groups";
 
 export const useCreateSecurityGroup = () => {
   const api = useApi();
