@@ -30,6 +30,8 @@ import {
 
 import { useLibraryStore } from "@/stores/library-store";
 
+import { useParamsStateStore } from "@/stores/params-state-store";
+
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
 import {
@@ -90,6 +92,8 @@ export const FolderCard = ({
     setSelectedClipboardAction,
     aspectRatio,
   } = useLibraryStore();
+
+  const { setFolderId, setSelectedAssetId } = useParamsStateStore();
 
   const isSelected = selectedItems.some((item) => item.id === folderId);
 
@@ -158,6 +162,10 @@ export const FolderCard = ({
         <ContextMenu.Trigger>
           <motion.div
             layout="position"
+            onClick={() => {
+              setFolderId(folderId);
+              setSelectedAssetId("");
+            }}
             className={cn(
               "flex cursor-pointer flex-col gap-2 rounded-[20px] p-3",
               "transition-colors",

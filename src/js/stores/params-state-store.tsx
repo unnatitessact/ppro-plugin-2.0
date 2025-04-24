@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface ParamsStateStore {
-  folderId: string;
+  folderId: string | null;
   setFolderId: (folderId: string) => void;
   selectedAssetId: string;
   setSelectedAssetId: (selectedAssetId: string) => void;

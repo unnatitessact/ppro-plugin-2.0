@@ -32,6 +32,8 @@ import {
 import { PhysicalAssetThumbnail } from "../thumbnail/PhysicalAssetThumbnail";
 import { VersionModalButton } from "./VersionModalButton";
 
+import { useParamsStateStore } from "@/stores/params-state-store";
+
 interface PhysicalAssetCardProps extends Partial<ResourceSpecificCardProps> {
   assetId: string;
   assetName: string;
@@ -71,6 +73,8 @@ export const PhysicalAssetCard = ({
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const { setSelectedAssetId, setFolderId } = useParamsStateStore();
 
   const versionParam = versionStack
     ? `?version=${versionStack?.versions[0]?.file.id}`
@@ -151,6 +155,10 @@ export const PhysicalAssetCard = ({
           > */}
           <motion.div
             layout="position"
+            onClick={() => {
+              setSelectedAssetId(assetId);
+              setFolderId("");
+            }}
             className={cn(
               " cursor-pointer flex-col gap-2 rounded-[20px] p-3",
               "transition-colors",

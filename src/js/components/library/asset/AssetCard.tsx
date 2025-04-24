@@ -51,6 +51,8 @@ import {
 
 import { VersionModalButton } from "./VersionModalButton";
 
+import { useParamsStateStore } from "@/stores/params-state-store";
+
 interface AssetCardProps extends ResourceSpecificCardProps {
   fileSize: number;
   thumbnailUrl: string;
@@ -108,6 +110,8 @@ export const AssetCard = ({
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const { setSelectedAssetId, setFolderId } = useParamsStateStore();
 
   // const router = useRouter();
 
@@ -212,6 +216,10 @@ export const AssetCard = ({
           > */}
           <motion.div
             layout="position"
+            onClick={() => {
+              setSelectedAssetId(assetId);
+              setFolderId("");
+            }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",
               "transition-colors",

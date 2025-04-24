@@ -11,6 +11,7 @@ import prettyBytes from "pretty-bytes";
 import { BubbleText6, DotGrid1X3Horizontal } from "@tessact/icons";
 
 import { Checkbox } from "@/components/ui/Checkbox";
+import { useParamsStateStore } from "@/stores/params-state-store";
 import {
   Dropdown,
   DropdownItem,
@@ -90,6 +91,8 @@ export const ImageCard = ({
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
+  const { setSelectedAssetId, setFolderId } = useParamsStateStore();
+
   const versionParam = versionStack
     ? `?version=${versionStack?.versions[0]?.file.id}`
     : "";
@@ -161,6 +164,10 @@ export const ImageCard = ({
         <ContextMenu.Trigger>
           <motion.div
             layout="position"
+            onClick={() => {
+              setSelectedAssetId(assetId);
+              setFolderId("");
+            }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",
               "transition-colors",

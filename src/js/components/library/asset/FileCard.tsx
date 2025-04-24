@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/Dropdown";
 import { Listbox, ListboxItem } from "@/components/ui/Listbox";
 
+import { useParamsStateStore } from "@/stores/params-state-store";
+
 import {
   ResourceCardActions,
   ResourceSpecificCardProps,
@@ -85,6 +87,8 @@ export const FileCard = ({
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const { setSelectedAssetId, setFolderId } = useParamsStateStore();
 
   const {
     selectedItems,
@@ -159,6 +163,10 @@ export const FileCard = ({
         <ContextMenu.Trigger>
           <motion.div
             layout="position"
+            onClick={() => {
+              setSelectedAssetId(assetId);
+              setFolderId("");
+            }}
             className={cn(
               "flex cursor-pointer flex-col gap-2 rounded-[20px] p-3",
               "transition-colors",

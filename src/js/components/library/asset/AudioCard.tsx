@@ -31,6 +31,8 @@ import { useLibraryStore } from "@/stores/library-store";
 
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
+import { useParamsStateStore } from "@/stores/params-state-store";
+
 import {
   assetCardCheckboxAnimation,
   assetCardDropdownAnimation,
@@ -75,6 +77,8 @@ export const AudioCard = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+
+  const { setSelectedAssetId, setFolderId } = useParamsStateStore();
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
@@ -181,6 +185,10 @@ export const AudioCard = ({
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             layout="position"
+            onClick={() => {
+              setSelectedAssetId(assetId);
+              setFolderId("");
+            }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",
               "transition-colors",
