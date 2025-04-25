@@ -14,7 +14,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSidebarStore } from "../../stores/sidebar-store";
 
 // Define the possible page names
-type PageName = "library" | "review" | "auth" | "folder";
+export type PageName = "library" | "review" | "auth" | "folder";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -45,6 +45,10 @@ export const Layout = () => {
     }
   };
 
+  console.log({
+    currentPage,
+  });
+
   useEffect(() => {
     if (selectedAssetId) {
       setCurrentPage("review");
@@ -71,7 +75,7 @@ export const Layout = () => {
         <>
           {isSidebarOpen && <Sidebar />}
           <div className="flex-1  flex flex-col overflow-hidden">
-            <Navbar />
+            <Navbar setCurrentPage={setCurrentPage} />
             <main className="flex-1 overflow-x-hidden overflow-y-auto  p-4">
               {renderPage()}
             </main>

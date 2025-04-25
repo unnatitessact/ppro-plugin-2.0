@@ -17,6 +17,8 @@ import nodeJs from "../assets/node-js.svg";
 import adobe from "../assets/adobe.svg";
 import bolt from "../assets/bolt-cep.svg";
 
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
 import "./main.css";
 import { NextUIProvider } from "@nextui-org/react";
 import { Layout } from "../components/layout/Layout";
@@ -27,16 +29,24 @@ import { WorkspacesProvider } from "../context/workspaces";
 
 const Main = () => {
   const queryClient = new QueryClient();
+  const posix = (str: string) => str.replace(/\\/g, "/");
+
+  const cepBasename = window.cep_node
+    ? `${posix(window.cep_node.global.__dirname)}/`
+    : "/main/";
+
   return (
     <AuthProvider>
       <ThemeProvider>
-        <NextUIProvider>
-          <QueryClientProvider client={queryClient}>
-            <WorkspacesProvider>
-              <Layout />
-            </WorkspacesProvider>
-          </QueryClientProvider>
-        </NextUIProvider>
+        <BrowserRouter basename={cepBasename}>
+          <NextUIProvider>
+            <QueryClientProvider client={queryClient}>
+              <WorkspacesProvider>
+                <Layout />
+              </WorkspacesProvider>
+            </QueryClientProvider>
+          </NextUIProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
   );

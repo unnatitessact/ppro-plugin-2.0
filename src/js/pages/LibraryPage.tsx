@@ -2,19 +2,19 @@
 
 import { Library } from "../components/library/Library";
 
-import { useWorkspace } from "../hooks/useWorkspace";
-import { LibraryRoomProvider } from "../../../liveblocks.config";
+// import { useWorkspace } from "../hooks/useWorkspace";
+// import { LibraryRoomProvider } from "../../../liveblocks.config";
 
 export const LibraryPage = () => {
-  const workspace = useWorkspace();
+  // const workspace = useWorkspace();
 
   return (
-    <LibraryRoomProvider
-      id={`library:${workspace?.workspace?.id}:root`}
-      initialPresence={{}}
-      initialStorage={{}}
-    >
-      <Library />
-    </LibraryRoomProvider>
+    // <LibraryRoomProvider
+    //   id={`library:${workspace?.workspace?.id}:root`}
+    //   initialPresence={{}}
+    //   initialStorage={{}}
+    // >
+    <Library />
+    // </LibraryRoomProvider>
   );
 };

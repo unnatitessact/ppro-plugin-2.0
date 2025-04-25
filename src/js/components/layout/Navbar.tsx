@@ -1,14 +1,15 @@
 import { useState } from "react";
 
-import { LayoutLeft } from "@tessact/icons";
+import { ArrowLeft, LayoutLeft } from "@tessact/icons";
 
+import { Dispatch, SetStateAction } from "react";
 // import { useRouter } from 'next/navigation';
 
 // import { useAuth } from '@/context/auth';
 // import { usePermissions } from '@/context/permissions';
 // import { usePreferences } from '@/context/preferences';
 import { useClickOutside } from "@mantine/hooks";
-import { Avatar, Badge, cn, user } from "@nextui-org/react";
+import { Avatar, Badge, Button, cn, user } from "@nextui-org/react";
 import { isMobile } from "react-device-detect";
 
 import useAuth from "../../hooks/useAuth";
@@ -37,6 +38,8 @@ import UserFallback from "../ui/UserFallback";
 
 import { NotificationBellWithRoomProvider } from "../notification/NotificationBell";
 
+import { PageName } from "./Layout";
+
 // import { useUpdatePreferences } from "@/api-integration/mutations/preferences";
 // import { ThemePreference } from "@/api-integration/types/preferences";
 
@@ -46,7 +49,11 @@ import { Kbd } from "../ui/Kbd";
 
 import { Drawer } from "vaul";
 
-export const Navbar = () => {
+export const Navbar = ({
+  setCurrentPage,
+}: {
+  setCurrentPage: Dispatch<SetStateAction<string>>;
+}) => {
   // const { session } = useAuth();
   // const user = session?.user;
   // const name =
@@ -108,7 +115,23 @@ export const Navbar = () => {
 
   return (
     <div className="flex bg-transparent items-center px-3 py-2 justify-between">
-      <LayoutLeft onClick={toggle} />
+      <div className="flex items-center gap-2">
+        <Button variant="light" size="sm" isIconOnly onClick={toggle}>
+          <LayoutLeft />
+        </Button>
+
+        <Button
+          variant="light"
+          size="sm"
+          isIconOnly
+          onClick={() => {
+            // console.log("back");
+            setCurrentPage("library");
+          }}
+        >
+          <ArrowLeft />
+        </Button>
+      </div>
       <div className="flex items-center">
         {!isMobile && <Divider orientation="vertical" className="mx-2 h-4" />}
         <div

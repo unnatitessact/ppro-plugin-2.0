@@ -1,49 +1,64 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useParams, useRouter } from 'next/navigation';
+// import { useParams, useRouter } from 'next/navigation';
 
-import { useMediaQuery } from '@mantine/hooks';
-import { cn, Image, Skeleton, useDisclosure } from '@nextui-org/react';
-import { motion } from 'framer-motion';
-import prettyBytes from 'pretty-bytes';
-import Barcode from 'react-barcode';
-import { useInView } from 'react-intersection-observer';
-import { toast } from 'sonner';
+import { useMediaQuery } from "@mantine/hooks";
+import { cn, Image, Skeleton, useDisclosure } from "@nextui-org/react";
+import { motion } from "framer-motion";
+import prettyBytes from "pretty-bytes";
+import Barcode from "react-barcode";
+import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 
-import { BubbleText6, DotGrid1X3Horizontal, Folder1Filled } from '@tessact/icons';
+import {
+  BubbleText6,
+  DotGrid1X3Horizontal,
+  Folder1Filled,
+} from "@tessact/icons";
 
-import { Button } from '@/components/ui/Button';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { AlertModal } from '@/components/ui/modal/AlertModal';
-import { ToastFallback, ToastProcess, ToastSuccess } from '@/components/ui/ToastContent';
+import { Button } from "@/components/ui/Button";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { AlertModal } from "@/components/ui/modal/AlertModal";
+import {
+  ToastFallback,
+  ToastProcess,
+  ToastSuccess,
+} from "@/components/ui/ToastContent";
 
-import { VersionModalButton } from '@/components/library/asset/VersionModalButton';
-import { FetchingNextPageIndicator } from '@/components/library/FetchingNextPageIndicator';
-import { DeleteModal } from '@/components/library/modals/DeleteModal';
-import Table from '@/components/table/Table';
+import { VersionModalButton } from "@/components/library/asset/VersionModalButton";
+import { DeleteModal } from "@/components/library/modals/DeleteModal";
+import { FetchingNextPageIndicator } from "./FetchNextPageIndicator";
+import { Table } from "../ui/Table";
 
-import { useFeatureFlag } from '@/hooks/useFeatureFlag';
-import { useFileUpload } from '@/hooks/useFileUpload';
+import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { useFileUpload } from "@/hooks/useFileUpload";
 
 import {
   useDeleteAsset,
   useDeleteTableAsset,
   useRenameAsset,
-  useRenameTableAsset
-} from '@/api-integration/mutations/library';
-import { LibraryAsset, ResourceType } from '@/api-integration/types/library';
+  useRenameTableAsset,
+} from "@/api-integration/mutations/library";
+import { LibraryAsset, ResourceType } from "@/api-integration/types/library";
 
-import { useLibraryStore } from '@/stores/library-store';
-import { FileUpload, useUploadsStore } from '@/stores/uploads-store';
+import { useLibraryStore } from "@/stores/library-store";
+import { FileUpload, useUploadsStore } from "@/stores/uploads-store";
 
-import { Column } from '@/types/table';
+import { useParamsStateStore } from "@/stores/params-state-store";
 
-import { formatDate } from '@/utils/dates';
-import { REMIXES_FLAG } from '@/utils/featureFlagUtils';
-import { MOBILE_MEDIA_QUERY } from '@/utils/responsiveUtils';
+import { Column } from "@/types/table";
 
-import { StatusDropdown } from './StatusDropdown';
-import { getIcon } from './thumbnail/IconThumbnail';
+import { formatDate } from "@/utils/dates";
+import { REMIXES_FLAG } from "@/utils/featureFlagUtils";
+import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
+
+import { StatusDropdown } from "./StatusDropdown";
+import { getIcon } from "./thumbnail/IconThumbnail";
 
 interface LibraryTableViewProps {
   data: LibraryAsset[];
@@ -58,14 +73,17 @@ interface LibraryTableViewProps {
   emptyStateComponent?: React.ReactNode;
 }
 
-export const getResourceType = (resourcetype: ResourceType, connection: boolean) => {
-  if (resourcetype === 'Folder' && connection) return 'Connected folder';
-  if (resourcetype === 'AudioFile') return 'Audio file';
-  if (resourcetype === 'VideoFile') return 'Video file';
-  if (resourcetype === 'Folder') return 'Folder';
-  if (resourcetype === 'ImageFile') return 'Image file';
-  if (resourcetype === 'File') return 'File';
-  if (resourcetype === 'PhysicalAsset') return 'Physical asset';
+export const getResourceType = (
+  resourcetype: ResourceType,
+  connection: boolean
+) => {
+  if (resourcetype === "Folder" && connection) return "Connected folder";
+  if (resourcetype === "AudioFile") return "Audio file";
+  if (resourcetype === "VideoFile") return "Video file";
+  if (resourcetype === "Folder") return "Folder";
+  if (resourcetype === "ImageFile") return "Image file";
+  if (resourcetype === "File") return "File";
+  if (resourcetype === "PhysicalAsset") return "Physical asset";
 };
 
 export const LibraryTableView = ({
@@ -77,7 +95,7 @@ export const LibraryTableView = ({
   showStatusDropdown,
   showCommentsCount,
   uploads,
-  emptyStateComponent
+  emptyStateComponent,
 }: LibraryTableViewProps) => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
   const {
@@ -85,7 +103,7 @@ export const LibraryTableView = ({
     setSelectedItems,
     clearSelectedItems,
     setSelectedClipboardAction,
-    addOrRemoveItem
+    addOrRemoveItem,
   } = useLibraryStore();
 
   const isRemixesEnabled = useFeatureFlag(REMIXES_FLAG);
@@ -108,7 +126,9 @@ export const LibraryTableView = ({
 
   const [selectedRow, setSelectedRow] = useState<LibraryAsset | null>(null);
 
-  const { folderId } = useParams() as { folderId?: string };
+  // const { folderId } = useParams() as { folderId?: string };
+
+  const { folderId } = useParamsStateStore();
 
   const [rightClickedFile, setRightClickedFile] = useState<{
     versionStackId: string;
@@ -116,7 +136,12 @@ export const LibraryTableView = ({
   } | null>(null);
 
   const uploadInputRef = useRef<HTMLInputElement>(null);
-  const { uploadFile } = useFileUpload('library', folderId || null, undefined, undefined);
+  const { uploadFile } = useFileUpload(
+    "library",
+    folderId || null,
+    undefined,
+    undefined
+  );
 
   const uploadFiles = async (files: File[]) => {
     if (!rightClickedFile || !files.length) return;
@@ -130,7 +155,9 @@ export const LibraryTableView = ({
       {
         loading: <ToastProcess title={`Uploading file as new version`} />,
         success: <ToastSuccess title={`Uploaded new file as version`} />,
-        error: <ToastFallback title={`Failed to upload new file as version}`} />
+        error: (
+          <ToastFallback title={`Failed to upload new file as version}`} />
+        ),
       }
     );
   };
@@ -141,7 +168,9 @@ export const LibraryTableView = ({
         setRightClickedFile({
           versionStackId: row?.id,
           versionStackFileId:
-            row?.resourcetype === 'VersionStack' ? row?.versions?.[0]?.file?.id : row?.id
+            row?.resourcetype === "VersionStack"
+              ? row?.versions?.[0]?.file?.id
+              : row?.id,
         });
         uploadInputRef.current.click();
       }
@@ -149,7 +178,7 @@ export const LibraryTableView = ({
     [uploadInputRef, setRightClickedFile]
   );
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const selectedData = useMemo(() => {
     return selectedItems
@@ -168,23 +197,28 @@ export const LibraryTableView = ({
   const columns: Column<LibraryAsset>[] = useMemo(() => {
     const baseColumns: Column<LibraryAsset>[] = [
       {
-        header: 'Asset',
-        key: 'asset',
-        label: 'Asset',
+        header: "Asset",
+        key: "asset",
+        label: "Asset",
         cell: ({ row }) => {
-          const resource = row?.resourcetype === 'VersionStack' ? row.versions[0].file : row;
+          const resource =
+            row?.resourcetype === "VersionStack" ? row.versions[0].file : row;
 
           return (
             <div className="flex items-center gap-3">
               <div className="aspect-video h-10">
-                {resource.resourcetype === 'VideoFile' || resource.resourcetype === 'ImageFile' ? (
-                  <Thumbnail fileName={resource.name} thumbnailUrl={resource.thumbnail || ''} />
-                ) : resource.resourcetype === 'PhysicalAsset' ? (
+                {resource.resourcetype === "VideoFile" ||
+                resource.resourcetype === "ImageFile" ? (
+                  <Thumbnail
+                    fileName={resource.name}
+                    thumbnailUrl={resource.thumbnail || ""}
+                  />
+                ) : resource.resourcetype === "PhysicalAsset" ? (
                   <PhysicalAssetThumbnail
                     barcode={resource.barcode}
-                    thumbnailUrl={resource.asset_image || ''}
+                    thumbnailUrl={resource.asset_image || ""}
                   />
-                ) : resource.resourcetype === 'Folder' ? (
+                ) : resource.resourcetype === "Folder" ? (
                   <FolderCard />
                 ) : (
                   <FileCard />
@@ -193,13 +227,13 @@ export const LibraryTableView = ({
               <div className="flex flex-col overflow-hidden whitespace-nowrap">
                 <div className="flex items-center gap-2">
                   <h3 className="truncate">{resource.name}</h3>
-                  {row?.resourcetype === 'VersionStack' ? (
+                  {row?.resourcetype === "VersionStack" ? (
                     <VersionModalButton versionStack={row} />
                   ) : null}
                 </div>
                 <p
                   className={cn(
-                    'flex items-center gap-1 text-xs text-ds-text-secondary'
+                    "flex items-center gap-1 text-xs text-ds-text-secondary"
                     // activeText && 'text-ds-text-primary'
                   )}
                 >
@@ -207,7 +241,10 @@ export const LibraryTableView = ({
                     id={resource?.id}
                     fallbackText={getResourceType(
                       resource.resourcetype,
-                      !!(resource.resourcetype === 'Folder' && resource.connection_id)
+                      !!(
+                        resource.resourcetype === "Folder" &&
+                        resource.connection_id
+                      )
                     )}
                   />
                 </p>
@@ -218,33 +255,42 @@ export const LibraryTableView = ({
         isSortable: false,
         minWidth: 400,
         maxWidth: 800,
-        isResizable: true
-      }
+        isResizable: true,
+      },
     ];
     if (!isMobile) {
       baseColumns.push({
-        header: 'Uploaded on',
-        key: 'uploadedOn',
-        label: 'Uploaded on',
+        header: "Uploaded on",
+        key: "uploadedOn",
+        label: "Uploaded on",
         cell: ({ row }) => {
-          const resource = row?.resourcetype === 'VersionStack' ? row?.versions?.[0]?.file : row;
+          const resource =
+            row?.resourcetype === "VersionStack"
+              ? row?.versions?.[0]?.file
+              : row;
           return <div>{formatDate(resource?.created_on)}</div>;
         },
         isSortable: false,
         minWidth: 150,
         maxWidth: 300,
-        isResizable: true
+        isResizable: true,
       });
 
       baseColumns.push({
-        header: 'Size',
-        key: 'size',
-        label: 'Size',
+        header: "Size",
+        key: "size",
+        label: "Size",
         cell: ({ row }) => {
-          const resource = row?.resourcetype === 'VersionStack' ? row?.versions?.[0].file : row;
+          const resource =
+            row?.resourcetype === "VersionStack"
+              ? row?.versions?.[0].file
+              : row;
 
-          if (resource.resourcetype === 'PhysicalAsset' || resource.resourcetype === 'Folder') {
-            return '';
+          if (
+            resource.resourcetype === "PhysicalAsset" ||
+            resource.resourcetype === "Folder"
+          ) {
+            return "";
           } else {
             return <div>{prettyBytes(resource?.size)}</div>;
           }
@@ -252,40 +298,50 @@ export const LibraryTableView = ({
         isSortable: false,
         minWidth: 150,
         maxWidth: 300,
-        isResizable: true
+        isResizable: true,
       });
 
       if (showStatusDropdown) {
         baseColumns.push({
-          header: 'Status',
-          key: 'status',
-          label: 'Status',
+          header: "Status",
+          key: "status",
+          label: "Status",
           cell: ({ row }) => {
-            const resource = row?.resourcetype === 'VersionStack' ? row?.versions?.[0].file : row;
+            const resource =
+              row?.resourcetype === "VersionStack"
+                ? row?.versions?.[0].file
+                : row;
 
-            return resource.resourcetype === 'Folder' ||
-              resource.resourcetype === 'PhysicalAsset' ? (
+            return resource.resourcetype === "Folder" ||
+              resource.resourcetype === "PhysicalAsset" ? (
               <div></div>
             ) : (
-              <StatusDropdown assetId={resource.id} status={resource?.file_status} variant="pill" />
+              <StatusDropdown
+                assetId={resource.id}
+                status={resource?.file_status}
+                variant="pill"
+              />
             );
           },
           isSortable: false,
           minWidth: 200,
           maxWidth: 350,
-          isResizable: true
+          isResizable: true,
         });
       }
 
       if (showCommentsCount) {
         baseColumns.push({
-          header: 'Comments',
-          key: 'comments',
-          label: 'Comments',
+          header: "Comments",
+          key: "comments",
+          label: "Comments",
           cell: ({ row }) => {
-            const resource = row?.resourcetype === 'VersionStack' ? row?.versions?.[0].file : row;
-            return resource.resourcetype === 'Folder' ||
-              resource.resourcetype === 'PhysicalAsset' ? (
+            const resource =
+              row?.resourcetype === "VersionStack"
+                ? row?.versions?.[0].file
+                : row;
+            return resource.resourcetype === "Folder" ||
+              resource.resourcetype === "PhysicalAsset" ? (
               <div></div>
             ) : (
               <div className="flex items-center gap-0.5 px-2 text-ds-text-secondary">
@@ -296,14 +352,14 @@ export const LibraryTableView = ({
           },
           isSortable: false,
           minWidth: 200,
-          maxWidth: 350
+          maxWidth: 350,
         });
       }
 
       baseColumns.push({
-        header: 'Actions',
-        key: 'actions',
-        label: 'Actions',
+        header: "Actions",
+        key: "actions",
+        label: "Actions",
         cell: ({ row }) => {
           return (
             <ThreeDotMenu
@@ -322,21 +378,34 @@ export const LibraryTableView = ({
         isSortable: false,
         isResizable: true,
         minWidth: 150,
-        maxWidth: 250
+        maxWidth: 250,
       });
     }
 
     return baseColumns;
-  }, [selectedItems, showStatusDropdown, showCommentsCount, handleUploadVersion, isMobile]);
+  }, [
+    selectedItems,
+    showStatusDropdown,
+    showCommentsCount,
+    handleUploadVersion,
+    isMobile,
+  ]);
 
   const { mutate: renameAsset } = useRenameTableAsset();
   const { mutate: deleteAsset } = useDeleteTableAsset();
 
-  const { isOpen: isRenameModalOpen, onOpenChange: onRenameModalOpenChange } = useDisclosure();
-  const { isOpen: isDeleteModalOpen, onOpenChange: onDeleteModalOpenChange } = useDisclosure();
+  const { isOpen: isRenameModalOpen, onOpenChange: onRenameModalOpenChange } =
+    useDisclosure();
+  const { isOpen: isDeleteModalOpen, onOpenChange: onDeleteModalOpenChange } =
+    useDisclosure();
 
   return (
-    <div className={cn('relative flex h-full min-h-0 flex-col', isMobile && 'pl-2.5')}>
+    <div
+      className={cn(
+        "relative flex h-full min-h-0 flex-col",
+        isMobile && "pl-2.5"
+      )}
+    >
       <Table
         columns={columns}
         data={data}
@@ -350,35 +419,39 @@ export const LibraryTableView = ({
         emptyStateComponent={emptyStateComponent}
         hasRightClickMenu={true}
         rightClickMenuOptions={(row) => {
-          const isFolder = row.resourcetype === 'Folder';
+          const isFolder = row.resourcetype === "Folder";
           const isConnectedFolder = isFolder && !!row.connection_id;
 
-          const hasEditPermission = !!row?.permissions?.includes?.('can_edit_asset');
-          const hasDeletePermission = !!row?.permissions?.includes('can_delete_asset');
+          const hasEditPermission =
+            !!row?.permissions?.includes?.("can_edit_asset");
+          const hasDeletePermission =
+            !!row?.permissions?.includes("can_delete_asset");
 
           return [
             ...(isConnectedFolder || !hasEditPermission
               ? []
               : [
                   {
-                    label: 'Rename',
-                    key: 'rename',
+                    label: "Rename",
+                    key: "rename",
                     onAction: (id: string) => {
                       const row = data.find((item) => item.id === id);
                       const resource =
-                        row?.resourcetype === 'VersionStack' ? row?.versions?.[0].file : row;
+                        row?.resourcetype === "VersionStack"
+                          ? row?.versions?.[0].file
+                          : row;
                       if (resource) {
                         setSelectedRow(resource);
                         onRenameModalOpenChange();
                       }
-                    }
-                  }
+                    },
+                  },
                 ]),
             ...(hasEditPermission
               ? [
                   {
-                    label: 'Cut',
-                    key: 'cut',
+                    label: "Cut",
+                    key: "cut",
                     onAction: () => {
                       clearSelectedItems();
                       addOrRemoveItem({
@@ -386,20 +459,23 @@ export const LibraryTableView = ({
                         name: row.name,
                         resourceType: row.resourcetype,
                         thumbnail:
-                          row.resourcetype === 'VideoFile' || row.resourcetype === 'ImageFile'
+                          row.resourcetype === "VideoFile" ||
+                          row.resourcetype === "ImageFile"
                             ? row.thumbnail || undefined
-                            : '',
+                            : "",
                         indexStatus:
-                          row.resourcetype === 'VideoFile' ? row.index_status : undefined,
+                          row.resourcetype === "VideoFile"
+                            ? row.index_status
+                            : undefined,
                         permissions: row?.permissions || [],
-                        connection_id: row?.connection_id ?? null
+                        connection_id: row?.connection_id ?? null,
                       });
-                      setSelectedClipboardAction('cut');
-                    }
+                      setSelectedClipboardAction("cut");
+                    },
                   },
                   {
-                    label: 'Copy',
-                    key: 'copy',
+                    label: "Copy",
+                    key: "copy",
                     onAction: () => {
                       clearSelectedItems();
                       addOrRemoveItem({
@@ -407,72 +483,75 @@ export const LibraryTableView = ({
                         name: row.name,
                         resourceType: row.resourcetype,
                         thumbnail:
-                          row.resourcetype === 'VideoFile' || row.resourcetype === 'ImageFile'
+                          row.resourcetype === "VideoFile" ||
+                          row.resourcetype === "ImageFile"
                             ? row.thumbnail || undefined
-                            : '',
+                            : "",
                         indexStatus:
-                          row.resourcetype === 'VideoFile' ? row.index_status : undefined,
+                          row.resourcetype === "VideoFile"
+                            ? row.index_status
+                            : undefined,
                         permissions: row?.permissions || [],
-                        connection_id: row?.connection_id ?? null
+                        connection_id: row?.connection_id ?? null,
                       });
-                      setSelectedClipboardAction('copy');
-                    }
-                  }
+                      setSelectedClipboardAction("copy");
+                    },
+                  },
                 ]
               : []),
             ...(!isFolder
               ? [
                   {
-                    label: 'Upload a version',
-                    key: 'upload-version',
+                    label: "Upload a version",
+                    key: "upload-version",
                     onAction: () => {
                       handleUploadVersion(row);
-                    }
-                  }
+                    },
+                  },
                 ]
               : [
                   {
-                    label: 'View metadata',
-                    key: 'view-metadata',
+                    label: "View metadata",
+                    key: "view-metadata",
                     onAction: () => {
-                      router.push(`/library/folder/${row?.id}/metadata`);
-                    }
-                  }
+                      // router.push(`/library/folder/${row?.id}/metadata`);
+                    },
+                  },
                 ]),
             ...(hasDeletePermission
               ? [
                   {
-                    label: 'Delete',
-                    key: 'delete',
+                    label: "Delete",
+                    key: "delete",
                     onAction: (id: string) => {
                       const row = data.find((item) => item.id === id);
                       if (row) {
                         setSelectedRow(row);
                         onDeleteModalOpenChange();
                       }
-                    }
-                  }
+                    },
+                  },
                 ]
-              : [])
+              : []),
           ];
         }}
         onSearchQueryChange={() => {}}
-        onRowClick={(row) => {
-          const isVersionStack = row?.resourcetype === 'VersionStack';
+        onRowClick={(row: LibraryAsset) => {
+          const isVersionStack = row?.resourcetype === "VersionStack";
           const resource = isVersionStack ? row?.versions?.[0].file : row;
-          const versionParam = isVersionStack ? `?version=${resource?.id}` : '';
-          if (row.resourcetype === 'File' && row.file_extension === '.tdraft') {
-            router.push(`/library/video/${row?.id}${versionParam}`);
+          const versionParam = isVersionStack ? `?version=${resource?.id}` : "";
+          if (row.resourcetype === "File" && row.file_extension === ".tdraft") {
+            // router.push(`/library/video/${row?.id}${versionParam}`);
           } else {
-            router.push(
-              row.resourcetype === 'Folder'
-                ? `/library/folder/${row.id}`
-                : `/library/asset/${row?.id}${versionParam}`
-            );
+            // router.push(
+            //   row.resourcetype === "Folder"
+            //     ? `/library/folder/${row.id}`
+            //     : `/library/asset/${row?.id}${versionParam}`
+            // );
           }
         }}
         selectedData={selectedData}
-        setSelectedData={(assets) => {
+        setSelectedData={(assets: LibraryAsset[]) => {
           const newSelectedItems = Array.from(
             new Set([
               ...(assets?.map((asset) => ({
@@ -480,21 +559,25 @@ export const LibraryTableView = ({
                 name: asset.name,
                 resourceType: asset.resourcetype,
                 thumbnail:
-                  asset.resourcetype === 'VideoFile' || asset.resourcetype === 'ImageFile'
+                  asset.resourcetype === "VideoFile" ||
+                  asset.resourcetype === "ImageFile"
                     ? asset.thumbnail || undefined
-                    : '',
-                indexStatus: asset.resourcetype === 'VideoFile' ? asset.index_status : undefined,
+                    : "",
+                indexStatus:
+                  asset.resourcetype === "VideoFile"
+                    ? asset.index_status
+                    : undefined,
                 permissions: asset?.permissions || [],
-                connection_id: asset?.connection_id ?? null
-              })) ?? [])
+                connection_id: asset?.connection_id ?? null,
+              })) ?? []),
             ])
           );
 
           setSelectedItems(newSelectedItems);
         }}
         sortColumn={{
-          key: 'asset',
-          order: 'asc'
+          key: "asset",
+          order: "asc",
         }}
         setSortColumn={() => {}}
         loadingState={
@@ -519,10 +602,12 @@ export const LibraryTableView = ({
         }
         tableActions={null}
         paginationScrollRef={ref}
-        scrollOffsetBottomPadding={isRemixesEnabled ? 164 : selectedItems.length ? 86 : 0}
+        scrollOffsetBottomPadding={
+          isRemixesEnabled ? 164 : selectedItems.length ? 86 : 0
+        }
         topContent={uploads.map((upload) => ({
           key: upload.uploadId,
-          content: <UploadIndicator upload={upload} />
+          content: <UploadIndicator upload={upload} />,
         }))}
         hideColumnAddButton={isMobile}
         hideTableHead={isMobile}
@@ -540,7 +625,10 @@ export const LibraryTableView = ({
         title="Rename"
         description={selectedRow?.name}
         onConfirm={async (value) =>
-          await renameAsset({ newName: value, assetId: selectedRow?.id as string })
+          await renameAsset({
+            newName: value,
+            assetId: selectedRow?.id as string,
+          })
         }
         onOpenChange={onRenameModalOpenChange}
         actionText="Confirm"
@@ -558,12 +646,12 @@ export const LibraryTableView = ({
               name: selectedRow.name,
               resourceType: selectedRow.resourcetype,
               permissions: selectedRow.permissions,
-              connection_id: selectedRow.connection_id ?? null
-            }
+              connection_id: selectedRow.connection_id ?? null,
+            },
           ]}
           handleDelete={async () => {
             await deleteAsset({
-              assetId: selectedRow?.id
+              assetId: selectedRow?.id,
             });
             // if (isSelected) {
             //   setSelectedItems(selectedItems.filter((item) => item.id !== resource.id));
@@ -591,7 +679,7 @@ export const LibraryTableView = ({
 
 export const Thumbnail = ({
   fileName,
-  thumbnailUrl
+  thumbnailUrl,
 }: {
   fileName: string;
   thumbnailUrl: string;
@@ -601,9 +689,9 @@ export const Thumbnail = ({
   return (
     <div
       className={cn(
-        'relative rounded-lg bg-ds-asset-card-bg-hover',
-        'overflow-hidden',
-        'aspect-video h-10'
+        "relative rounded-lg bg-ds-asset-card-bg-hover",
+        "overflow-hidden",
+        "aspect-video h-10"
       )}
     >
       <div className="pointer-events-none absolute z-20 h-full w-full rounded-lg border border-black/[8%] bg-transparent dark:border-white/15"></div>
@@ -611,12 +699,12 @@ export const Thumbnail = ({
         src={thumbnailUrl}
         alt={fileName}
         className={cn(
-          'aspect-video',
-          thumbnail === 'fit' ? 'object-contain' : 'object-cover object-center',
-          'rounded-none',
-          'flex h-full max-h-full w-full max-w-full'
+          "aspect-video",
+          thumbnail === "fit" ? "object-contain" : "object-cover object-center",
+          "rounded-none",
+          "flex h-full max-h-full w-full max-w-full"
         )}
-        classNames={{ wrapper: 'flex h-full w-full max-w-full' }}
+        classNames={{ wrapper: "flex h-full w-full max-w-full" }}
       />
     </div>
   );
@@ -624,7 +712,7 @@ export const Thumbnail = ({
 
 export const PhysicalAssetThumbnail = ({
   barcode,
-  thumbnailUrl
+  thumbnailUrl,
 }: {
   barcode: string;
   thumbnailUrl: string;
@@ -634,9 +722,9 @@ export const PhysicalAssetThumbnail = ({
   return (
     <div
       className={cn(
-        'relative rounded-lg bg-ds-asset-card-bg-hover',
-        'overflow-hidden',
-        'aspect-video h-10'
+        "relative rounded-lg bg-ds-asset-card-bg-hover",
+        "overflow-hidden",
+        "aspect-video h-10"
       )}
     >
       <div className="pointer-events-none absolute z-20 h-full w-full rounded-lg border border-black/[8%] bg-transparent dark:border-white/15"></div>
@@ -645,12 +733,14 @@ export const PhysicalAssetThumbnail = ({
           src={thumbnailUrl}
           alt={barcode}
           className={cn(
-            'aspect-video',
-            thumbnail === 'fit' ? 'object-contain' : 'object-cover object-center',
-            'rounded-none',
-            'flex h-full max-h-full w-full max-w-full'
+            "aspect-video",
+            thumbnail === "fit"
+              ? "object-contain"
+              : "object-cover object-center",
+            "rounded-none",
+            "flex h-full max-h-full w-full max-w-full"
           )}
-          classNames={{ wrapper: 'flex h-full w-full' }}
+          classNames={{ wrapper: "flex h-full w-full" }}
         />
       ) : (
         <Barcode
@@ -670,10 +760,10 @@ export const FileCard = ({ fileExtension }: { fileExtension?: string }) => {
     <div className="aspect-video h-10">
       <div
         className={cn(
-          'h-full w-full rounded-lg p-2 text-ds-text-secondary',
-          'flex items-center justify-center',
-          'transition-colors duration-200',
-          'bg-ds-asset-card-bg-select'
+          "h-full w-full rounded-lg p-2 text-ds-text-secondary",
+          "flex items-center justify-center",
+          "transition-colors duration-200",
+          "bg-ds-asset-card-bg-select"
         )}
       >
         {getIcon(fileExtension, 20)}
@@ -687,10 +777,10 @@ export const FolderCard = () => {
     <div className="aspect-video h-10">
       <div
         className={cn(
-          'h-full w-full rounded-lg p-2 text-ds-text-secondary',
-          'flex items-center justify-center',
-          'transition-colors duration-200',
-          'bg-ds-asset-card-bg-select'
+          "h-full w-full rounded-lg p-2 text-ds-text-secondary",
+          "flex items-center justify-center",
+          "transition-colors duration-200",
+          "bg-ds-asset-card-bg-select"
         )}
       >
         <Folder1Filled size={20} className="fill-ds-text-secondary" />
@@ -708,7 +798,7 @@ const ThreeDotMenu = ({
   // isConnectedFolder,
   // permissions,
   asset,
-  handleUploadVersion
+  handleUploadVersion,
 }: {
   asset: LibraryAsset;
   // assetId: string;
@@ -723,106 +813,117 @@ const ThreeDotMenu = ({
   const { id: assetId, name: fileName, resourcetype: resourceType } = asset;
 
   const permissions = asset?.permissions ?? [];
-  const isConnectedFolder = asset?.resourcetype === 'Folder' && !!asset?.connection_id;
+  const isConnectedFolder =
+    asset?.resourcetype === "Folder" && !!asset?.connection_id;
 
   const { mutate: renameAsset } = useRenameAsset(assetId);
   const { mutate: deleteAsset } = useDeleteAsset(assetId);
 
-  const { isOpen: isRenameModalOpen, onOpenChange: onRenameModalOpenChange } = useDisclosure();
-  const { isOpen: isDeleteModalOpen, onOpenChange: onDeleteModalOpenChange } = useDisclosure();
+  const { isOpen: isRenameModalOpen, onOpenChange: onRenameModalOpenChange } =
+    useDisclosure();
+  const { isOpen: isDeleteModalOpen, onOpenChange: onDeleteModalOpenChange } =
+    useDisclosure();
 
-  const { addOrRemoveItem, clearSelectedItems, setSelectedClipboardAction } = useLibraryStore();
+  const { addOrRemoveItem, clearSelectedItems, setSelectedClipboardAction } =
+    useLibraryStore();
 
-  const hasEditPermission = !!permissions.includes('can_edit_asset');
-  const hasDeletePermission = !!permissions.includes('can_delete_asset');
+  const hasEditPermission = !!permissions.includes("can_edit_asset");
+  const hasDeletePermission = !!permissions.includes("can_delete_asset");
 
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <>
       <Dropdown>
         <DropdownTrigger>
-          <Button color="secondary" isIconOnly size="sm" aria-label="Library Table More options">
+          <Button
+            color="secondary"
+            isIconOnly
+            size="sm"
+            aria-label="Library Table More options"
+          >
             <DotGrid1X3Horizontal size={20} />
           </Button>
         </DropdownTrigger>
         <DropdownMenu
           onAction={(key) => {
-            if (key === 'rename') {
+            if (key === "rename") {
               onRenameModalOpenChange();
             }
-            if (key === 'cut') {
+            if (key === "cut") {
               clearSelectedItems();
               addOrRemoveItem({
                 id: assetId,
                 name: fileName,
                 resourceType,
                 permissions,
-                connection_id: isConnected ? assetId : null
+                connection_id: isConnected ? assetId : null,
               });
-              setSelectedClipboardAction('cut');
+              setSelectedClipboardAction("cut");
             }
-            if (key === 'copy') {
+            if (key === "copy") {
               clearSelectedItems();
               addOrRemoveItem({
                 id: assetId,
                 name: fileName,
                 resourceType,
                 permissions,
-                connection_id: isConnected ? assetId : null
+                connection_id: isConnected ? assetId : null,
               });
-              setSelectedClipboardAction('copy');
+              setSelectedClipboardAction("copy");
             }
-            if (key === 'delete') {
+            if (key === "delete") {
               onDeleteModalOpenChange();
             }
-            if (key === 'upload-version') {
+            if (key === "upload-version") {
               handleUploadVersion?.(asset);
             }
-            if (key === 'view-metadata') {
-              router.push(`/library/folder/${assetId}/metadata`);
+            if (key === "view-metadata") {
+              // router.push(`/library/folder/${assetId}/metadata`);
             }
           }}
         >
           <DropdownItem
             key="rename"
             isDisabled={isConnectedFolder || !hasEditPermission}
-            className={cn((isConnectedFolder || !hasEditPermission) && 'hidden')}
+            className={cn(
+              (isConnectedFolder || !hasEditPermission) && "hidden"
+            )}
           >
             Rename
           </DropdownItem>
           <DropdownItem
             key="cut"
             isDisabled={!hasEditPermission}
-            className={cn(!hasEditPermission && 'hidden')}
+            className={cn(!hasEditPermission && "hidden")}
           >
             Cut
           </DropdownItem>
           <DropdownItem
             key="copy"
             isDisabled={!hasEditPermission}
-            className={cn(!hasEditPermission && 'hidden')}
+            className={cn(!hasEditPermission && "hidden")}
           >
             Copy
           </DropdownItem>
           <DropdownItem
             key="upload-version"
-            isDisabled={resourceType === 'Folder'}
-            className={cn(resourceType === 'Folder' && 'hidden')}
+            isDisabled={resourceType === "Folder"}
+            className={cn(resourceType === "Folder" && "hidden")}
           >
             Upload a version
           </DropdownItem>
           <DropdownItem
             key="view-metadata"
-            isDisabled={resourceType !== 'Folder'}
-            className={cn(resourceType !== 'Folder' && 'hidden')}
+            isDisabled={resourceType !== "Folder"}
+            className={cn(resourceType !== "Folder" && "hidden")}
           >
             View metadata
           </DropdownItem>
           <DropdownItem
             key="delete"
             isDisabled={!hasDeletePermission}
-            className={cn(!hasDeletePermission && 'hidden')}
+            className={cn(!hasDeletePermission && "hidden")}
           >
             Delete
           </DropdownItem>
@@ -876,8 +977,8 @@ const ThreeDotMenu = ({
             name: asset.name,
             connection_id: asset.connection_id ?? null,
             resourceType: asset.resourcetype,
-            permissions: asset.permissions
-          }
+            permissions: asset.permissions,
+          },
         ]}
         handleDelete={async () => {
           await deleteAsset();
@@ -887,7 +988,7 @@ const ThreeDotMenu = ({
               name: fileName,
               resourceType,
               permissions,
-              connection_id: isConnected ? assetId : null
+              connection_id: isConnected ? assetId : null,
             });
         }}
         // selectedItems={[
@@ -945,7 +1046,7 @@ const UploadIndicator = ({ upload }: { upload: FileUpload }) => {
 
 export const VersionUploadActiveText = ({
   id,
-  fallbackText
+  fallbackText,
 }: {
   id: string;
   fallbackText?: string;
@@ -956,10 +1057,17 @@ export const VersionUploadActiveText = ({
     (upload) => upload.versionStackFileId === id
   );
   const activeText = activeVersionUploadsOnThisAsset
-    ? `Uploading version ${Math.round((activeVersionUploadsOnThisAsset.sizeUploaded * 100) / activeVersionUploadsOnThisAsset.totalSize)}%`
-    : '';
+    ? `Uploading version ${Math.round(
+        (activeVersionUploadsOnThisAsset.sizeUploaded * 100) /
+          activeVersionUploadsOnThisAsset.totalSize
+      )}%`
+    : "";
   if (activeText) {
-    return <div className="text-xs text-ds-button-primary-bg-hover">{activeText}</div>;
+    return (
+      <div className="text-xs text-ds-button-primary-bg-hover">
+        {activeText}
+      </div>
+    );
   }
   if (fallbackText) {
     return <div className="text-xs text-ds-text-secondary">{fallbackText}</div>;
