@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
+export type PageName = "library" | "review" | "auth" | "folder" | "projects";
+
 interface ParamsStateStore {
+  currentPage: PageName;
+  setCurrentPage: (currentPage: PageName) => void;
   folderId: string | null;
   setFolderId: (folderId: string) => void;
   selectedAssetId: string;
@@ -44,4 +48,6 @@ export const useParamsStateStore = create<ParamsStateStore>((set) => ({
   setViewId: (viewId) => set({ viewId }),
   groupId: "",
   setGroupId: (groupId) => set({ groupId }),
+  currentPage: "library",
+  setCurrentPage: (currentPage) => set({ currentPage }),
 }));

@@ -9,12 +9,12 @@ import { FolderPage } from "../../pages/FolderPage";
 
 import { useParamsStateStore } from "@/stores/params-state-store";
 
+import { PageName } from "@/stores/params-state-store";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import { useSidebarStore } from "../../stores/sidebar-store";
 
 // Define the possible page names
-export type PageName = "library" | "review" | "auth" | "folder";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -23,12 +23,12 @@ import { useTheme } from "../../context/ThemeContext";
 export const Layout = () => {
   // State to manage the currently active page
   // For now, defaulting to 'library'
-  const [currentPage, setCurrentPage] = useState<PageName>("library");
 
   const { auth } = useAuth();
 
   const { isOpen: isSidebarOpen } = useSidebarStore();
   const { selectedAssetId, folderId } = useParamsStateStore();
+  const { currentPage, setCurrentPage } = useParamsStateStore();
 
   const renderPage = () => {
     switch (currentPage) {
