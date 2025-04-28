@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 import { Filter, Sort } from "./library-store";
 
-// Type definitions for folder-specific filter state
 export type FolderFilterState = {
   filters: Filter[];
   sorts: Sort[];

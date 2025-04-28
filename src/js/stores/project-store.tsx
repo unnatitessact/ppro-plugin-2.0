@@ -18,220 +18,220 @@ import { AspectRatio, Sort, Thumbnail, View } from "../stores/library-store";
 
 import { Project as DummyProject } from "../api-integration/types/projects";
 
-export const resources: DummyProject[] = [
-  {
-    id: "1",
-    name: "Project Alpha",
-    description: "This is a description of the project alpha",
-    sub_contents: [
-      {
-        id: "1.1",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
-      },
-      {
-        id: "1.2",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
-      },
-      {
-        id: "1.3",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
-      },
-    ],
-    status: "Not Started",
-    completed_tasks: 0,
-    total_tasks: 10,
-    is_archived: false,
-    due_date: null,
-  },
-  {
-    id: "2",
-    name: "Project Beta",
-    description: "This is a description of the project beta",
-    sub_contents: [
-      {
-        id: "2.1",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
-      },
-      {
-        id: "2.2",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
-      },
-    ],
-    status: "In Progress",
-    completed_tasks: 1,
-    total_tasks: 10,
-    is_archived: false,
-    due_date: null,
-    members: [
-      {
-        first_name: "John",
-        last_name: "Doe",
-        display_name: "John Doe",
-        profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Project Omega",
-    description: "This is a description of the project omega",
-    sub_contents: [
-      {
-        id: "3.1",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
-      },
-    ],
-    status: "In Progress",
-    completed_tasks: 3,
-    total_tasks: 10,
-    is_archived: false,
-    due_date: null,
-    members: [
-      {
-        first_name: "John",
-        last_name: "Doe",
-        display_name: "John Doe",
-        profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-    ],
-  },
-  {
-    id: "4",
-    name: "Project Genesis",
-    description: "This is a description of the project genesis",
-    sub_contents: [
-      {
-        id: "4.1",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
-      },
-      {
-        id: "4.2",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
-      },
-      {
-        id: "4.3",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
-      },
-    ],
-    status: "Completed",
-    completed_tasks: 10,
-    total_tasks: 10,
-    is_archived: false,
-    due_date: null,
-    members: [
-      {
-        first_name: "John",
-        last_name: "Doe",
-        display_name: "John Doe",
-        profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-      {
-        first_name: "Albert",
-        last_name: "Einstein",
-        display_name: "Albert Einstein",
-        profile_picture: "https://randomuser.me/api/portraits/men/2.jpg",
-      },
-    ],
-  },
-  {
-    id: "5",
-    name: "Project Nemesis",
-    description: "This is a description of the project nemesis",
-    sub_contents: [
-      {
-        id: "5.1",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
-      },
-      {
-        id: "5.2",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
-      },
-      {
-        id: "5.3",
-        type: "video",
-        thumbnail:
-          "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
-      },
-    ],
-    status: "Completed",
-    completed_tasks: 10,
-    total_tasks: 10,
-    is_archived: false,
-    due_date: null,
-    members: [
-      {
-        first_name: "John",
-        last_name: "Doe",
-        display_name: "John Doe",
-        profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-      {
-        first_name: "Jane",
-        last_name: "Doe",
-        display_name: "Jane Doe",
-        profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
-      },
-    ],
-  },
-];
+// export const resources: DummyProject[] = [
+//   {
+//     id: "1",
+//     name: "Project Alpha",
+//     description: "This is a description of the project alpha",
+//     sub_contents: [
+//       {
+//         id: "1.1",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
+//       },
+//       {
+//         id: "1.2",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
+//       },
+//       {
+//         id: "1.3",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
+//       },
+//     ],
+//     status: "Not Started",
+//     completed_tasks: 0,
+//     total_tasks: 10,
+//     is_archived: false,
+//     due_date: null,
+//   },
+//   {
+//     id: "2",
+//     name: "Project Beta",
+//     description: "This is a description of the project beta",
+//     sub_contents: [
+//       {
+//         id: "2.1",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
+//       },
+//       {
+//         id: "2.2",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
+//       },
+//     ],
+//     status: "In Progress",
+//     completed_tasks: 1,
+//     total_tasks: 10,
+//     is_archived: false,
+//     due_date: null,
+//     members: [
+//       {
+//         first_name: "John",
+//         last_name: "Doe",
+//         display_name: "John Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//     ],
+//   },
+//   {
+//     id: "3",
+//     name: "Project Omega",
+//     description: "This is a description of the project omega",
+//     sub_contents: [
+//       {
+//         id: "3.1",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
+//       },
+//     ],
+//     status: "In Progress",
+//     completed_tasks: 3,
+//     total_tasks: 10,
+//     is_archived: false,
+//     due_date: null,
+//     members: [
+//       {
+//         first_name: "John",
+//         last_name: "Doe",
+//         display_name: "John Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//     ],
+//   },
+//   {
+//     id: "4",
+//     name: "Project Genesis",
+//     description: "This is a description of the project genesis",
+//     sub_contents: [
+//       {
+//         id: "4.1",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
+//       },
+//       {
+//         id: "4.2",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
+//       },
+//       {
+//         id: "4.3",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
+//       },
+//     ],
+//     status: "Completed",
+//     completed_tasks: 10,
+//     total_tasks: 10,
+//     is_archived: false,
+//     due_date: null,
+//     members: [
+//       {
+//         first_name: "John",
+//         last_name: "Doe",
+//         display_name: "John Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//       {
+//         first_name: "Albert",
+//         last_name: "Einstein",
+//         display_name: "Albert Einstein",
+//         profile_picture: "https://randomuser.me/api/portraits/men/2.jpg",
+//       },
+//     ],
+//   },
+//   {
+//     id: "5",
+//     name: "Project Nemesis",
+//     description: "This is a description of the project nemesis",
+//     sub_contents: [
+//       {
+//         id: "5.1",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/c6cb6a32-7495-44ce-8ea7-83a06294a586/c6cb6a32-7495-44ce-8ea7-83a06294a586_thumbnail.avif",
+//       },
+//       {
+//         id: "5.2",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/4e4fbca3-64e0-4732-a90e-3466bc162adb/4e4fbca3-64e0-4732-a90e-3466bc162adb_thumbnail.avif",
+//       },
+//       {
+//         id: "5.3",
+//         type: "video",
+//         thumbnail:
+//           "https://assets.tessact.com/thumbnails/76dbcbfe-f1b4-41ad-a22d-8f125678b365/91f02a40-fae1-46ff-8978-ed177e9ea9a3/91f02a40-fae1-46ff-8978-ed177e9ea9a3_thumbnail.avif",
+//       },
+//     ],
+//     status: "Completed",
+//     completed_tasks: 10,
+//     total_tasks: 10,
+//     is_archived: false,
+//     due_date: null,
+//     members: [
+//       {
+//         first_name: "John",
+//         last_name: "Doe",
+//         display_name: "John Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/men/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//       {
+//         first_name: "Jane",
+//         last_name: "Doe",
+//         display_name: "Jane Doe",
+//         profile_picture: "https://randomuser.me/api/portraits/women/1.jpg",
+//       },
+//     ],
+//   },
+// ];
 
 export const dummyMetadata = [
   {
@@ -587,7 +587,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   isAddProjectUserModalOpen: false,
   setIsAddProjectUserModalOpen: (isAddProjectUserModalOpen: boolean) =>
     set({ isAddProjectUserModalOpen }),
-  projects: resources as DummyProject[],
+  projects: [],
+  // projects: resources as DummyProject[],
   setProjects: (projects: DummyProject[]) => set({ projects }),
   projectStatus: "Not Started",
   setProjectStatus: (projectStatus: string) => set({ projectStatus }),
