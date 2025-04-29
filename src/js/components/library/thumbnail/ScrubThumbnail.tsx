@@ -1,12 +1,16 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 
-import { useElementSize } from '@mantine/hooks';
-import { cn, Image } from '@nextui-org/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useElementSize } from "@mantine/hooks";
+import { cn, Image } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
 
-import { AspectRatio, Thumbnail, useLibraryStore } from '@/stores/library-store';
+import {
+  AspectRatio,
+  Thumbnail,
+  useLibraryStore,
+} from "@/stores/library-store";
 
 interface ScrubThumbnailProps {
   scrubUrl: string;
@@ -18,16 +22,22 @@ interface ScrubThumbnailProps {
   overrideThumbnail?: Thumbnail;
 }
 
+interface ThumbnailPosition {
+  top: number;
+  left: number;
+}
+
 const COLUMNS = 10;
 const ROWS = 10;
 
 export const generateSprites = (spriteWidth: number, spriteHeight: number) => {
-  const sprites = [];
+  const sprites: ThumbnailPosition[] = [];
   for (let i = 0; i < ROWS; i++) {
     for (let j = 0; j < COLUMNS; j++) {
+      // ts-ignore: idk how to fix this
       sprites.push({
         top: i * spriteHeight,
-        left: j * spriteWidth
+        left: j * spriteWidth,
       });
     }
   }
@@ -40,12 +50,13 @@ export const getHeight = (
   scrubHeight: number,
   scrubWidth: number
 ) => {
-  if (aspectRatio === 'vertical') {
-    return thumbnail === 'fill' ? '100%' : 'auto';
+  if (aspectRatio === "vertical") {
+    return thumbnail === "fill" ? "100%" : "auto";
   } else {
-    return thumbnail === 'fill' || (thumbnail === 'fit' && scrubHeight >= scrubWidth)
-      ? '100%'
-      : 'auto';
+    return thumbnail === "fill" ||
+      (thumbnail === "fit" && scrubHeight >= scrubWidth)
+      ? "100%"
+      : "auto";
   }
 };
 
@@ -55,10 +66,10 @@ export const getWidth = (
   scrubHeight: number,
   scrubWidth: number
 ) => {
-  if (aspectRatio === 'vertical') {
-    return thumbnail === 'fill' ? 'auto' : '100%';
+  if (aspectRatio === "vertical") {
+    return thumbnail === "fill" ? "auto" : "100%";
   } else {
-    return thumbnail === 'fit' && scrubHeight >= scrubWidth ? 'auto' : '100%';
+    return thumbnail === "fit" && scrubHeight >= scrubWidth ? "auto" : "100%";
   }
 };
 
@@ -69,7 +80,7 @@ export const ScrubThumbnail = ({
   scrubWidth = 426,
   scrubHeight = 240,
   overrideAspectRatio,
-  overrideThumbnail
+  overrideThumbnail,
 }: ScrubThumbnailProps) => {
   const [scrubPosition, setScrubPosition] = useState<number | null>(null);
   const [indexToShow, setIndexToShow] = useState<number | null>(null);
@@ -91,27 +102,37 @@ export const ScrubThumbnail = ({
   }, [width, height, scrubWidth, scrubHeight]);
 
   const scrubBackgroundPosition = useMemo(() => {
+    // ts-ignore: idk how to fix this
     const horizontalPosition = `-${sprites[indexToShow || 0]?.left * scale}px`;
+    // ts-ignore: idk how to fix this
     let verticalPosition = `-${sprites[indexToShow || 0]?.top * scale}px`;
 
     if (
-      aspectRatioToUse === 'horizontal' &&
+      aspectRatioToUse === "horizontal" &&
       scrubHeight > scrubWidth &&
-      thumbnailToUse === 'fill'
+      thumbnailToUse === "fill"
     ) {
       const offsetY = (scrubHeight / 2) * scale;
       verticalPosition = `calc(${verticalPosition} + ${offsetY * scale}px)`;
     }
 
     return `${horizontalPosition} ${verticalPosition}`;
-  }, [sprites, indexToShow, scale, aspectRatioToUse, thumbnailToUse, scrubHeight, scrubWidth]);
+  }, [
+    sprites,
+    indexToShow,
+    scale,
+    aspectRatioToUse,
+    thumbnailToUse,
+    scrubHeight,
+    scrubWidth,
+  ]);
 
   return (
     <div
       className={cn(
-        'relative rounded-2xl bg-ds-asset-card-bg-hover',
-        'group overflow-hidden',
-        aspectRatioToUse === 'horizontal' ? 'aspect-video' : 'aspect-[9/16]'
+        "relative rounded-2xl bg-ds-asset-card-bg-hover",
+        "group overflow-hidden",
+        aspectRatioToUse === "horizontal" ? "aspect-video" : "aspect-[9/16]"
       )}
     >
       <AnimatePresence>
@@ -123,8 +144,8 @@ export const ScrubThumbnail = ({
             transition={{ duration: 0.15 }}
             className="pointer-events-none absolute z-40 h-full w-0.5 bg-primary-400"
             style={{
-              filter: 'drop-shadow(0px 4px 4px #3592FF)',
-              transform: `translateX(${scrubPosition}px)`
+              filter: "drop-shadow(0px 4px 4px #3592FF)",
+              transform: `translateX(${scrubPosition}px)`,
             }}
           ></motion.div>
         )}
@@ -133,19 +154,31 @@ export const ScrubThumbnail = ({
       <div
         ref={ref}
         style={{
-          position: 'absolute',
+          position: "absolute",
           zIndex: 30,
-          pointerEvents: 'none',
+          pointerEvents: "none",
           opacity: indexToShow ? 1 : 0,
-          height: getHeight(aspectRatioToUse, thumbnailToUse, scrubHeight, scrubWidth),
-          width: getWidth(aspectRatioToUse, thumbnailToUse, scrubHeight, scrubWidth),
+          height: getHeight(
+            aspectRatioToUse,
+            thumbnailToUse,
+            scrubHeight,
+            scrubWidth
+          ),
+          width: getWidth(
+            aspectRatioToUse,
+            thumbnailToUse,
+            scrubHeight,
+            scrubWidth
+          ),
           backgroundImage: `url(${scrubUrl})`,
           aspectRatio: `${scrubWidth} / ${scrubHeight}`,
-          backgroundSize: `${scrubWidth * COLUMNS * scale}px ${scrubHeight * ROWS * scale}px`,
+          backgroundSize: `${scrubWidth * COLUMNS * scale}px ${
+            scrubHeight * ROWS * scale
+          }px`,
           backgroundPosition: scrubBackgroundPosition,
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)'
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
         }}
       ></div>
       <Image
@@ -160,11 +193,13 @@ export const ScrubThumbnail = ({
           setScrubPosition(mouseX);
         }}
         className={cn(
-          aspectRatioToUse === 'horizontal' ? 'aspect-video' : 'aspect-[9/16]',
-          thumbnailToUse === 'fit' ? 'object-contain' : 'object-cover object-center',
-          'h-full w-full'
+          aspectRatioToUse === "horizontal" ? "aspect-video" : "aspect-[9/16]",
+          thumbnailToUse === "fit"
+            ? "object-contain"
+            : "object-cover object-center",
+          "h-full w-full"
         )}
-        classNames={{ wrapper: 'flex h-full w-full' }}
+        classNames={{ wrapper: "flex h-full w-full" }}
         onMouseLeave={() => {
           setScrubPosition(null);
           setIndexToShow(null);

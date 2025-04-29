@@ -15,6 +15,7 @@ import { cn } from "@nextui-org/react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroller";
+const InfiniteScrollComponent = InfiniteScroll as any;
 
 import { Button } from "@/components/ui/Button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow";
@@ -372,7 +373,7 @@ export const FolderPage = () => {
       ref={scrollParentRef}
       scrollRestorationKey={`library-grid-${folderId}`}
     >
-      <InfiniteScroll
+      <InfiniteScrollComponent
         hasMore={hasNextPage}
         loadMore={() => {
           if (!isFetchingNextPage) {
@@ -466,7 +467,7 @@ export const FolderPage = () => {
             )}
           </AnimatePresence>
         </WithLibraryThreeDotMenu>
-      </InfiniteScroll>
+      </InfiniteScrollComponent>
     </ScrollShadow>
     // </LibraryRoomProvider>
   );

@@ -29,14 +29,14 @@ export const NavLink = ({
 }: NavLinkProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const { currentPage } = useParamsStateStore();
+  const isActive = false;
 
-  const isActive =
-    (href &&
-      (currentPage === href ||
-        (href[href.length - 1] === "/" &&
-          href?.slice(0, -1) === currentPage))) ||
-    isLinkActive;
+  // const isActive =
+  //   (href &&
+  //     (currentPage === href ||
+  //       (href[href.length - 1] === "/" &&
+  //         href?.slice(0, -1) === currentPage))) ||
+  //   isLinkActive;
 
   return (
     <motion.div

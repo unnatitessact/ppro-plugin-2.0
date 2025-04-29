@@ -6,6 +6,7 @@ import { SubtitleLanguageCode } from "../types/video";
 // import { CreateMetadataTemplateSchema } from "../../schemas/library/metadata";
 
 import { PaginatedAPIResponse } from "../../types/api";
+import { CreateMetadataTemplateSchema } from "@/schema/library/library";
 
 export type MetadataFieldType =
   | "text"
@@ -226,6 +227,9 @@ export type ActiveTranslationJobList = ActiveTranslationJob[];
 // export type CreateMetadataTemplatePayload = z.infer<
 //   typeof CreateMetadataTemplateSchema
 // >;
+export type CreateMetadataTemplatePayload = z.infer<
+  typeof CreateMetadataTemplateSchema
+>;
 
 export type CreateMetadataCategoryPayload = { name: string; isTable: boolean };
 export type AutoFillMetadataFieldPayload = AutoFillMetadataField;

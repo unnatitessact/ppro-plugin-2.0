@@ -1,26 +1,34 @@
-'use client';
+"use client";
 
 // import { useState } from 'react';
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { useParams } from 'next/navigation';
+import { useParams } from "react-router-dom";
 
-import { zodResolver } from '@hookform/resolvers/zod';
+// import { useParams } from "next/navigation";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 // import { Switch } from '@nextui-org/react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Folder1Filled } from '@tessact/icons';
+import { Folder1Filled } from "@tessact/icons";
 
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@/components/ui/Modal';
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/ui/Modal";
 
 // import { Select, SelectItem } from '@/components/ui/Select';
 
-import { useCreateFolder } from '@/api-integration/mutations/library';
+import { useCreateFolder } from "@/api-integration/mutations/library";
 
-import { CreateFolderSchema } from '@/schemas/library/folders';
+import { CreateFolderSchema } from "@/schema/library/folders";
 
 interface NewFolderModalProps {
   isOpen: boolean;
@@ -28,16 +36,19 @@ interface NewFolderModalProps {
   isDrawer?: boolean;
 }
 
-export const NewFolderModal = ({ isOpen, onOpenChange }: NewFolderModalProps) => {
+export const NewFolderModal = ({
+  isOpen,
+  onOpenChange,
+}: NewFolderModalProps) => {
   const { folderId: parentId } = useParams() as { folderId: string };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<z.infer<typeof CreateFolderSchema>>({
-    resolver: zodResolver(CreateFolderSchema)
+    resolver: zodResolver(CreateFolderSchema),
   });
 
   const { mutateAsync, isPending } = useCreateFolder(parentId || null);
@@ -50,7 +61,7 @@ export const NewFolderModal = ({ isOpen, onOpenChange }: NewFolderModalProps) =>
           {
             onSuccess: () => {
               reset();
-            }
+            },
           }
         );
         onOpenChange(false);
@@ -71,7 +82,9 @@ export const NewFolderModal = ({ isOpen, onOpenChange }: NewFolderModalProps) =>
       // as="form"
       // onSubmit={handleSubmit(async (data) => await createFolder(data.name))}
       >
-        <form onSubmit={handleSubmit(async (data) => await createFolder(data.name))}>
+        <form
+          onSubmit={handleSubmit(async (data) => await createFolder(data.name))}
+        >
           <ModalHeader
             title="New folder"
             description="Folders can store metadata and act as titles, while helping you manage your assets."
@@ -85,7 +98,7 @@ export const NewFolderModal = ({ isOpen, onOpenChange }: NewFolderModalProps) =>
                 placeholder="Folder name"
                 size="lg"
                 autoFocus
-                {...register('name')}
+                {...register("name")}
                 isInvalid={!!errors.name}
                 errorMessage={errors.name?.message}
               />
@@ -109,7 +122,12 @@ export const NewFolderModal = ({ isOpen, onOpenChange }: NewFolderModalProps) =>
           )} */}
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" type="submit" isLoading={isPending} aria-label="Create">
+            <Button
+              color="primary"
+              type="submit"
+              isLoading={isPending}
+              aria-label="Create"
+            >
               Create
             </Button>
           </ModalFooter>

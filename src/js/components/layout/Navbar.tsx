@@ -38,8 +38,6 @@ import UserFallback from "../ui/UserFallback";
 
 import { NotificationBellWithRoomProvider } from "../notification/NotificationBell";
 
-import { PageName } from "./Layout";
-
 // import { useUpdatePreferences } from "@/api-integration/mutations/preferences";
 // import { ThemePreference } from "@/api-integration/types/preferences";
 
@@ -49,11 +47,7 @@ import { Kbd } from "../ui/Kbd";
 
 import { Drawer } from "vaul";
 
-export const Navbar = ({
-  setCurrentPage,
-}: {
-  setCurrentPage: Dispatch<SetStateAction<string>>;
-}) => {
+export const Navbar = () => {
   // const { session } = useAuth();
   // const user = session?.user;
   // const name =
@@ -120,17 +114,9 @@ export const Navbar = ({
           <LayoutLeft />
         </Button>
 
-        <Button
-          variant="light"
-          size="sm"
-          isIconOnly
-          onClick={() => {
-            // console.log("back");
-            setCurrentPage("library");
-          }}
-        >
+        {/* <Button variant="light" size="sm" isIconOnly>
           <ArrowLeft />
-        </Button>
+        </Button> */}
       </div>
       <div className="flex items-center">
         {!isMobile && <Divider orientation="vertical" className="mx-2 h-4" />}
@@ -262,50 +248,3 @@ const TabThemeSwitcher = ({
     </Tabs>
   );
 };
-
-// TODO: Add this submenu in future when API is ready.
-
-// const PauseNotificationsSubMenu = () => {
-//   const tomorrow = dayjs().add(1, 'day');
-//   const formattedTomorrow = tomorrow.format('Till Do MMMM');
-
-//   return (
-//     <DropdownMenuSub>
-//       <DropdownMenuSubTrigger>
-//         <div className="flex w-full items-center justify-between">
-//           <p>Pause Notifications</p>
-//           <ChevronRightSmallFilledThin width={20} height={20} />
-//         </div>
-//       </DropdownMenuSubTrigger>
-//       <DropdownMenuPortal>
-//         <DropdownMenuSubContent>
-//           <DropdownMenuLabel>Pause notifications</DropdownMenuLabel>
-//           <DropdownMenuGroup>
-//             <DropdownMenuItem>For 30 minutes</DropdownMenuItem>
-//             <DropdownMenuItem>For 1 hour</DropdownMenuItem>
-//             <DropdownMenuItem>
-//               <div className="flex w-full flex-col">
-//                 <p>Until EOD</p>
-//                 <p className="text-xs text-ds-menu-text-secondary">
-//                   Till 5pm IST (India Standard Time)
-//                 </p>
-//               </div>
-//             </DropdownMenuItem>
-//             <DropdownMenuItem>
-//               <div className="flex w-full flex-col">
-//                 <p>Until tomorrow</p>
-//                 <p className="text-xs text-ds-menu-text-secondary">{formattedTomorrow}, 9am IST</p>
-//               </div>
-//             </DropdownMenuItem>
-//             <DropdownMenuItem>
-//               <div className="flex w-full flex-col">
-//                 <p>Until next week</p>
-//                 <p className="text-xs text-ds-menu-text-secondary">Next Monday, 9am IST</p>
-//               </div>
-//             </DropdownMenuItem>
-//           </DropdownMenuGroup>
-//         </DropdownMenuSubContent>
-//       </DropdownMenuPortal>
-//     </DropdownMenuSub>
-//   );
-// };

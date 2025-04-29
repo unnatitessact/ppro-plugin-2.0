@@ -41,7 +41,7 @@ export const links: Link[] = [
   // },
   {
     label: "Library",
-    href: "/library",
+    href: "library",
     icon: <Folder1 size={20} />,
   },
   // {

@@ -38,6 +38,7 @@ import {
   ResourceType,
   VersionStackItem,
   LibraryAsset,
+  LibraryAssetMinimal,
 } from "../types/library";
 
 import { useParamsStateStore } from "../../stores/params-state-store";
@@ -117,7 +118,7 @@ export const useRenameAsset = (assetId: string) => {
               return {
                 ...page,
                 results: page.results
-                  .map((result: LibraryAsset) => {
+                  .map((result: LibraryAssetMinimal) => {
                     if (result.id === assetId) {
                       return {
                         ...result,
@@ -126,7 +127,7 @@ export const useRenameAsset = (assetId: string) => {
                     }
                     return result;
                   })
-                  .filter((item: LibraryAsset | null) => item !== null),
+                  .filter((item: LibraryAssetMinimal | null) => item !== null),
               };
             }),
           };
@@ -222,7 +223,7 @@ export const useRenameTableAsset = () => {
               return {
                 ...page,
                 results: page.results
-                  .map((result: LibraryAsset) => {
+                  .map((result: LibraryAssetMinimal) => {
                     if (result.id === payload?.assetId) {
                       return {
                         ...result,
@@ -231,7 +232,7 @@ export const useRenameTableAsset = () => {
                     }
                     return result;
                   })
-                  .filter((item: LibraryAsset | null) => item !== null),
+                  .filter((item: LibraryAssetMinimal | null) => item !== null),
               };
             }),
           };
@@ -1122,7 +1123,7 @@ export const useReorderVersionStack = () => {
               return {
                 ...page,
                 results: page.results
-                  .map((result: LibraryAsset) => {
+                  .map((result: LibraryAssetMinimal) => {
                     if (
                       result.resourcetype === "VersionStack" &&
                       result.id === payload.version_stack_id
@@ -1149,7 +1150,7 @@ export const useReorderVersionStack = () => {
                     }
                     return result;
                   })
-                  .filter((item: LibraryAsset | null) => item !== null),
+                  .filter((item: LibraryAssetMinimal | null) => item !== null),
               };
             }),
           };
@@ -1251,7 +1252,7 @@ export const useGetLibraryContentPermissions = () => {
           newLibraryContent.pages = newLibraryContent.pages.map((page) => ({
             ...page,
             results: page.results
-              .map((result: LibraryAsset) => {
+              .map((result: LibraryAssetMinimal) => {
                 const contains = variables.items.some(
                   (item) => item.id === result.id
                 );
@@ -1265,7 +1266,7 @@ export const useGetLibraryContentPermissions = () => {
                 // Preserve existing permissions and sub_contents if they exist
                 return result;
               })
-              .filter((item: LibraryAsset | null) => item !== null),
+              .filter((item: LibraryAssetMinimal | null) => item !== null),
           }));
 
           return newLibraryContent;

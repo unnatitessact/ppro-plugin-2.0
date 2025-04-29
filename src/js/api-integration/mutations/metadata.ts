@@ -13,14 +13,16 @@ import {
   getModificationDetailsQueryKey,
   getSelectOptionsQueryKey,
 } from "../queries/metadata";
+import { CreateMetadataTemplatePayload } from "../types/metadata";
+import { CreateMetadataCategoryPayload } from "../types/metadata";
+// import { CreateMetadataTemplateSchema } from "@/schema/library/metadata";
 import { getProjectMetadataQueryKey } from "../queries/projects";
 import {
   AutoFillMetadataFieldPayload,
   AutoFillProjectMetadataFieldPayload,
   AutoTranslateMetadataFieldPayload,
   AutoTranslateProjectMetadataFieldPayload,
-  CreateMetadataCategoryPayload,
-  CreateMetadataTemplatePayload,
+  // CreateMetadataCategoryPayload,
   MetadataFieldType,
   MetadataFieldValue,
   MetadataKeyValueCategoryField,

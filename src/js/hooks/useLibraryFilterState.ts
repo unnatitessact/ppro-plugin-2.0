@@ -1,282 +1,246 @@
-// import type { FieldOption } from '@/api-integration/types/metadata';
-// import type { FolderFilterState } from '@/stores/library-filter-store';
+import type { FieldOption } from "@/api-integration/types/metadata";
+import type { FolderFilterState } from "@/stores/library-filter-store";
 
-// import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from "react";
 
-// import { useParams, usePathname } from 'next/navigation';
+import { useParams, useLocation } from "react-router-dom";
 
-// import { parseAsBoolean, parseAsJson, parseAsStringEnum, useQueryState } from 'nuqs';
-// import { z } from 'zod';
+import { z } from "zod";
 
-// import { MetadataFieldType } from '@/api-integration/types/metadata';
+import { MetadataFieldType } from "@/api-integration/types/metadata";
 
-// import { useFilterStore } from '@/stores/library-filter-store';
-// import { Filter, Sort } from '@/stores/library-store';
+import { Filter, Sort } from "@/stores/library-store";
+import { create } from "zustand";
 
-// const metadataFieldTypeEnum = z.enum([
-//   'text',
-//   'number',
-//   'date',
-//   'text_area',
-//   'person',
-//   'location',
-//   'timecode',
-//   'timecode_range',
-//   'select',
-//   'multiselect',
-//   'rating',
-//   'toggle',
-//   'attachment',
-//   'file_status',
-//   'tagging_status'
-// ] as const satisfies readonly MetadataFieldType[]) as z.ZodType<MetadataFieldType>;
+const metadataFieldTypeEnum = z.enum([
+  "text",
+  "number",
+  "date",
+  "text_area",
+  "person",
+  "location",
+  "timecode",
+  "timecode_range",
+  "select",
+  "multiselect",
+  "rating",
+  "toggle",
+  "attachment",
+  "file_status",
+  "tagging_status",
+] as const satisfies readonly MetadataFieldType[]) as z.ZodType<MetadataFieldType>;
 
-// const fieldOptionSchema: z.ZodType<FieldOption> = z.object({
-//   id: z.string(),
-//   label: z.string(),
-//   value: z.string()
-// });
+const fieldOptionSchema: z.ZodType<FieldOption> = z.object({
+  id: z.string(),
+  label: z.string(),
+  value: z.string(),
+});
 
-// const filterSchema = z.array(
-//   z.object({
-//     id: z.string(),
-//     key: z.string().optional(),
-//     label: z.string(),
-//     type: metadataFieldTypeEnum,
-//     value: z.string().nullable(),
-//     operator: z.string().nullable(),
-//     isStatic: z.boolean().optional(),
-//     options: z.array(fieldOptionSchema)
-//   })
-// );
+const filterSchema = z.array(
+  z.object({
+    id: z.string(),
+    key: z.string().optional(),
+    label: z.string(),
+    type: metadataFieldTypeEnum,
+    value: z.string().nullable(),
+    operator: z.string().nullable(),
+    isStatic: z.boolean().optional(),
+    options: z.array(fieldOptionSchema),
+  })
+);
 
-// const sortSchema = z.array(
-//   z.object({
-//     id: z.string(),
-//     label: z.string(),
-//     key: z.string(),
-//     direction: z.enum(['asc', 'desc']),
-//     type: z.enum(['date', 'name'])
-//   })
-// );
+const sortSchema = z.array(
+  z.object({
+    id: z.string(),
+    label: z.string(),
+    key: z.string(),
+    direction: z.enum(["asc", "desc"]),
+    type: z.enum(["date", "name"]),
+  })
+);
 
-// // Schema for the current folder filter state in URL
-// const currentFilterStateSchema = z.object({
-//   filters: filterSchema.optional(),
-//   sorts: sortSchema.optional(),
-//   searchQuery: z.string().optional()
-// });
+// Schema for the current folder filter state in URL
+const currentFilterStateSchema = z.object({
+  filters: filterSchema.optional(),
+  sorts: sortSchema.optional(),
+  searchQuery: z.string().optional(),
+});
 
-// const parseCurrentFilterState = parseAsJson<z.infer<typeof currentFilterStateSchema>>(
-//   (rawValue: unknown) => {
-//     try {
-//       return currentFilterStateSchema.parse(rawValue);
-//     } catch (error) {
-//       console.error('Current filter state schema validation error:', error);
-//       return { filters: [], sorts: [], searchQuery: '' };
-//     }
-//   }
-// ).withDefault({ filters: [], sorts: [], searchQuery: '' });
+interface LibraryFilterState {
+  currentFolderId: string;
+  filterMatchType: "all" | "any";
+  isFlattened: boolean;
+  folderStates: Record<
+    string,
+    {
+      filters: Filter[];
+      sorts: Sort[];
+      searchQuery: string;
+    }
+  >;
+  setFilterMatchType: (type: "all" | "any") => void;
+  setIsFlattened: (flattened: boolean) => void;
+  updateFolderState: (
+    folderId: string,
+    state: {
+      filters: Filter[];
+      sorts: Sort[];
+      searchQuery: string;
+    }
+  ) => void;
+}
 
-// export const useLibraryFilterState = () => {
-//   // Global states in URL
-//   const [filterMatchType, setFilterMatchType] = useQueryState(
-//     'match_type',
-//     parseAsStringEnum(['all', 'any'] as const).withDefault('all')
-//   );
+const useLibraryFilterStore = create<LibraryFilterState>((set) => ({
+  currentFolderId: "root",
+  filterMatchType: "all",
+  isFlattened: false,
+  folderStates: {},
+  setFilterMatchType: (type) => set({ filterMatchType: type }),
+  setIsFlattened: (flattened) => set({ isFlattened: flattened }),
+  updateFolderState: (folderId, state) =>
+    set((prev) => ({
+      folderStates: {
+        ...prev.folderStates,
+        [folderId]: state,
+      },
+    })),
+}));
 
-//   const [isFlattened, setIsFlattened] = useQueryState(
-//     'flattened',
-//     parseAsBoolean.withDefault(false)
-//   );
+export const useLibraryFilterState = () => {
+  const {
+    currentFolderId,
+    filterMatchType,
+    isFlattened,
+    folderStates,
+    setFilterMatchType,
+    setIsFlattened,
+    updateFolderState,
+  } = useLibraryFilterStore();
 
-//   // Current folder filter state in URL
-//   const [currentFilterState, setCurrentFilterState] = useQueryState(
-//     'filterState',
-//     parseCurrentFilterState
-//   );
+  const currentState = folderStates[currentFolderId] || {
+    filters: [],
+    sorts: [],
+    searchQuery: "",
+  };
 
-//   // Access the Zustand store
-//   const { folderStates, updateFolderState } = useFilterStore();
+  // Filter operations
+  const addFilter = useCallback(
+    (filter: Filter) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        filters: [...currentState.filters, filter],
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//   // Determine current folder ID and check if we're on a library page
-//   const params = useParams();
-//   const pathname = usePathname();
+  const removeFilter = useCallback(
+    (filterId: string) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        filters: currentState.filters.filter((f) => f.id !== filterId),
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//   const isLibraryPage = useMemo(() => {
-//     return pathname === '/library' || pathname.startsWith('/library/folder/');
-//   }, [pathname]);
+  const modifyFilter = useCallback(
+    (filterId: string, filter: Filter) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        filters: currentState.filters.map((f) =>
+          f.id === filterId ? filter : f
+        ),
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//   const currentFolderId = useMemo(() => {
-//     if (pathname.startsWith('/library/folder/') && params?.folderId) {
-//       return params.folderId as string;
-//     }
-//     return 'root';
-//   }, [pathname, params]);
+  const clearFilters = useCallback(() => {
+    updateFolderState(currentFolderId, {
+      ...currentState,
+      filters: [],
+    });
+  }, [currentFolderId, currentState, updateFolderState]);
 
-//   // Sync URL state with store when folder changes
-//   useEffect(() => {
-//     if (!isLibraryPage) {
-//       // Clear URL params when not on library pages
-//       setCurrentFilterState({
-//         filters: [],
-//         sorts: [],
-//         searchQuery: ''
-//       });
-//       return;
-//     }
+  // Sort operations
+  const addSort = useCallback(
+    (sort: Sort) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        sorts: [...currentState.sorts, sort],
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//     // When folder changes, check store first
-//     if (folderStates[currentFolderId]) {
-//       // If this folder has stored state, use it for URL
-//       setCurrentFilterState(folderStates[currentFolderId]);
-//     } else {
-//       // New folder with no stored state - clear URL params
-//       setCurrentFilterState({
-//         filters: [],
-//         sorts: [],
-//         searchQuery: ''
-//       });
-//     }
-//   }, [currentFolderId, folderStates, setCurrentFilterState, isLibraryPage]);
+  const removeSort = useCallback(
+    (sortId: string) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        sorts: currentState.sorts.filter((s) => s.id !== sortId),
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//   // Update both store and URL when filter state changes
-//   const updateFilterState = useCallback(
-//     (updater: (state: FolderFilterState) => FolderFilterState) => {
-//       // Update the Zustand store (always update store regardless of page)
-//       updateFolderState(currentFolderId, updater);
+  const modifySort = useCallback(
+    (sortId: string, sort: Sort) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        sorts: currentState.sorts.map((s) => (s.id === sortId ? sort : s)),
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//       // Only update URL query params on library pages
-//       if (isLibraryPage) {
-//         setCurrentFilterState((prev) => {
-//           const stateToUpdate = {
-//             filters: prev.filters || [],
-//             sorts: prev.sorts || [],
-//             searchQuery: prev.searchQuery || ''
-//           };
-//           return updater(stateToUpdate);
-//         });
-//       }
-//     },
-//     [currentFolderId, updateFolderState, setCurrentFilterState, isLibraryPage]
-//   );
+  const clearSorts = useCallback(() => {
+    updateFolderState(currentFolderId, {
+      ...currentState,
+      sorts: [],
+    });
+  }, [currentFolderId, currentState, updateFolderState]);
 
-//   // Filter operations
-//   const addFilter = useCallback(
-//     (filter: Filter) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         filters: [...state.filters, filter]
-//       }));
-//     },
-//     [updateFilterState]
-//   );
+  // Search operations
+  const setSearch = useCallback(
+    (searchQuery: string) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        searchQuery,
+      });
+    },
+    [currentFolderId, currentState, updateFolderState]
+  );
 
-//   const removeFilter = useCallback(
-//     (filterId: string) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         filters: state.filters.filter((f) => f.id !== filterId)
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   const modifyFilter = useCallback(
-//     (filterId: string, filter: Filter) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         filters: state.filters.map((f) => (f.id === filterId ? filter : f))
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   const clearFilters = useCallback(() => {
-//     updateFilterState((state) => ({
-//       ...state,
-//       filters: []
-//     }));
-//   }, [updateFilterState]);
-
-//   // Sort operations
-//   const addSort = useCallback(
-//     (sort: Sort) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         sorts: [...state.sorts, sort]
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   const removeSort = useCallback(
-//     (sortId: string) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         sorts: state.sorts.filter((s) => s.id !== sortId)
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   const modifySort = useCallback(
-//     (sortId: string, sort: Sort) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         sorts: state.sorts.map((s) => (s.id === sortId ? sort : s))
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   const clearSorts = useCallback(() => {
-//     updateFilterState((state) => ({
-//       ...state,
-//       sorts: []
-//     }));
-//   }, [updateFilterState]);
-
-//   // Search operations
-//   const setSearch = useCallback(
-//     (searchQuery: string) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         searchQuery
-//       }));
-//     },
-//     [updateFilterState]
-//   );
-
-//   return {
-//     filters: currentFilterState.filters || [],
-//     setFilters: (filters: Filter[]) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         filters
-//       }));
-//     },
-//     filterMatchType,
-//     setFilterMatchType,
-//     addFilter,
-//     removeFilter,
-//     modifyFilter,
-//     clearFilters,
-//     sorts: currentFilterState.sorts || [],
-//     setSorts: (sorts: Sort[]) => {
-//       updateFilterState((state) => ({
-//         ...state,
-//         sorts
-//       }));
-//     },
-//     addSort,
-//     removeSort,
-//     modifySort,
-//     clearSorts,
-//     search: currentFilterState.searchQuery || '',
-//     setSearch,
-//     isFlattened,
-//     setIsFlattened,
-//     currentFolderId
-//   };
-// };
+  return {
+    filters: currentState.filters,
+    setFilters: (filters: Filter[]) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        filters,
+      });
+    },
+    filterMatchType,
+    setFilterMatchType,
+    addFilter,
+    removeFilter,
+    modifyFilter,
+    clearFilters,
+    sorts: currentState.sorts,
+    setSorts: (sorts: Sort[]) => {
+      updateFolderState(currentFolderId, {
+        ...currentState,
+        sorts,
+      });
+    },
+    addSort,
+    removeSort,
+    modifySort,
+    clearSorts,
+    search: currentState.searchQuery,
+    setSearch,
+    isFlattened,
+    setIsFlattened,
+    currentFolderId,
+  };
+};

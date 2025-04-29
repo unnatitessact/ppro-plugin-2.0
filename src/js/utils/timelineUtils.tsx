@@ -1,20 +1,30 @@
 const COLUMNS = 10;
 const ROWS = 10;
 
+interface SpritePosition {
+  top: number;
+  left: number;
+}
+
 export const generateSprites = (spriteWidth: number, spriteHeight: number) => {
-  const sprites = [];
+  const sprites: SpritePosition[] = [];
   for (let i = 0; i < ROWS; i++) {
     for (let j = 0; j < COLUMNS; j++) {
+      // ts-ignore: idk how to fix this
       sprites.push({
         top: i * spriteHeight,
-        left: j * spriteWidth
+        left: j * spriteWidth,
       });
     }
   }
   return sprites;
 };
 
-export const distributeSprites = (min: number, max: number, count: number): number[] => {
+export const distributeSprites = (
+  min: number,
+  max: number,
+  count: number
+): number[] => {
   if (count <= 0) return [];
   if (count === 1) return [min];
 
@@ -31,12 +41,13 @@ export const generateSpritesCustom = (
   rows: number,
   columns: number
 ) => {
-  const sprites = [];
+  const sprites: SpritePosition[] = [];
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
+      // ts-ignore: idk how to fix this
       sprites.push({
         top: i * spriteHeight,
-        left: j * spriteWidth
+        left: j * spriteWidth,
       });
     }
   }

@@ -1,5 +1,6 @@
-import { PermissionPayload } from "../components/security-groups/files-folders/PermissionDropdown";
+// import { PermissionPayload } from "@/components/security-groups/files-folders/PermissionDropdown";
 
+import { PermissionPayload } from "../api-integration/types/library";
 import { ResourceType } from "../api-integration/types/library";
 import { LibraryTree } from "../api-integration/types/security-groups";
 

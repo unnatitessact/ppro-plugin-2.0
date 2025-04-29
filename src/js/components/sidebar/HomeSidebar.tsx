@@ -31,11 +31,6 @@ export const HomeSidebar = ({
 }) => {
   const { setIsSearchOpen } = useSearchStore();
 
-  //   const router = useRouter();
-  //   const searchParams = useSearchParams();
-
-  //   const hasSearchParam = searchParams.get("search");
-
   const showUploadLimitIndicator = useFeatureToggle([
     "production",
     "staging",
@@ -65,13 +60,18 @@ export const HomeSidebar = ({
             // endContent={<SearchKbd keys={["mod", "K"]} />}
           />
         )}
-        {(isUserTagger ? taggingLinks : links).map((link) => (
-          <NavLink key={link.href} {...link} layoutIdPrefix="home" />
+        {links.map((link) => (
+          <NavLink
+            key={link.href}
+            {...link}
+            onClick={() => {}}
+            layoutIdPrefix="home"
+          />
         ))}
-        {isInternalUser &&
+        {/* {isInternalUser &&
           internalLinks.map((link) => (
             <NavLink key={link.href} {...link} layoutIdPrefix="home" />
-          ))}
+          ))} */}
 
         {/* {isRemixesEnabled ? (
           <NavLink

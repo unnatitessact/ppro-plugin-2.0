@@ -40,7 +40,7 @@ import { ResourceType as ProjectResourceType } from "../api-integration/types/pr
 
 import { useReviewStore } from "../stores/review-store";
 import { useSearchActionsStore } from "../stores/search-actions-store";
-import { useUpdateReviewCommentsAsRead } from "../api-integration/mutations/review";
+// import { useUpdateReviewCommentsAsRead } from "../api-integration/mutations/review";
 
 export const emptyFilterState = {
   attachments: false,
@@ -154,8 +154,8 @@ export function CommentsProvider({
     }
   }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSuccess]);
 
-  const { mutate: updateReviewCommentsAsRead } =
-    useUpdateReviewCommentsAsRead();
+  // const { mutate: updateReviewCommentsAsRead } =
+  //   useUpdateReviewCommentsAsRead();
 
   // const searchParams = useSearchParams();
   const searchQuery = "";
@@ -209,28 +209,28 @@ export function CommentsProvider({
     );
   }, []);
 
-  const markCommentsAsRead = useCallback(
-    (ids: string[]) => {
-      updateReviewCommentsAsRead(ids, {
-        onSuccess: () => {
-          commentsToBeMarkedAsReadRef.current = [];
-        },
-      });
-    },
-    [updateReviewCommentsAsRead]
-  );
+  // const markCommentsAsRead = useCallback(
+  //   (ids: string[]) => {
+  //     updateReviewCommentsAsRead(ids, {
+  //       onSuccess: () => {
+  //         commentsToBeMarkedAsReadRef.current = [];
+  //       },
+  //     });
+  //   },
+  //   [updateReviewCommentsAsRead]
+  // );
 
   useEffect(() => {
     // This function batches all comment ids that need to be marked as read
     // and calls the API every 2 seconds if needed to mark as read
     const intervalId = setInterval(() => {
       if (commentsToBeMarkedAsReadRef.current.length > 0) {
-        markCommentsAsRead(commentsToBeMarkedAsReadRef.current);
+        // markCommentsAsRead(commentsToBeMarkedAsReadRef.current);
       }
     }, 2000);
 
     return () => clearInterval(intervalId);
-  }, [markCommentsAsRead]);
+  }, []);
 
   // Save them as duplicate in review store, to make them accessible in the action bar
   // For download comment logic

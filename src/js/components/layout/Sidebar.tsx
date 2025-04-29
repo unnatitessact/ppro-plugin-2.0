@@ -6,18 +6,10 @@ import { Button } from "../ui/Button";
 import { WorkspaceSwitcher } from "../user-management/WorkspaceSwitcher";
 import { useEffect } from "react";
 import { Suspense } from "react";
-import { useParamsStateStore } from "@/stores/params-state-store";
 import { HomeSidebar } from "../sidebar/HomeSidebar";
 import { ChevronLeftSmall, ChevronRightSmall } from "@tessact/icons";
 
-import {
-  Drawer,
-  DrawerContent,
-  DrawerItem,
-  // DrawerNested,
-  DrawerNestedItem,
-  DrawerTrigger,
-} from "../../components/ui/Drawer";
+import { Drawer, DrawerContent } from "../../components/ui/Drawer";
 
 export const transition = {
   // type: 'spring',
@@ -59,92 +51,9 @@ export const Sidebar = () => {
 
   const lastViewedView = lastViewed[lastViewed?.length - 1];
 
-  const { currentPage } = useParamsStateStore();
-
   useEffect(() => {
     setLastViewed([]);
-
-    // if (pathname.startsWith("/library/editor/")) {
-    //   setSidebarView("editor-v2");
-    //   return;
-    // }
-
-    if (currentPage === "library") {
-      setSidebarView("root");
-    }
-    // if (pathname === "/settings") {
-    //   setSidebarView("root");
-    // }
-    // if (pathname.startsWith('/settings/')) {
-    //   setSidebarView('settings');
-    // }
-    // if (pathname.startsWith('/settings/workflows/')) {
-    //   setSidebarView('workflows');
-    // }
-
-    if (currentPage === "library") {
-      // setSidebarView("library");
-    }
-    // if (pathname === '/views') {
-    //   setSidebarView('root');
-    // }
-    // if (pathname.startsWith('/views/')) {
-    //   setSidebarView('views');
-    // }
-    if (currentPage === "projects") {
-      setSidebarView("root");
-    }
-    // if (pathname.startsWith('/settings/teams/')) {
-    //   setSidebarView('teams');
-    // }
-    if (currentPage === "projects") {
-      setSidebarView("projects");
-    }
-    // if (
-    //   pathname === `/projects/${projectId}/tasks/${taskId}` ||
-    //   pathname === `/projects/${projectId}/tasks/${taskId}/` ||
-    //   pathname === `/projects/${projectId}/files` ||
-    //   pathname === `/projects/${projectId}/files/` ||
-    //   pathname === `/projects/${projectId}/members` ||
-    //   pathname === `/projects/${projectId}/settings` ||
-    //   pathname === `/projects/${projectId}/settings/`
-    // ) {
-    //   setSidebarView("project-overview");
-    // }
-    // if (
-    //   pathname === `/projects/${projectId}/files/asset/${assetId}` ||
-    //   pathname === `/projects/${projectId}/files/folder/${folderId}` ||
-    //   pathname === `/projects/${projectId}/files/asset/${assetId}/` ||
-    //   pathname === `/projects/${projectId}/files/folder/${folderId}/` ||
-    //   pathname === `/projects/${projectId}/files/video/${assetId}` ||
-    //   pathname === `/projects/${projectId}/files/video/${assetId}/`
-    // ) {
-    //   setSidebarView("project-file-preview");
-    // }
-    // if (
-    //   pathname === `/projects/${projectId}/tasks/${taskId}/files/${assetId}` ||
-    //   pathname ===
-    //     `/projects/${projectId}/tasks/${taskId}/files/folder/${folderId}` ||
-    //   pathname === `/projects/${projectId}/tasks/${taskId}/files/${assetId}/` ||
-    //   pathname ===
-    //     `/projects/${projectId}/tasks/${taskId}/files/folder/${folderId}/` ||
-    //   pathname ===
-    //     `/projects/${projectId}/tasks/${taskId}/files/video/${assetId}` ||
-    //   pathname ===
-    //     `/projects/${projectId}/tasks/${taskId}/files/video/${assetId}/`
-    // ) {
-    //   setSidebarView("project-task-file");
-    // }
-    // if (pathname === `/preset` || pathname === `/preset/`) {
-    //   setSidebarView("preset-dashboard");
-    // }
-    // if (
-    //   pathname === `/preset/${presetId}` ||
-    //   pathname === `/preset/${presetId}/`
-    // ) {
-    //   setSidebarView("preset");
-    // }
-  }, [currentPage]);
+  }, []);
 
   const buttonActionCategoryMappings: Record<
     SidebarView,
@@ -163,6 +72,50 @@ export const Sidebar = () => {
     },
     library: {
       Component: <LibrarySidebar />,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    settings: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    workflows: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    views: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    projects: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    "project-overview": {
+      Component: null,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    "project-task-file": {
+      Component: null,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    "project-file-preview": {
+      Component: null,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    teams: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    tagging: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    "marathon-cameras": {
+      Component: null,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    "preset-dashboard": {
+      Component: null,
+      back: () => {},
+      forward: () => {},
+      level: 0,
+    },
+    preset: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    editor: { Component: null, back: () => {}, forward: () => {}, level: 0 },
+    "editor-v2": {
+      Component: null,
       back: () => {},
       forward: () => {},
       level: 0,

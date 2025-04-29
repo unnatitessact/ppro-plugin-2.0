@@ -1,61 +1,69 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useParams } from 'next/navigation';
+// import { useParams } from "next/navigation";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { cn, Spinner } from '@nextui-org/react';
-import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useParams } from "react-router-dom";
 
-import { ChevronRightSmall, Folder1Filled, FolderLink } from '@tessact/icons';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn, Spinner } from "@nextui-org/react";
+import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@/components/ui/Modal';
-import { ScrollShadow } from '@/components/ui/ScrollShadow';
-import { Select, SelectItem } from '@/components/ui/Select';
+import { ChevronRightSmall, Folder1Filled, FolderLink } from "@tessact/icons";
 
-import { useConnectExternalFolder } from '@/api-integration/mutations/library';
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@/components/ui/Modal";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
+import { Select, SelectItem } from "@/components/ui/Select";
+
+import { useConnectExternalFolder } from "@/api-integration/mutations/library";
 import {
   useConnectionsQuery,
-  useListFoldersOfConnectionQuery
-} from '@/api-integration/queries/library';
+  useListFoldersOfConnectionQuery,
+} from "@/api-integration/queries/library";
 
-import { CreateConnectedFolderSchema } from '@/schemas/library/folders';
+import { CreateConnectedFolderSchema } from "@/schema/library/folders";
 
 interface NewConnectedFolderModalProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  backdrop?: 'transparent' | 'opaque' | 'blur' | undefined;
+  backdrop?: "transparent" | "opaque" | "blur" | undefined;
 }
 
 export const NewConnectedFolderModal = ({
   isOpen,
   onOpenChange,
-  backdrop
+  backdrop,
 }: NewConnectedFolderModalProps) => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm<z.infer<typeof CreateConnectedFolderSchema>>({
     resolver: zodResolver(CreateConnectedFolderSchema),
     defaultValues: {
-      name: ''
-    }
+      name: "",
+    },
   });
 
   const { folderId } = useParams() as { folderId: string | null };
 
-  const [selectedConnection, setSelectedConnection] = useState<string | null>(null);
+  const [selectedConnection, setSelectedConnection] = useState<string | null>(
+    null
+  );
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
-  const { mutateAsync: createConnectedFolder, isPending } = useConnectExternalFolder(
-    selectedConnection || '',
-    folderId
-  );
+  const { mutateAsync: createConnectedFolder, isPending } =
+    useConnectExternalFolder(selectedConnection || "", folderId);
 
   const onSubmit = async ({ name }: { name: string }) => {
     if (selectedFolder) {
@@ -67,17 +75,15 @@ export const NewConnectedFolderModal = ({
             reset();
             setSelectedConnection(null);
             setSelectedFolder(null);
-          }
+          },
         }
       );
     }
   };
 
   const { data: connections } = useConnectionsQuery();
-  const { data: folders, isLoading: isFetchingFolders } = useListFoldersOfConnectionQuery(
-    selectedConnection || '',
-    null
-  );
+  const { data: folders, isLoading: isFetchingFolders } =
+    useListFoldersOfConnectionQuery(selectedConnection || "", null);
 
   useEffect(() => {
     if (selectedConnection) {
@@ -101,7 +107,7 @@ export const NewConnectedFolderModal = ({
               placeholder="Folder name"
               size="lg"
               autoFocus
-              {...register('name')}
+              {...register("name")}
               isInvalid={!!errors.name}
               errorMessage={errors.name?.message}
             />
@@ -163,7 +169,7 @@ const ConnectedFolderNode = ({
   selectedConnection,
   selectedFolder,
   setSelectedFolder,
-  isOnRoot
+  isOnRoot,
 }: {
   folderName: string;
   selectedConnection: string | null;
@@ -176,7 +182,7 @@ const ConnectedFolderNode = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: children, isLoading } = useListFoldersOfConnectionQuery(
-    selectedConnection || '',
+    selectedConnection || "",
     folderName
   );
 
@@ -192,8 +198,8 @@ const ConnectedFolderNode = ({
         <ChevronRightSmall
           size={16}
           className={cn(
-            'mt-2 cursor-pointer text-ds-text-secondary transition',
-            isExpanded && 'rotate-90'
+            "mt-2 cursor-pointer text-ds-text-secondary transition",
+            isExpanded && "rotate-90"
           )}
           onClick={() => setIsExpanded(!isExpanded)}
         />
@@ -204,7 +210,9 @@ const ConnectedFolderNode = ({
         )}
 
         <motion.div
-          className={cn('relative flex cursor-pointer items-center gap-2 rounded-xl px-1.5 py-2')}
+          className={cn(
+            "relative flex cursor-pointer items-center gap-2 rounded-xl px-1.5 py-2"
+          )}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => setSelectedFolder(folderName)}
@@ -212,7 +220,7 @@ const ConnectedFolderNode = ({
           <span className="flex-shrink-0">
             <Folder1Filled size={20} className="text-ds-text-secondary" />
           </span>
-          <p className={cn('overflow-hidden truncate text-sm')}>{folderName}</p>
+          <p className={cn("overflow-hidden truncate text-sm")}>{folderName}</p>
           {isHovered && (
             <motion.div
               layout

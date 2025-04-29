@@ -92,11 +92,16 @@ interface LibraryState {
   setCompositionToPreview: (compositionToPreview: CompositionOutput) => void;
   selectedVersionStackId: string | null;
   setSelectedVersionStackId: (selectedVersionStackId: string | null) => void;
+  showVersionsPanel: boolean;
+  toggleVersionsPanel: () => void;
 }
 
 export const useLibraryStore = create<LibraryState>()(
   persist(
     (set) => ({
+      showVersionsPanel: false,
+      toggleVersionsPanel: () =>
+        set((state) => ({ showVersionsPanel: !state.showVersionsPanel })),
       sorts: [],
       setSorts: (sorts: Sort[]) => set({ sorts }),
       filters: [],

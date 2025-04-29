@@ -1,5 +1,6 @@
 // import { Library } from "../components/pages/Library";
 
+import LibraryLayout from "@/components/layout/LibraryLayout";
 import { Library } from "../components/library/Library";
 
 // import { useWorkspace } from "../hooks/useWorkspace";
@@ -14,7 +15,9 @@ export const LibraryPage = () => {
     //   initialPresence={{}}
     //   initialStorage={{}}
     // >
-    <Library />
+    <LibraryLayout>
+      <Library />
+    </LibraryLayout>
     // </LibraryRoomProvider>
   );
 };

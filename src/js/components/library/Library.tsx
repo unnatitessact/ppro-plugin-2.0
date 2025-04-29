@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import { useDebouncedCallback, useMediaQuery } from "@mantine/hooks";
 
@@ -9,6 +9,7 @@ import { cn } from "@nextui-org/react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroller";
+const InfiniteScrollComponent = InfiniteScroll as any;
 
 import { Button } from "@/components/ui/Button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow";
@@ -156,7 +157,7 @@ export const Library = () => {
       ref={scrollParentRef}
       scrollRestorationKey="library-grid"
     >
-      <InfiniteScroll
+      <InfiniteScrollComponent
         hasMore={hasNextPage}
         loadMore={() => {
           if (!isFetchingNextPage) {
@@ -248,7 +249,7 @@ export const Library = () => {
           isFetching={isFetchingNextPage}
           customText="Loading"
         />
-      </InfiniteScroll>
+      </InfiniteScrollComponent>
     </ScrollShadow>
   );
 };

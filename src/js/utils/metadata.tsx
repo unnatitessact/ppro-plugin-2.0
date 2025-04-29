@@ -22,7 +22,7 @@ import {
   TextSize,
 } from "@tessact/icons";
 
-import { User } from "../components/library/metadata/User";
+import { User } from "@/components/library/User";
 
 export const fieldTypes: {
   label: string;

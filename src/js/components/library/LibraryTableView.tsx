@@ -33,7 +33,7 @@ import {
 import { VersionModalButton } from "@/components/library/asset/VersionModalButton";
 import { DeleteModal } from "@/components/library/modals/DeleteModal";
 import { FetchingNextPageIndicator } from "./FetchNextPageIndicator";
-import { Table } from "../ui/Table";
+import Table from "../table/Table";
 
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { useFileUpload } from "@/hooks/useFileUpload";

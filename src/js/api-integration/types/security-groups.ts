@@ -1,5 +1,6 @@
-import { PermissionPayload } from "../../components/security-groups/files-folders/PermissionDropdown";
+// import { PermissionPayload } from "@/components/security-groups/files-folders/PermissionDropdown";
 
+import { PermissionPayload } from "./library";
 import { User } from "./auth";
 import { ResourceType, VersionStackItem } from "./library";
 import { Workspace } from "./user-management";
