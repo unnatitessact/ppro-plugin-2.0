@@ -54,10 +54,15 @@ const LibraryLayout = ({ children }: { children: ReactNode }) => {
 
   const pathname = useLocation().pathname;
 
+  console.log("pathname", pathname);
+
   const showBars =
-    (pathname === "/library" ||
-      (pathname.startsWith("/folder") && !pathname.includes("metadata"))) &&
-    !isMobile;
+    pathname === "/" ||
+    (pathname.includes("/folder") && !pathname.includes("metadata"));
+
+  console.log({
+    showBars,
+  });
   const selectionContainerRef = useRef<HTMLDivElement>(null);
   const isRemixesEnabled = useFeatureFlag(REMIXES_FLAG);
 
@@ -151,10 +156,9 @@ const LibraryLayout = ({ children }: { children: ReactNode }) => {
         </SelectionProvider>
       </LayoutGroup>
       <AnimatePresence>
-        {isMobile
-          ? selectedItems?.length > 0 &&
-            showBars && <SelectionBar key="selection-bar" />
-          : null}
+        {selectedItems?.length > 0 && showBars && (
+          <SelectionBar key="selection-bar" />
+        )}
       </AnimatePresence>
       <VersionModal
         isOpen={!!selectedVersionStackId}
