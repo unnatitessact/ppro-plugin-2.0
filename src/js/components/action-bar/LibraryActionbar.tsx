@@ -138,7 +138,6 @@ import { formatDate } from "@/utils/dates";
 import { ASSET_SHARE_FLAG } from "@/utils/featureFlagUtils";
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 import { getLabelFromFileStatus } from "@/utils/status";
-import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
 
 import {
   FileCard,
@@ -202,8 +201,7 @@ export const LibraryActionbar = () => {
     setView,
   } = useLibraryStore();
 
-  const { search, setSearch, clearFilters, clearSorts } =
-    useLibraryFilterState();
+  const { search, setSearch, clearFilters, clearSorts } = useLibraryStore();
 
   // const { setIsPreferencesModalOpen, setSelectedItem } = usePreferencesStore();
 
@@ -747,11 +745,11 @@ export const LibraryActionbar = () => {
           <h3 className="font-medium">Library</h3>
         )}
         <div className="flex flex-shrink-0 items-center gap-2">
-          {/* <SearchbarButton
+          <SearchbarButton
             value={search}
             onChange={setSearch}
             placeholder="Search inside folder"
-          /> */}
+          />
           <Button
             isIconOnly
             color="secondary"
@@ -1399,7 +1397,7 @@ const LibraryMobileDrawer = ({
 };
 
 const LibraryMobileSearchbar = () => {
-  const { search, setSearch } = useLibraryFilterState();
+  const { search, setSearch } = useLibraryStore();
 
   return (
     <Searchbar

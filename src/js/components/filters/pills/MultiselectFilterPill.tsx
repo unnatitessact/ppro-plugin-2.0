@@ -1,43 +1,57 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 
-import { useClickOutside } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface MultiselectFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'include') return 'include';
-  if (operator === 'exclude') return 'exclude';
-  if (operator === 'include_any_of') return 'include any of';
-  if (operator === 'exclude_any_of') return 'exclude any of';
-  if (operator === 'include_all') return 'include all';
-  if (operator === 'exclude_all') return 'exclude all';
+  if (operator === "include") return "include";
+  if (operator === "exclude") return "exclude";
+  if (operator === "include_any_of") return "include any of";
+  if (operator === "exclude_any_of") return "exclude any of";
+  if (operator === "include_all") return "include all";
+  if (operator === "exclude_all") return "exclude all";
 };
 
-export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+export const MultiselectFilterPill = ({
+  filter,
+}: MultiselectFilterPillProps) => {
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   // const { data: selectOptions } = useSelectOptionsQuery();
 
@@ -48,20 +62,22 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
   });
 
   const selectedValues = useMemo(() => {
-    return value ? value.split(',') : [];
+    return value ? value.split(",") : [];
   }, [value]);
 
   const selectedOptions =
     useMemo(() => {
-      return filter.options.filter((option) => selectedValues.includes(option.id));
+      return filter.options.filter((option) =>
+        selectedValues.includes(option.id)
+      );
     }, [filter.options, selectedValues]) || [];
 
   useEffect(() => {
-    if (operator === 'include' || operator === 'exclude') {
+    if (operator === "include" || operator === "exclude") {
       if (selectedValues.length > 1) {
         modifyFilter(id, {
           ...filter,
-          value: selectedValues[0]
+          value: selectedValues[0],
         });
       }
     }
@@ -72,15 +88,15 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('person', 16)}
+            {getIconFromType("person", 16)}
             {label}
           </div>
         </PopoverTrigger>
@@ -89,7 +105,7 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -109,15 +125,17 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
           </PopoverTrigger>
           <PopoverContent>
             <Listbox
-              classNames={{ list: 'max-h-60' }}
+              classNames={{ list: "max-h-60" }}
               selectionMode={
-                operator === 'include' || operator === 'exclude' ? 'single' : 'multiple'
+                operator === "include" || operator === "exclude"
+                  ? "single"
+                  : "multiple"
               }
-              selectedKeys={value ? value.split(',') : undefined}
+              selectedKeys={value ? value.split(",") : undefined}
               onSelectionChange={(keys) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: Array.from(keys).join(',')
+                  value: Array.from(keys).join(","),
                 });
               }}
               disallowEmptySelection
@@ -138,7 +156,7 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -155,20 +173,22 @@ export const MultiselectFilterPill = ({ filter }: MultiselectFilterPillProps) =>
         <Popover>
           <PopoverTrigger>
             <div className={cn(clickablePillCn)}>
-              {selectedOptions.map((option) => option.value).join(', ')}
+              {selectedOptions.map((option) => option.value).join(", ")}
             </div>
           </PopoverTrigger>
           <PopoverContent>
             <Listbox
-              classNames={{ list: 'max-h-60' }}
+              classNames={{ list: "max-h-60" }}
               selectionMode={
-                operator === 'include' || operator === 'exclude' ? 'single' : 'multiple'
+                operator === "include" || operator === "exclude"
+                  ? "single"
+                  : "multiple"
               }
-              selectedKeys={value ? value.split(',') : undefined}
+              selectedKeys={value ? value.split(",") : undefined}
               onSelectionChange={(keys) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: Array.from(keys).join(',')
+                  value: Array.from(keys).join(","),
                 });
               }}
               disallowEmptySelection

@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
+import { useLibraryStore } from "@/stores/library-store";
 import { useWorkspace } from "@/hooks/useWorkspace";
 
 import { Filter } from "@/stores/library-store";
@@ -50,7 +50,7 @@ const getLabelFromType = (operator: string) => {
 };
 
 export const PersonFilterPill = ({ filter }: PersonFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { members } = useWorkspace();
 

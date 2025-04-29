@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 
 import { DateSortPill, NameSortPill } from "@/components/filters/pills";
 
-// import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
+import { useLibraryStore } from "@/stores/library-store";
 
 import { Sort } from "@/stores/library-store";
 
@@ -72,7 +72,7 @@ const renderSortPillComponent = (sort: Sort, order: number) => {
 };
 
 export const SortBar = () => {
-  // const { clearSorts, addSort, sorts, removeSort } = useLibraryFilterState();
+  const { clearSorts, addSort, sorts, removeSort } = useLibraryStore();
 
   const [input, setInput] = useState("");
 
@@ -115,21 +115,21 @@ export const SortBar = () => {
             Sort by
           </p>
           <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
-            {/* {sorts.map((sort, index) =>
+            {sorts.map((sort, index) =>
               renderSortPillComponent(sort, index + 1)
-            )} */}
+            )}
             <Select
               onKeyDown={(e) => {
-                // if (
-                //   e.key === "Backspace" &&
-                //   input.length === 0 &&
-                //   sorts.length > 0
-                // ) {
-                //   const lastSort = sorts[sorts.length - 1];
-                //   if (lastSort) {
-                //     removeSort(lastSort.id);
-                //   }
-                // }
+                if (
+                  e.key === "Backspace" &&
+                  input.length === 0 &&
+                  sorts.length > 0
+                ) {
+                  const lastSort = sorts[sorts.length - 1];
+                  if (lastSort) {
+                    removeSort(lastSort.id);
+                  }
+                }
               }}
               controlShouldRenderValue={false}
               inputValue={input}
@@ -166,19 +166,19 @@ export const SortBar = () => {
                 );
               }}
               onChange={(data) => {
-                // addSort({
-                //   id: nanoid(),
-                //   type: data?.type || "name",
-                //   label: data?.label || "",
-                //   key: data?.value || "",
-                //   direction: data?.type === "date" ? "desc" : "asc",
-                // });
+                addSort({
+                  id: nanoid(),
+                  type: data?.type || "name",
+                  label: data?.label || "",
+                  key: data?.value || "",
+                  direction: data?.type === "date" ? "desc" : "asc",
+                });
               }}
             />
           </div>
         </div>
         <div className="flex items-center gap-4">
-          {/* {sorts.length > 0 && (
+          {sorts.length > 0 && (
             <>
               <div className="flex items-center space-x-2">
                 <Button
@@ -191,7 +191,7 @@ export const SortBar = () => {
                 </Button>
               </div>
             </>
-          )} */}
+          )}
         </div>
       </div>
     </motion.div>

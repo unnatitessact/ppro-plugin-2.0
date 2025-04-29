@@ -19,7 +19,6 @@ import { WithLibraryThreeDotMenu } from "./WithLibraryThreeDotMenu";
 import { UploadAsset } from "./UploadAsset";
 import { AssetCardSkeleton } from "../skeletons/AssetCardSkeleton";
 import { AssetCardFetchingSkeleton } from "../skeletons/AssetCardSkeleton";
-// import { useFilterStore } from "@/stores/library-filter-store";
 
 import { ResourceCard } from "@/components/library/asset/ResourceCard";
 
@@ -41,8 +40,6 @@ import { LibraryAsset, LibraryResults } from "@/api-integration/types/library";
 
 import { useUploadsStore } from "@/stores/uploads-store";
 
-import { useLibraryFilterStore } from "@/stores/library-filter-store";
-
 import { REMIXES_FLAG } from "@/utils/featureFlagUtils";
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
@@ -53,17 +50,26 @@ export const Library = () => {
 
   const isRemixesEnabled = useFeatureFlag(REMIXES_FLAG);
 
+  const {
+    setSelectedItems,
+    selectedItems,
+    filters,
+    filterMatchType,
+    sorts,
+    search,
+    flattenFolders,
+  } = useLibraryStore();
+
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useLibraryContentsQuery(null, {
-      filters: [],
-      sorts: [],
-      searchQuery: "",
-      flatten: false,
-      matchType: "all",
+      filters,
+      sorts,
+      searchQuery: search,
+      flatten: flattenFolders,
+      matchType: filterMatchType,
     });
 
   const { uploads } = useUploadsStore();
-  const { setSelectedItems, selectedItems } = useLibraryStore();
 
   const uploadsOnThisPage = useMemo(() => {
     return uploads.filter(
@@ -131,9 +137,6 @@ export const Library = () => {
 
   const scrollParentRef = useRef<HTMLDivElement>(null);
 
-  const { folderStates } = useLibraryFilterStore();
-  const { filters, sorts, searchQuery } = folderStates;
-
   const selectAllItems = () => {
     const allItems = allResults.map((resource) => ({
       id: resource.id,
@@ -179,7 +182,7 @@ export const Library = () => {
           <AnimatePresence initial={false} mode="wait">
             {/* <SelectionContext.Provider value={selection}> */}
             {!isLoading &&
-            !folderStates.searchQuery &&
+            !search &&
             allResults.length === 0 &&
             uploadsOnThisPage.length === 0 ? (
               <LibraryEmptyState
@@ -197,12 +200,12 @@ export const Library = () => {
                 }
               />
             ) : !isLoading &&
-              folderStates.searchQuery &&
+              search &&
               allResults.length === 0 &&
               uploadsOnThisPage.length === 0 ? (
               <LibraryEmptyState
                 title="No assets found"
-                description={`There were no assets found matching "${folderStates.searchQuery}" in this folder.`}
+                description={`There were no assets found matching "${search}" in this folder.`}
               />
             ) : (
               <div id="closest-asset-wrapper" className="h-full w-full">

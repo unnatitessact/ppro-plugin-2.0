@@ -22,14 +22,11 @@ import { VersionModal } from "@/components/library/VersionModal";
 // import { LibraryRemixBar } from "@/components/remixes-bar/LibraryRemixBar";
 
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
-import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
 
 import { useLibraryStore } from "@/stores/library-store";
 
 import { REMIXES_FLAG } from "@/utils/featureFlagUtils";
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
-
-// import { useLibraryFilterStore } from "@/stores/library-filter-store";
 
 const LibraryLayout = ({ children }: { children: ReactNode }) => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
@@ -42,9 +39,9 @@ const LibraryLayout = ({ children }: { children: ReactNode }) => {
     toggleSortBar,
     selectedVersionStackId,
     setSelectedVersionStackId,
+    filters,
+    sorts,
   } = useLibraryStore();
-
-  const { filters, sorts } = useLibraryFilterState();
 
   // const { folderStates } = useLibraryFilterStore();
 

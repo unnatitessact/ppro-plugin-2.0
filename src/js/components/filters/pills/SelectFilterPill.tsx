@@ -1,41 +1,53 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 
-import { useClickOutside } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface SelectFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'is') return 'is';
-  if (operator === 'is_not') return 'is not';
-  if (operator === 'is_any_of') return 'is any of';
-  if (operator === 'is_not_any_of') return 'is not any of';
+  if (operator === "is") return "is";
+  if (operator === "is_not") return "is not";
+  if (operator === "is_any_of") return "is any of";
+  if (operator === "is_not_any_of") return "is not any of";
 };
 
 export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -44,20 +56,22 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
   });
 
   const selectedValues = useMemo(() => {
-    return value ? value.split(',') : [];
+    return value ? value.split(",") : [];
   }, [value]);
 
   const selectedOptions =
     useMemo(() => {
-      return filter.options.filter((option) => selectedValues.includes(option.id));
+      return filter.options.filter((option) =>
+        selectedValues.includes(option.id)
+      );
     }, [filter.options, selectedValues]) || [];
 
   useEffect(() => {
-    if (operator === 'is' || operator === 'is_not') {
+    if (operator === "is" || operator === "is_not") {
       if (selectedValues.length > 1) {
         modifyFilter(id, {
           ...filter,
-          value: selectedValues[0]
+          value: selectedValues[0],
         });
       }
     }
@@ -68,15 +82,15 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('person', 16)}
+            {getIconFromType("person", 16)}
             {label}
           </div>
         </PopoverTrigger>
@@ -85,7 +99,7 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -103,15 +117,17 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
           </PopoverTrigger>
           <PopoverContent>
             <Listbox
-              classNames={{ list: 'max-h-60' }}
+              classNames={{ list: "max-h-60" }}
               selectionMode={
-                operator === 'is_any_of' || operator === 'is_not_any_of' ? 'multiple' : 'single'
+                operator === "is_any_of" || operator === "is_not_any_of"
+                  ? "multiple"
+                  : "single"
               }
-              selectedKeys={value ? value.split(',') : undefined}
+              selectedKeys={value ? value.split(",") : undefined}
               onSelectionChange={(keys) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: Array.from(keys).join(',')
+                  value: Array.from(keys).join(","),
                 });
               }}
               disallowEmptySelection
@@ -132,7 +148,7 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -147,20 +163,22 @@ export const SelectFilterPill = ({ filter }: SelectFilterPillProps) => {
         <Popover>
           <PopoverTrigger>
             <div className={cn(clickablePillCn)}>
-              {selectedOptions.map((option) => option.value).join(', ')}
+              {selectedOptions.map((option) => option.value).join(", ")}
             </div>
           </PopoverTrigger>
           <PopoverContent>
             <Listbox
-              classNames={{ list: 'max-h-60' }}
+              classNames={{ list: "max-h-60" }}
               selectionMode={
-                operator === 'is_any_of' || operator === 'is_not_any_of' ? 'multiple' : 'single'
+                operator === "is_any_of" || operator === "is_not_any_of"
+                  ? "multiple"
+                  : "single"
               }
-              selectedKeys={value ? value.split(',') : undefined}
+              selectedKeys={value ? value.split(",") : undefined}
               onSelectionChange={(keys) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: Array.from(keys).join(',')
+                  value: Array.from(keys).join(","),
                 });
               }}
               disallowEmptySelection

@@ -1,43 +1,55 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useClickOutside, useDebouncedValue } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface TextareaFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'contains') {
-    return 'contains';
+  if (operator === "contains") {
+    return "contains";
   }
-  if (operator === 'does_not_contain') {
-    return 'does not contain';
+  if (operator === "does_not_contain") {
+    return "does not contain";
   }
 };
 
 export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -45,7 +57,7 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
     if (!operator) removeFilter(id);
   });
 
-  const [valueInput, setValueInput] = useState(value || '');
+  const [valueInput, setValueInput] = useState(value || "");
   const [debouncedValue] = useDebouncedValue(valueInput, 300);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +66,7 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
     if (debouncedValue) {
       modifyFilter(id, {
         ...filter,
-        value: debouncedValue
+        value: debouncedValue,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,16 +76,16 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       {/* Display popover to select operator if not selected already */}
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('text_area', 20)}
+            {getIconFromType("text_area", 20)}
             {label}
           </div>
         </PopoverTrigger>
@@ -82,7 +94,7 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
             onAction={(key) => {
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               });
               setTimeout(() => {
                 inputRef.current?.focus();
@@ -103,7 +115,7 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -113,7 +125,7 @@ export const TextareaFilterPill = ({ filter }: TextareaFilterPillProps) => {
         </Dropdown>
       )}
       {operator && (
-        <div className={cn(clickablePillCn, 'p-1')}>
+        <div className={cn(clickablePillCn, "p-1")}>
           <input
             type="text"
             placeholder="Value to filter"

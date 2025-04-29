@@ -1,42 +1,54 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { useClickOutside } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
-import { Rating } from 'react-simple-star-rating';
+import { useClickOutside } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
+import { Rating } from "react-simple-star-rating";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface RatingFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'is') return 'is';
-  if (operator === 'is_not') return 'is not';
-  if (operator === 'greater_than') return 'greater than';
-  if (operator === 'less_than') return 'less than';
+  if (operator === "is") return "is";
+  if (operator === "is_not") return "is not";
+  if (operator === "greater_than") return "greater than";
+  if (operator === "less_than") return "less than";
 };
 
 export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
   const { id, label, value, operator } = filter;
 
   const [isOperatorOpen, setIsOperatorOpen] = useState(!operator);
@@ -52,15 +64,18 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
-      <Popover isOpen={isOperatorOpen} onOpenChange={(open) => setIsOperatorOpen(open)}>
+      <Popover
+        isOpen={isOperatorOpen}
+        onOpenChange={(open) => setIsOperatorOpen(open)}
+      >
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('rating', 16)}
+            {getIconFromType("rating", 16)}
             {label}
           </div>
         </PopoverTrigger>
@@ -69,7 +84,7 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
             onAction={(key) => {
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               });
               setIsOperatorOpen(false);
               setIsValueOpen(true);
@@ -83,7 +98,10 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
         </PopoverContent>
       </Popover>
       {operator && !value && (
-        <Popover isOpen={isValueOpen} onOpenChange={(open) => setIsValueOpen(open)}>
+        <Popover
+          isOpen={isValueOpen}
+          onOpenChange={(open) => setIsValueOpen(open)}
+        >
           <PopoverTrigger>
             <div className={clickablePillCn}>{getLabelFromType(operator)}</div>
           </PopoverTrigger>
@@ -92,25 +110,50 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
               onAction={(key) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: key as string
+                  value: key as string,
                 });
                 setIsValueOpen(false);
               }}
             >
               <ListboxItem key="5">
-                <Rating readonly initialValue={5} size={16} SVGclassName="inline-flex" />
+                <Rating
+                  readonly
+                  initialValue={5}
+                  size={16}
+                  SVGclassName="inline-flex"
+                />
               </ListboxItem>
               <ListboxItem key="4">
-                <Rating readonly initialValue={4} size={16} SVGclassName="inline-flex" />
+                <Rating
+                  readonly
+                  initialValue={4}
+                  size={16}
+                  SVGclassName="inline-flex"
+                />
               </ListboxItem>
               <ListboxItem key="3">
-                <Rating readonly initialValue={3} size={16} SVGclassName="inline-flex" />
+                <Rating
+                  readonly
+                  initialValue={3}
+                  size={16}
+                  SVGclassName="inline-flex"
+                />
               </ListboxItem>
               <ListboxItem key="2">
-                <Rating readonly initialValue={2} size={16} SVGclassName="inline-flex" />
+                <Rating
+                  readonly
+                  initialValue={2}
+                  size={16}
+                  SVGclassName="inline-flex"
+                />
               </ListboxItem>
               <ListboxItem key="1">
-                <Rating readonly initialValue={1} size={16} SVGclassName="inline-flex" />
+                <Rating
+                  readonly
+                  initialValue={1}
+                  size={16}
+                  SVGclassName="inline-flex"
+                />
               </ListboxItem>
             </Listbox>
           </PopoverContent>
@@ -125,7 +168,7 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -140,31 +183,61 @@ export const RatingFilterPill = ({ filter }: RatingFilterPillProps) => {
         <Dropdown>
           <DropdownTrigger>
             <div className={clickablePillCn}>
-              <Rating readonly initialValue={Number(value)} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={Number(value)}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </div>
           </DropdownTrigger>
           <DropdownMenu
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                value: key as string
+                value: key as string,
               })
             }
           >
             <DropdownItem key="5">
-              <Rating readonly initialValue={5} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={5}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </DropdownItem>
             <DropdownItem key="4">
-              <Rating readonly initialValue={4} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={4}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </DropdownItem>
             <DropdownItem key="3">
-              <Rating readonly initialValue={3} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={3}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </DropdownItem>
             <DropdownItem key="2">
-              <Rating readonly initialValue={2} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={2}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </DropdownItem>
             <DropdownItem key="1">
-              <Rating readonly initialValue={1} size={16} SVGclassName="inline-flex" />
+              <Rating
+                readonly
+                initialValue={1}
+                size={16}
+                SVGclassName="inline-flex"
+              />
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

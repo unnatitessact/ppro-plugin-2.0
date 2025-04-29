@@ -72,10 +72,21 @@ interface LibraryState {
   setThumbnail: (thumbnail: Thumbnail) => void;
   filters: Filter[];
   setFilters: (filters: Filter[]) => void;
+  filterMatchType: "all" | "any";
+  setFilterMatchType: (filterMatchType: "all" | "any") => void;
+  addFilter: (filter: Filter) => void;
+  removeFilter: (filterId: string) => void;
+  modifyFilter: (filterId: string, filter: Filter) => void;
+  clearFilters: () => void;
   sorts: Sort[];
-  setSorts: (sorts: Sort[]) => void;
-  // flattenFolders: boolean;
-  // setFlattenFolders: (flattenFolders: boolean) => void;
+  addSort: (sort: Sort) => void;
+  removeSort: (sortId: string) => void;
+  modifySort: (sortId: string, sort: Sort) => void;
+  clearSorts: () => void;
+  flattenFolders: boolean;
+  setFlattenFolders: (flattenFolders: boolean) => void;
+  search: string;
+  setSearch: (search: string) => void;
   showMetadataPanel: boolean;
   toggleMetadataPanel: () => void;
   isSearchExpanded: boolean;
@@ -99,6 +110,29 @@ interface LibraryState {
 export const useLibraryStore = create<LibraryState>()(
   persist(
     (set) => ({
+      filterMatchType: "all",
+      setFilterMatchType: (filterMatchType: "all" | "any") =>
+        set({ filterMatchType }),
+      addFilter: (filter: Filter) =>
+        set((state) => ({ filters: [...state.filters, filter] })),
+      modifyFilter: (filterId: string, filter: Filter) =>
+        set((state) => ({
+          filters: state.filters.map((f) => (f.id === filterId ? filter : f)),
+        })),
+      removeFilter: (filterId: string) =>
+        set((state) => ({
+          filters: state.filters.filter((f) => f.id !== filterId),
+        })),
+      clearFilters: () => set({ filters: [] }),
+      addSort: (sort: Sort) =>
+        set((state) => ({ sorts: [...state.sorts, sort] })),
+      modifySort: (sortId: string, sort: Sort) =>
+        set((state) => ({
+          sorts: state.sorts.map((s) => (s.id === sortId ? sort : s)),
+        })),
+      removeSort: (sortId: string) =>
+        set((state) => ({ sorts: state.sorts.filter((s) => s.id !== sortId) })),
+      clearSorts: () => set({ sorts: [] }),
       showVersionsPanel: false,
       toggleVersionsPanel: () =>
         set((state) => ({ showVersionsPanel: !state.showVersionsPanel })),
@@ -163,6 +197,10 @@ export const useLibraryStore = create<LibraryState>()(
       selectedVersionStackId: null,
       setSelectedVersionStackId: (selectedVersionStackId: string | null) =>
         set({ selectedVersionStackId }),
+      search: "",
+      setSearch: (search: string) => set({ search }),
+      flattenFolders: false,
+      setFlattenFolders: (flattenFolders: boolean) => set({ flattenFolders }),
     }),
 
     {

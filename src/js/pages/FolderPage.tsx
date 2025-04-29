@@ -57,7 +57,6 @@ import {
   AssetCardFetchingSkeleton,
 } from "@/components/skeletons/AssetCardSkeleton";
 import { useParamsStateStore } from "@/stores/params-state-store";
-import { useLibraryFilterStore } from "@/stores/library-filter-store";
 import LibraryLayout from "@/components/layout/LibraryLayout";
 
 // const UploadAsset = dynamic(
@@ -118,7 +117,16 @@ import LibraryLayout from "@/components/layout/LibraryLayout";
 export const FolderPage = () => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
-  const { setSelectedItems, view, selectedItems } = useLibraryStore();
+  const {
+    setSelectedItems,
+    view,
+    selectedItems,
+    filters,
+    filterMatchType,
+    sorts,
+    search,
+    isFlattened,
+  } = useLibraryStore();
 
   // const { filters, filterMatchType, sorts, search, isFlattened } =
   //   useLibraryFilterState();
@@ -128,10 +136,6 @@ export const FolderPage = () => {
   // const { folderId } = useParams() as { folderId: string };
 
   const { folderId } = useParamsStateStore();
-
-  const { folderStates } = useLibraryFilterStore();
-
-  const { filters, filterMatchType, sorts, search, isFlattened } = folderStates;
 
   const { data: folderDetails } = useAssetDetailsQuery(folderId as string);
 
@@ -146,11 +150,11 @@ export const FolderPage = () => {
   }, [uploads, folderId]);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useLibraryContentsQuery(folderId as string, {
-      filters: [],
-      sorts: [],
-      searchQuery: "",
-      flatten: false,
-      matchType: "all",
+      filters,
+      sorts,
+      searchQuery: search,
+      flatten: isFlattened,
+      matchType: filterMatchType,
     });
 
   const allResultsMinimal = useMemo(() => {

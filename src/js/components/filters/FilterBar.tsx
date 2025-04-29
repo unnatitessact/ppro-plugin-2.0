@@ -54,7 +54,7 @@ import {
   MetadataFieldType,
 } from "@/api-integration/types/metadata";
 
-import { Filter } from "@/stores/library-store";
+import { Filter, useLibraryStore } from "@/stores/library-store";
 
 import { getIconFromType } from "@/utils/metadata";
 
@@ -122,19 +122,14 @@ const staticFilters: MetadataFieldInfo[] = [
 ];
 
 export const FilterBar = () => {
-  // const {
-  //   clearFilters,
-  //   addFilter,
-  //   filters,
-  //   filterMatchType,
-  //   setFilterMatchType,
-  //   removeFilter,
-  //   sorts,
-  //   // addS ort,
-  //   // removeSort,
-  //   // modifySort,
-  //   clearSorts,
-  // } = useLibraryFilterState();
+  const {
+    clearFilters,
+    addFilter,
+    filters,
+    filterMatchType,
+    setFilterMatchType,
+    removeFilter,
+  } = useLibraryStore();
 
   const showFileStatusFilter = true;
 
@@ -180,63 +175,63 @@ export const FilterBar = () => {
     }
   }, [fetchNextPage, fields]);
 
-  // useEffect(() => {
-  //   if (aiFilters && aiFilters.length > 0) {
-  //     aiFilters.forEach((filter) => {
-  //       if (filter.meta_field_name) {
-  //         addFilter({
-  //           id: nanoid(),
-  //           label: filter.meta_field_name,
-  //           type: filter.field_type,
-  //           value: filter.value,
-  //           operator: filter.operator,
-  //           options: filter.options,
-  //         });
-  //       } else {
-  //         if (filter.static_field_name === "file__file_status") {
-  //           addFilter({
-  //             id: nanoid(),
-  //             label:
-  //               staticFilters.find((f) => f.id === filter.static_field_name)
-  //                 ?.name || "",
-  //             type: "file_status",
-  //             value: filter.value,
-  //             operator: filter.operator,
-  //             isStatic: true,
-  //             key: filter.static_field_name,
-  //             options: filter.options,
-  //           });
-  //         } else if (filter.static_field_name === "file__tagging_status") {
-  //           addFilter({
-  //             id: nanoid(),
-  //             label:
-  //               staticFilters.find((f) => f.id === filter.static_field_name)
-  //                 ?.name || "",
-  //             type: "tagging_status",
-  //             value: filter.value,
-  //             operator: filter.operator,
-  //             isStatic: true,
-  //             key: filter.static_field_name,
-  //             options: filter.options,
-  //           });
-  //         } else {
-  //           addFilter({
-  //             id: nanoid(),
-  //             label:
-  //               staticFilters.find((f) => f.id === filter.static_field_name)
-  //                 ?.name || "",
-  //             type: filter.field_type,
-  //             value: filter.value,
-  //             operator: filter.operator,
-  //             isStatic: true,
-  //             key: filter.static_field_name,
-  //             options: filter.options,
-  //           });
-  //         }
-  //       }
-  //     });
-  //   }
-  // }, [aiFilters, addFilter]);
+  useEffect(() => {
+    if (aiFilters && aiFilters.length > 0) {
+      aiFilters.forEach((filter) => {
+        if (filter.meta_field_name) {
+          addFilter({
+            id: nanoid(),
+            label: filter.meta_field_name,
+            type: filter.field_type,
+            value: filter.value,
+            operator: filter.operator,
+            options: filter.options,
+          });
+        } else {
+          if (filter.static_field_name === "file__file_status") {
+            addFilter({
+              id: nanoid(),
+              label:
+                staticFilters.find((f) => f.id === filter.static_field_name)
+                  ?.name || "",
+              type: "file_status",
+              value: filter.value,
+              operator: filter.operator,
+              isStatic: true,
+              key: filter.static_field_name,
+              options: filter.options,
+            });
+          } else if (filter.static_field_name === "file__tagging_status") {
+            addFilter({
+              id: nanoid(),
+              label:
+                staticFilters.find((f) => f.id === filter.static_field_name)
+                  ?.name || "",
+              type: "tagging_status",
+              value: filter.value,
+              operator: filter.operator,
+              isStatic: true,
+              key: filter.static_field_name,
+              options: filter.options,
+            });
+          } else {
+            addFilter({
+              id: nanoid(),
+              label:
+                staticFilters.find((f) => f.id === filter.static_field_name)
+                  ?.name || "",
+              type: filter.field_type,
+              value: filter.value,
+              operator: filter.operator,
+              isStatic: true,
+              key: filter.static_field_name,
+              options: filter.options,
+            });
+          }
+        }
+      });
+    }
+  }, [aiFilters, addFilter]);
 
   const inputRef = useRef<
     SelectInstance<{
@@ -289,21 +284,21 @@ export const FilterBar = () => {
               Filter by
             </p>
             <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
-              {/* {filters.map((filter) => renderFilterPillComponent(filter))} */}
+              {filters.map((filter) => renderFilterPillComponent(filter))}
               {isAiFiltersLoading && <Spinner size="sm" />}
               <Select
                 menuPortalTarget={document.body}
                 onKeyDown={(e) => {
-                  // if (
-                  //   e.key === "Backspace" &&
-                  //   input.length === 0 &&
-                  //   filters.length > 0
-                  // ) {
-                  //   const lastFilter = filters[filters.length - 1];
-                  //   if (lastFilter) {
-                  //     removeFilter(lastFilter.id);
-                  //   }
-                  // }
+                  if (
+                    e.key === "Backspace" &&
+                    input.length === 0 &&
+                    filters.length > 0
+                  ) {
+                    const lastFilter = filters[filters.length - 1];
+                    if (lastFilter) {
+                      removeFilter(lastFilter.id);
+                    }
+                  }
                 }}
                 unstyled
                 placeholder=""
@@ -351,34 +346,36 @@ export const FilterBar = () => {
                       (filter) => filter.id === data?.value
                     );
 
-                    // if (isStaticFilter) {
-                    //   addFilter({
-                    //     id: nanoid(),
-                    //     label: data.label || "",
-                    //     type: data.type || "text",
-                    //     value:
-                    //       data.type === "toggle" || data.type === "attachment"
-                    //         ? "true"
-                    //         : null,
-                    //     operator: null,
-                    //     isStatic: true,
-                    //     key: data.value,
-                    //     options: [],
-                    //   });
-                    //   return;
-                    // }
+                    if (isStaticFilter) {
+                      addFilter({
+                        id: nanoid(),
+                        label: data.label || "",
+                        type: data.type || "text",
+                        value:
+                          data.type === "toggle" || data.type === "attachment"
+                            ? "true"
+                            : null,
+                        operator: null,
+                        isStatic: true,
+                        key: data.value,
+                        options: [],
+                      });
+                      return;
+                    }
 
-                    // addFilter({
-                    //   id: nanoid(),
-                    //   label: data.label || "",
-                    //   type: data.type || "text",
-                    //   value:
-                    //     data.type === "toggle" || data.type === "attachment"
-                    //       ? "true"
-                    //       : null,
-                    //   operator: null,
-                    //   options: data.opts,
-                    // });
+                    alert("Adding filter");
+
+                    addFilter({
+                      id: nanoid(),
+                      label: data.label || "",
+                      type: data.type || "text",
+                      value:
+                        data.type === "toggle" || data.type === "attachment"
+                          ? "true"
+                          : null,
+                      operator: null,
+                      options: data.opts,
+                    });
                   }
                 }}
                 createOptionPosition="first"
@@ -389,15 +386,15 @@ export const FilterBar = () => {
             <Tabs
               aria-label="Apply filters for"
               classNames={{ tabList: "h-9" }}
-              // selectedKey={filterMatchType}
-              // onSelectionChange={(key) =>
-              //   setFilterMatchType(key as "all" | "any")
-              // }
+              selectedKey={filterMatchType}
+              onSelectionChange={(key) =>
+                setFilterMatchType(key as "all" | "any")
+              }
             >
               <Tab key="all" title="All"></Tab>
               <Tab key="any" title="Any"></Tab>
             </Tabs>
-            {/* {(filters.length > 0 || sorts.length > 0) && (
+            {filters.length > 0 && (
               <>
                 <div className="flex items-center space-x-2">
                   <Button
@@ -405,16 +402,14 @@ export const FilterBar = () => {
                     size="sm"
                     onPress={() => {
                       clearFilters();
-                      clearSorts();
                     }}
                     aria-label="Clear filters"
                   >
                     Clear
                   </Button>
-                  
                 </div>
               </>
-            )} */}
+            )}
           </div>
         </div>
       </motion.div>

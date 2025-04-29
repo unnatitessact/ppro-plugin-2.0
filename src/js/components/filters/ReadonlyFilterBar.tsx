@@ -23,7 +23,7 @@ import {
   ToggleFilterPill,
 } from "@/components/filters/pills";
 
-// import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
+import { useLibraryStore } from "@/stores/library-store";
 
 // import { useUpdateView } from '@/api-integration/mutations/library';
 
@@ -60,8 +60,7 @@ const renderFilterPillComponent = (filter: Filter) => {
 
 // export const ReadonlyFilterBar = ({ viewId }: ReadonlyFilterBarProps) => {
 export const ReadonlyFilterBar = () => {
-  // const { filters, filterMatchType, setFilterMatchType } =
-  //   useLibraryFilterState();
+  const { filters, filterMatchType, setFilterMatchType } = useLibraryStore();
 
   // const { mutate: updateView } = useUpdateView(viewId);
 
@@ -93,7 +92,7 @@ export const ReadonlyFilterBar = () => {
               Filter by
             </p>
             <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
-              {/* {filters.map((filter) => renderFilterPillComponent(filter))} */}
+              {filters.map((filter) => renderFilterPillComponent(filter))}
             </div>
           </div>
           <div className="flex items-center gap-4">

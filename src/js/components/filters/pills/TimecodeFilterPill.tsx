@@ -1,42 +1,54 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useClickOutside, useDebouncedValue } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
-import { TimecodeInput } from '@/components/ui/TimecodeInput';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { TimecodeInput } from "@/components/ui/TimecodeInput";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface TimecodeFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'is') return 'is';
-  if (operator === 'is_not') return 'is not';
-  if (operator === 'before') return 'before';
-  if (operator === 'after') return 'after';
+  if (operator === "is") return "is";
+  if (operator === "is_not") return "is not";
+  if (operator === "before") return "before";
+  if (operator === "after") return "after";
 };
 
 export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -44,7 +56,7 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
     if (!operator) removeFilter(id);
   });
 
-  const [valueInput, setValueInput] = useState(value || '');
+  const [valueInput, setValueInput] = useState(value || "");
   const [debouncedValue] = useDebouncedValue(valueInput, 300);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,7 +65,7 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
     if (debouncedValue) {
       modifyFilter(id, {
         ...filter,
-        value: debouncedValue
+        value: debouncedValue,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,15 +75,15 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('timecode', 20)}
+            {getIconFromType("timecode", 20)}
             {label}
           </div>
         </PopoverTrigger>
@@ -80,7 +92,7 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
             onAction={(key) => {
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               });
               setTimeout(() => {
                 inputRef.current?.focus();
@@ -103,7 +115,7 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -115,8 +127,12 @@ export const TimecodeFilterPill = ({ filter }: TimecodeFilterPillProps) => {
         </Dropdown>
       )}
       {operator && (
-        <div className={cn(clickablePillCn, 'h-7 overflow-hidden p-0')}>
-          <TimecodeInput value={valueInput} onChange={setValueInput} variant="small" />
+        <div className={cn(clickablePillCn, "h-7 overflow-hidden p-0")}>
+          <TimecodeInput
+            value={valueInput}
+            onChange={setValueInput}
+            variant="small"
+          />
         </div>
       )}
       {operator && (

@@ -19,7 +19,7 @@ import {
 import { TaggingStatusIcon } from "@/components/TaggingStatusIcon";
 // import { TaggingStatusIcon } from "@/components/TaggingStatusIcon";
 
-import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
+import { useLibraryStore } from "@/stores/library-store";
 
 import { TaggingStatus } from "@/api-integration/types/library";
 
@@ -57,7 +57,7 @@ const getLabelFromValue = (value: TaggingStatus) => {
 export const TaggingStatusFilterPill = ({
   filter,
 }: TaggingStatusFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 

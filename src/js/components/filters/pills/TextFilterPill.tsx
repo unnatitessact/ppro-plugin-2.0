@@ -1,43 +1,55 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useClickOutside, useDebouncedValue } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface TextFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'contains') {
-    return 'contains';
+  if (operator === "contains") {
+    return "contains";
   }
-  if (operator === 'does_not_contain') {
-    return 'does not contain';
+  if (operator === "does_not_contain") {
+    return "does not contain";
   }
 };
 
 export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -45,7 +57,7 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
     if (!operator) removeFilter(id);
   });
 
-  const [valueInput, setValueInput] = useState(value || '');
+  const [valueInput, setValueInput] = useState(value || "");
   const [debouncedValue] = useDebouncedValue(valueInput, 300);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +66,7 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
     if (debouncedValue) {
       modifyFilter(id, {
         ...filter,
-        value: debouncedValue
+        value: debouncedValue,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,15 +76,15 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('text', 20)}
+            {getIconFromType("text", 20)}
             {label}
           </div>
         </PopoverTrigger>
@@ -81,7 +93,7 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
             onAction={(key) => {
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               });
               setTimeout(() => {
                 inputRef.current?.focus();
@@ -102,7 +114,7 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -112,7 +124,7 @@ export const TextFilterPill = ({ filter }: TextFilterPillProps) => {
         </Dropdown>
       )}
       {operator && (
-        <div className={cn(clickablePillCn, 'p-1')}>
+        <div className={cn(clickablePillCn, "p-1")}>
           <input
             type="text"
             placeholder="Value to filter"

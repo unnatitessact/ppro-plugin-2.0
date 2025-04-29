@@ -1,52 +1,64 @@
-import { useClickOutside } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { useClickOutside } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { StatusIcon } from '@/components/StatusIcon';
+import { StatusIcon } from "@/components/StatusIcon";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { FileStatus } from '@/api-integration/types/library';
+import { FileStatus } from "@/api-integration/types/library";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface FileStatusFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromOperator = (operator: string) => {
-  if (operator === 'is') return 'is';
-  if (operator === 'is_not') return 'is not';
+  if (operator === "is") return "is";
+  if (operator === "is_not") return "is not";
 };
 
 const getLabelFromValue = (value: FileStatus) => {
-  if (value === 'approved') return 'Approved';
-  if (value === 'in_progress') return 'In Progress';
+  if (value === "approved") return "Approved";
+  if (value === "in_progress") return "In Progress";
   // if (value === 'inactive') return 'Inactive';
-  if (value === 'not_started') return 'Not Started';
+  if (value === "not_started") return "Not Started";
   // if (value === 'waiting') return 'Waiting';
-  if (value === 'rejected') return 'Rejected';
-  if (value === 'processed') return 'Processed';
-  if (value === 'needs_edit') return 'Needs Edit';
+  if (value === "rejected") return "Rejected";
+  if (value === "processed") return "Processed";
+  if (value === "needs_edit") return "Needs Edit";
 };
 
 export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -58,15 +70,15 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('file_status', 16)}
+            {getIconFromType("file_status", 16)}
             {label}
           </div>
         </PopoverTrigger>
@@ -75,7 +87,7 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -87,33 +99,53 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
       {operator && !value && (
         <Popover isOpen={!value}>
           <PopoverTrigger>
-            <div className={clickablePillCn}>{getLabelFromOperator(operator)}</div>
+            <div className={clickablePillCn}>
+              {getLabelFromOperator(operator)}
+            </div>
           </PopoverTrigger>
           <PopoverContent>
             <Listbox
               onAction={(key) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: key as string
+                  value: key as string,
                 });
               }}
             >
-              <ListboxItem startContent={<StatusIcon status="approved" />} key="approved">
+              <ListboxItem
+                startContent={<StatusIcon status="approved" />}
+                key="approved"
+              >
                 Approved
               </ListboxItem>
-              <ListboxItem startContent={<StatusIcon status="processed" />} key="processed">
+              <ListboxItem
+                startContent={<StatusIcon status="processed" />}
+                key="processed"
+              >
                 Processed
               </ListboxItem>
-              <ListboxItem startContent={<StatusIcon status="in_progress" />} key="in_progress">
+              <ListboxItem
+                startContent={<StatusIcon status="in_progress" />}
+                key="in_progress"
+              >
                 In Progress
               </ListboxItem>
-              <ListboxItem startContent={<StatusIcon status="needs_edit" />} key="needs_edit">
+              <ListboxItem
+                startContent={<StatusIcon status="needs_edit" />}
+                key="needs_edit"
+              >
                 Needs Edit
               </ListboxItem>
-              <ListboxItem startContent={<StatusIcon status="not_started" />} key="not_started">
+              <ListboxItem
+                startContent={<StatusIcon status="not_started" />}
+                key="not_started"
+              >
                 Not Started
               </ListboxItem>
-              <ListboxItem startContent={<StatusIcon status="rejected" />} key="rejected">
+              <ListboxItem
+                startContent={<StatusIcon status="rejected" />}
+                key="rejected"
+              >
                 Rejected
               </ListboxItem>
             </Listbox>
@@ -123,13 +155,15 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
       {operator && value && (
         <Dropdown>
           <DropdownTrigger>
-            <div className={clickablePillCn}>{getLabelFromOperator(operator)}</div>
+            <div className={clickablePillCn}>
+              {getLabelFromOperator(operator)}
+            </div>
           </DropdownTrigger>
           <DropdownMenu
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -141,7 +175,7 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
       {value && (
         <Dropdown>
           <DropdownTrigger>
-            <div className={cn(clickablePillCn, 'flex items-center gap-2')}>
+            <div className={cn(clickablePillCn, "flex items-center gap-2")}>
               <StatusIcon status={value as FileStatus} />
               {getLabelFromValue(value as FileStatus)}
             </div>
@@ -150,26 +184,44 @@ export const FileStatusFilterPill = ({ filter }: FileStatusFilterPillProps) => {
             onAction={(key) => {
               modifyFilter(id, {
                 ...filter,
-                value: key as string
+                value: key as string,
               });
             }}
           >
-            <DropdownItem startContent={<StatusIcon status="approved" />} key="approved">
+            <DropdownItem
+              startContent={<StatusIcon status="approved" />}
+              key="approved"
+            >
               Approved
             </DropdownItem>
-            <DropdownItem startContent={<StatusIcon status="processed" />} key="processed">
+            <DropdownItem
+              startContent={<StatusIcon status="processed" />}
+              key="processed"
+            >
               Processed
             </DropdownItem>
-            <DropdownItem startContent={<StatusIcon status="in_progress" />} key="in_progress">
+            <DropdownItem
+              startContent={<StatusIcon status="in_progress" />}
+              key="in_progress"
+            >
               In Progress
             </DropdownItem>
-            <DropdownItem startContent={<StatusIcon status="needs_edit" />} key="needs_edit">
+            <DropdownItem
+              startContent={<StatusIcon status="needs_edit" />}
+              key="needs_edit"
+            >
               Needs Edit
             </DropdownItem>
-            <DropdownItem startContent={<StatusIcon status="not_started" />} key="not_started">
+            <DropdownItem
+              startContent={<StatusIcon status="not_started" />}
+              key="not_started"
+            >
               Not Started
             </DropdownItem>
-            <DropdownItem startContent={<StatusIcon status="rejected" />} key="rejected">
+            <DropdownItem
+              startContent={<StatusIcon status="rejected" />}
+              key="rejected"
+            >
               Rejected
             </DropdownItem>
           </DropdownMenu>

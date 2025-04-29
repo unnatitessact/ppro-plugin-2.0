@@ -1,45 +1,57 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { parseDate } from '@internationalized/date';
-import { useClickOutside } from '@mantine/hooks';
-import { cn } from '@nextui-org/react';
+import { parseDate } from "@internationalized/date";
+import { useClickOutside } from "@mantine/hooks";
+import { cn } from "@nextui-org/react";
 
-import { CrossSmall } from '@tessact/icons';
+import { CrossSmall } from "@tessact/icons";
 
-import { Calendar } from '@/components/ui/Calendar';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@/components/ui/Dropdown';
-import { Listbox, ListboxItem } from '@/components/ui/Listbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import { Calendar } from "@/components/ui/Calendar";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/components/ui/Dropdown";
+import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
 
-import { useLibraryFilterState } from '@/hooks/useLibraryFilterState';
+import { useLibraryStore } from "@/stores/library-store";
 
-import { Filter } from '@/stores/library-store';
+import { Filter } from "@/stores/library-store";
 
-import { getIconFromType } from '@/utils/metadata';
+import { getIconFromType } from "@/utils/metadata";
 
 interface DateFilterPillProps {
   filter: Filter;
 }
 
 const clickablePillCn = cn(
-  'px-2 py-1 bg-ds-combo-pill-bg',
-  'hover:bg-ds-combo-pill-bg-label',
-  'cursor-pointer transition'
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "hover:bg-ds-combo-pill-bg-label",
+  "cursor-pointer transition"
 );
 
-const nonClickablePillCn = cn('px-2 py-1 bg-ds-combo-pill-bg', 'flex items-center gap-1');
+const nonClickablePillCn = cn(
+  "px-2 py-1 bg-ds-combo-pill-bg",
+  "flex items-center gap-1"
+);
 
 const getLabelFromType = (operator: string) => {
-  if (operator === 'is') return 'is';
-  if (operator === 'is_not') return 'is not';
-  if (operator === 'after') return 'after';
-  if (operator === 'before') return 'before';
+  if (operator === "is") return "is";
+  if (operator === "is_not") return "is not";
+  if (operator === "after") return "after";
+  if (operator === "before") return "before";
 };
 
 export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const { removeFilter, modifyFilter } = useLibraryFilterState();
+  const { removeFilter, modifyFilter } = useLibraryStore();
 
   const { id, label, value, operator } = filter;
 
@@ -51,15 +63,15 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-[1px]',
-        'text-sm text-ds-combo-pill-label',
-        'overflow-hidden rounded-lg'
+        "flex items-center gap-[1px]",
+        "text-sm text-ds-combo-pill-label",
+        "overflow-hidden rounded-lg"
       )}
     >
       <Popover isOpen={!operator}>
         <PopoverTrigger>
           <div className={nonClickablePillCn}>
-            {getIconFromType('date', 20)}
+            {getIconFromType("date", 20)}
             {label}
           </div>
         </PopoverTrigger>
@@ -68,7 +80,7 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -90,7 +102,7 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
               onChange={(value) =>
                 modifyFilter(id, {
                   ...filter,
-                  value: value.toString()
+                  value: value.toString(),
                 })
               }
             />
@@ -106,7 +118,7 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
             onAction={(key) =>
               modifyFilter(id, {
                 ...filter,
-                operator: key as string
+                operator: key as string,
               })
             }
           >
@@ -118,9 +130,15 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
         </Dropdown>
       )}
       {value && (
-        <Popover isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)}>
+        <Popover
+          isOpen={isCalendarOpen}
+          onClose={() => setIsCalendarOpen(false)}
+        >
           <PopoverTrigger>
-            <div className={clickablePillCn} onClick={() => setIsCalendarOpen(!isCalendarOpen)}>
+            <div
+              className={clickablePillCn}
+              onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+            >
               {value}
             </div>
           </PopoverTrigger>
@@ -130,7 +148,7 @@ export const DateFilterPill = ({ filter }: DateFilterPillProps) => {
               onChange={(value) => {
                 modifyFilter(id, {
                   ...filter,
-                  value: value.toString()
+                  value: value.toString(),
                 });
                 setIsCalendarOpen(false);
               }}

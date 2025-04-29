@@ -40,12 +40,6 @@ import { DotGrid2X3 } from "@tessact/icons";
 
 import { Tooltip } from "@/components/ui/Tooltip";
 
-// import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
-
-import { useLibraryFilterState } from "@/hooks/useLibraryFilterState";
-
-import { useLibraryFilterStore } from "@/stores/library-filter-store";
-
 import {
   useRemoveFromVersionStack,
   useReorderVersionStack,
@@ -88,8 +82,8 @@ export const VersionModal = ({ isOpen, onOpenChange }: VersionModalProps) => {
 
   const [versionsState, setVersionsState] = useState<VersionStackItem[]>(); // Need to use local state due to https://github.com/clauderic/dnd-kit/issues/921
 
-  const { filters, sorts, search, filterMatchType, isFlattened } =
-    useLibraryFilterState();
+  const { filters, sorts, search, filterMatchType, flattenFolders } =
+    useLibraryStore();
 
   // const [randomState, setRandomState] = useState(0); // used to tap into state flows.
 
@@ -111,13 +105,11 @@ export const VersionModal = ({ isOpen, onOpenChange }: VersionModalProps) => {
 
   const { selectedVersionStackId } = useLibraryStore();
 
-  const { folderStates } = useLibraryFilterStore();
-
   const { data } = useLibraryContentsQuery(parentId, {
     filters,
     sorts,
     searchQuery: search.trim(),
-    flatten: isFlattened ?? false,
+    flatten: flattenFolders,
     matchType: filterMatchType,
   });
 
