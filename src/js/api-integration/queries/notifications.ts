@@ -63,46 +63,41 @@ export const useNotificationSettings = (userId?: string) => {
   });
 };
 
-// export const useNotificationListQuery = () => {
-//   const api = useApi();
-//   const { workspace } = useWorkspace();
+export const useNotificationListQuery = () => {
+  const api = useApi();
+  const { workspace } = useWorkspace();
 
-//   return useInfiniteQuery({
-//     queryKey: notificationListQueryKey(workspace?.id),
-//     queryFn: async ({ pageParam = 1 }) => {
-//       const params = createUrlParams({
-//         page: `${pageParam}`
-//       });
-//       if (workspace && workspace?.id) {
-//         params.append('workspace', workspace?.id);
-//       }
-//       const { data } = await api.get<GetNotificationListResponse>(
-//         `/api/v1/user_notifications/?${params.toString()}`
-//       );
-//       return data.data;
-//     },
-//     getNextPageParam: (lastPage) =>
-//       lastPage.meta.next ? lastPage.meta.current_page + 1 : undefined,
-//     getPreviousPageParam: (lastPage) =>
-//       lastPage.meta.previous ? lastPage.meta.current_page - 1 : undefined,
-//     initialPageParam: 1
-//   });
-// };
+  return useInfiniteQuery({
+    queryKey: notificationListQueryKey(workspace?.id),
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data } = await api.get<GetNotificationListResponse>(
+        `/api/v1/user_notifications/?page=${pageParam}${
+          workspace?.id ? `&workspace=${workspace?.id}` : ""
+        }`
+      );
+      return data.data;
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.meta.next ? lastPage.meta.current_page + 1 : undefined,
+    getPreviousPageParam: (lastPage) =>
+      lastPage.meta.previous ? lastPage.meta.current_page - 1 : undefined,
+    initialPageParam: 1,
+  });
+};
 
-// export const useNotificationUnreadCountQuery = () => {
-//   const api = useApi();
-//   const { workspace } = useWorkspace();
+export const useNotificationUnreadCountQuery = () => {
+  const api = useApi();
+  const { workspace } = useWorkspace();
 
-//   return useQuery({
-//     queryKey: notificationUnreadCountQueryKey(workspace?.id),
-//     queryFn: async () => {
-//       const params = createUrlParams({
-//         ...(workspace && workspace?.id ? { workspace: workspace?.id } : {}),
-//       });
-//       const { data } = await api.get<{ unread_count: number }>(
-//         `/api/v1/user_notifications/unread_count/?${params.toString()}`
-//       );
-//       return data.unread_count;
-//     },
-//   });
-// };
+  return useQuery({
+    queryKey: notificationUnreadCountQueryKey(workspace?.id),
+    queryFn: async () => {
+      const { data } = await api.get<{ unread_count: number }>(
+        `/api/v1/user_notifications/unread_count/?${
+          workspace?.id ? `workspace=${workspace?.id}` : ""
+        }`
+      );
+      return data.unread_count;
+    },
+  });
+};

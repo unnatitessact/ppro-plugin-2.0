@@ -10,7 +10,7 @@ import { LayoutLeft } from "@tessact/icons";
 
 import { Button } from "@/components/ui/Button";
 
-// import { UserWithNotifications } from "@/components/UserWithNotifications";
+import { UserWithNotification } from "@/components/UserWithNotification";
 
 import { useSidebarStore } from "@/stores/sidebar-store";
 
@@ -45,7 +45,7 @@ export const RootActionbar = ({ children }: { children: ReactNode }) => {
           <LayoutLeft size={20} />
         </Button>
         {!isMobile && <div className="flex-1 overflow-hidden">{children}</div>}
-        {/* <UserWithNotifications /> */}
+        <UserWithNotification />
       </div>
       {isMobile && (
         <div className="pointer-events-none h-10 w-full">

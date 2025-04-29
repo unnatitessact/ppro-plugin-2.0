@@ -6,9 +6,13 @@ import {
 } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 
+import { Shape, ShapePreview } from "@/types/shape";
 // import { Shape, ShapePreview } from "@/components/review/markers-canvas/shapes";
 
 import { IndexStatus } from "./src/js/api-integration/types/library";
+
+export type LiveShape = Shape & JsonObject;
+export type LiveShapePreview = ShapePreview & JsonObject;
 
 type EventType =
   | "FOLLOW"
