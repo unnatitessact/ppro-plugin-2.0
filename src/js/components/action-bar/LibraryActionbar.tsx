@@ -280,7 +280,7 @@ export const LibraryActionbar = () => {
 
   const goBack = () => {
     if (data?.parent) {
-      navigate(`/library/folder/${data.parent.id}`);
+      navigate(`/folder/${data.parent.id}`);
     } else {
       navigate(`/library`);
     }
@@ -296,10 +296,16 @@ export const LibraryActionbar = () => {
 
   const showStatusDropdown = true;
 
-  const onFolderPage = pathname.startsWith("/library/folder");
-  const onAssetPage = pathname.startsWith("/library/asset");
+  const onFolderPage = pathname.startsWith("/folder");
+  const onAssetPage = pathname.startsWith("/asset");
   const onLibraryPage =
     pathname.startsWith("/library") && !onFolderPage && !onAssetPage;
+
+  console.log({
+    onFolderPage,
+    onAssetPage,
+    pathname,
+  });
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -716,7 +722,7 @@ export const LibraryActionbar = () => {
   return (
     <>
       <input ref={inputFileRef} type="file" hidden multiple />
-      <div className="flex items-center justify-between gap-5">
+      <div className="flex items-center  justify-between gap-5">
         {onFolderPage ? (
           <div className="flex items-center gap-2 overflow-hidden">
             <Button
@@ -1350,7 +1356,7 @@ const LibraryMobileDrawer = ({
   };
 
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className="flex w-full  flex-col gap-1.5">
       {/* <DrawerNestedItem
         label="New"
         icon={<PlusCircle size={20} className="text-default-500" />}

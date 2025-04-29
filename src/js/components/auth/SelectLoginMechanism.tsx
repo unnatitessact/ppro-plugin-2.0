@@ -117,7 +117,7 @@ const SelectLoginMechanism = ({
   //   const router = useRouter();
 
   return (
-    <>
+    <div className="flex flex-col gap-11">
       <FormHeading
         title="Log In"
         subtitle="Enter your registered email to receive an one-time passcode"
@@ -186,7 +186,7 @@ const SelectLoginMechanism = ({
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

@@ -32,6 +32,8 @@ import { useLibraryStore } from "@/stores/library-store";
 
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   assetCardCheckboxAnimation,
   assetCardDropdownAnimation,
@@ -109,6 +111,8 @@ export const ImageCard = ({
     (item) => item.id === (versionStack?.id ?? assetId)
   );
 
+  const navigate = useNavigate();
+
   const shouldControlsBeVisible = isDropdownOpen || isSelected;
 
   const handleAction = (action: Key) => {
@@ -165,8 +169,10 @@ export const ImageCard = ({
           <motion.div
             layout="position"
             onClick={() => {
-              setSelectedAssetId(assetId);
-              setFolderId("");
+              navigate(`/asset/${assetId}`);
+
+              // setSelectedAssetId(assetId);
+              // setFolderId("");
             }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",

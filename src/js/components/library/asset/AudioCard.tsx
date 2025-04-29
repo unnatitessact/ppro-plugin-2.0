@@ -10,6 +10,7 @@ import format from "format-duration";
 import { motion } from "framer-motion";
 
 import { BubbleText6, DotGrid1X3Horizontal } from "@tessact/icons";
+import { useNavigate } from "react-router-dom";
 
 import { Checkbox } from "@/components/ui/Checkbox";
 import {
@@ -81,6 +82,8 @@ export const AudioCard = ({
   const { setSelectedAssetId, setFolderId } = useParamsStateStore();
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
+
+  const navigate = useNavigate();
 
   const versionParam = versionStack
     ? `?version=${versionStack?.versions[0]?.file.id}`
@@ -186,8 +189,10 @@ export const AudioCard = ({
             onMouseLeave={() => setIsHovering(false)}
             layout="position"
             onClick={() => {
-              setSelectedAssetId(assetId);
-              setFolderId("");
+              navigate(`/asset/${assetId}`);
+
+              // setSelectedAssetId(assetId);
+              // setFolderId("");
             }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",

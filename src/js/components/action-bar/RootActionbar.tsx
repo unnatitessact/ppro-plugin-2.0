@@ -25,9 +25,9 @@ export const RootActionbar = ({ children }: { children: ReactNode }) => {
     <header
       id="actionbar-header"
       className={cn(
-        "relative flex items-center pr-6",
+        "relative flex items-center  p-2 pr-6",
         platform.todesktop.isDesktopApp() && !isOpen ? "ml-20" : "",
-        isMobile && "flex-col items-start gap-2 pl-4 pr-4"
+        isMobile && "flex-col items-start sticky  top-0 gap-2 pl-4 pr-4"
       )}
     >
       <div

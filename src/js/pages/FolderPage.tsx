@@ -58,6 +58,7 @@ import {
 } from "@/components/skeletons/AssetCardSkeleton";
 import { useParamsStateStore } from "@/stores/params-state-store";
 import { useLibraryFilterStore } from "@/stores/library-filter-store";
+import LibraryLayout from "@/components/layout/LibraryLayout";
 
 // const UploadAsset = dynamic(
 //   async () => {
@@ -368,107 +369,114 @@ export const FolderPage = () => {
     //   initialPresence={{}}
     //   initialStorage={{}}
     // >
-    <ScrollShadow
-      className={cn("h-full min-h-0 w-full pb-0", isMobile ? "px-1" : "pr-4")}
-      ref={scrollParentRef}
-      scrollRestorationKey={`library-grid-${folderId}`}
-    >
-      <InfiniteScrollComponent
-        hasMore={hasNextPage}
-        loadMore={() => {
-          if (!isFetchingNextPage) {
-            fetchNextPage();
-          }
-        }}
-        useWindow={false}
-        getScrollParent={() => scrollParentRef.current}
-        className="h-full"
+    <LibraryLayout>
+      <ScrollShadow
+        className={cn("h-full min-h-0 w-full pb-0", isMobile ? "px-1" : "pr-4")}
+        ref={scrollParentRef}
+        scrollRestorationKey={`library-grid-${folderId}`}
       >
-        <input
-          type="file"
-          ref={inputFileRef}
-          hidden
-          multiple
-          onChange={(e) => uploadFiles(Array.from(e.target.files || []))}
-        />
-        <WithLibraryThreeDotMenu onSelectAll={selectAllItems}>
-          <AnimatePresence initial={false} mode="wait">
-            {!isLoading &&
-            !search &&
-            allResults.length === 0 &&
-            uploadsOnThisPage.length === 0 ? (
-              <LibraryEmptyState
-                title="This folder is empty"
-                description="Once you upload your assets, they will appear here."
-                action={
-                  hasFolderEditPermission ? (
-                    <Button
-                      onPress={() => inputFileRef.current?.click()}
-                      color="secondary"
-                      className="mx-auto w-fit"
-                      aria-label="Upload files to library"
-                    >
-                      Upload files
-                    </Button>
-                  ) : undefined
-                }
-              />
-            ) : !isLoading &&
-              search &&
+        <InfiniteScrollComponent
+          hasMore={hasNextPage}
+          loadMore={() => {
+            if (!isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          useWindow={false}
+          getScrollParent={() => scrollParentRef.current}
+          className="h-full"
+        >
+          <input
+            type="file"
+            ref={inputFileRef}
+            hidden
+            multiple
+            onChange={(e) => uploadFiles(Array.from(e.target.files || []))}
+          />
+          <WithLibraryThreeDotMenu onSelectAll={selectAllItems}>
+            <AnimatePresence initial={false} mode="wait">
+              {!isLoading &&
+              !search &&
               allResults.length === 0 &&
               uploadsOnThisPage.length === 0 ? (
-              <LibraryEmptyState
-                title="No assets found"
-                description={`There were no assets found matching "${search}" in this folder.`}
-              />
-            ) : (
-              <div id="closest-asset-wrapper" className="h-full w-full">
-                <motion.div
-                  layout="position"
-                  id="closest-asset-container"
-                  className={cn(
-                    "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))]",
-                    isMobile &&
-                      "grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-0",
-                    isRemixesEnabled
-                      ? "pb-40"
-                      : selectedItems.length > 0
-                      ? "pb-[86px]"
-                      : "pb-0"
-                  )}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  {uploadsOnThisPage.map((upload) => (
-                    <motion.div key={upload.fileId} layoutId={upload.fileId}>
-                      <UploadAsset {...upload} />
-                    </motion.div>
-                  ))}
-                  <Suspense fallback={<></>}>
-                    {isLoading
-                      ? Array.from({ length: 10 }).map((_, index) => (
-                          <AssetCardSkeleton key={index} />
-                        ))
-                      : allResults.map((resource) => (
-                          <ResourceCard key={resource.id} resource={resource} />
+                <LibraryEmptyState
+                  title="This folder is empty"
+                  description="Once you upload your assets, they will appear here."
+                  action={
+                    hasFolderEditPermission ? (
+                      <Button
+                        onPress={() => inputFileRef.current?.click()}
+                        color="secondary"
+                        className="mx-auto w-fit"
+                        aria-label="Upload files to library"
+                      >
+                        Upload files
+                      </Button>
+                    ) : undefined
+                  }
+                />
+              ) : !isLoading &&
+                search &&
+                allResults.length === 0 &&
+                uploadsOnThisPage.length === 0 ? (
+                <LibraryEmptyState
+                  title="No assets found"
+                  description={`There were no assets found matching "${search}" in this folder.`}
+                />
+              ) : (
+                <div id="closest-asset-wrapper" className="h-full w-full">
+                  <motion.div
+                    layout="position"
+                    id="closest-asset-container"
+                    className={cn(
+                      "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))]",
+                      isMobile &&
+                        "grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-0",
+                      isRemixesEnabled
+                        ? "pb-40"
+                        : selectedItems.length > 0
+                        ? "pb-[86px]"
+                        : "pb-0"
+                    )}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {uploadsOnThisPage.map((upload) => (
+                      <motion.div key={upload.fileId} layoutId={upload.fileId}>
+                        <UploadAsset {...upload} />
+                      </motion.div>
+                    ))}
+                    <Suspense fallback={<></>}>
+                      {isLoading
+                        ? Array.from({ length: 10 }).map((_, index) => (
+                            <AssetCardSkeleton key={index} />
+                          ))
+                        : allResults.map((resource) => (
+                            <ResourceCard
+                              key={resource.id}
+                              resource={resource}
+                            />
+                          ))}
+                      {isFetchingNextPage &&
+                        Array.from({ length: 10 }).map((_, index) => (
+                          <AssetCardFetchingSkeleton
+                            key={`fetching-${index}`}
+                          />
                         ))}
-                    {isFetchingNextPage &&
-                      Array.from({ length: 10 }).map((_, index) => (
-                        <AssetCardFetchingSkeleton key={`fetching-${index}`} />
-                      ))}
-                    <FetchingNextPageIndicator
-                      isFetching={isFetchingNextPage}
-                      customText="Loading"
-                    />
-                  </Suspense>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-        </WithLibraryThreeDotMenu>
-      </InfiniteScrollComponent>
-    </ScrollShadow>
+                      <FetchingNextPageIndicator
+                        isFetching={isFetchingNextPage}
+                        customText="Loading"
+                      />
+                    </Suspense>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+          </WithLibraryThreeDotMenu>
+        </InfiniteScrollComponent>
+      </ScrollShadow>
+    </LibraryLayout>
     // </LibraryRoomProvider>
   );
 };

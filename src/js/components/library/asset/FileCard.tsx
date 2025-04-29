@@ -21,6 +21,8 @@ import { Listbox, ListboxItem } from "@/components/ui/Listbox";
 
 import { useParamsStateStore } from "@/stores/params-state-store";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   ResourceCardActions,
   ResourceSpecificCardProps,
@@ -108,6 +110,8 @@ export const FileCard = ({
 
   const shouldControlsBeVisible = isDropdownOpen || isSelected;
 
+  const navigate = useNavigate();
+
   const handleAction = (action: Key) => {
     if (action === "rename") {
       resourceActions?.onRename?.();
@@ -164,8 +168,9 @@ export const FileCard = ({
           <motion.div
             layout="position"
             onClick={() => {
-              setSelectedAssetId(assetId);
-              setFolderId("");
+              navigate(`/asset/${assetId}`);
+              // setSelectedAssetId(assetId);
+              // setFolderId("");
             }}
             className={cn(
               "flex cursor-pointer flex-col gap-2 rounded-[20px] p-3",

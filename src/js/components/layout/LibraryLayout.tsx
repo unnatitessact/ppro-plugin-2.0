@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // import { usePathname } from 'next/navigation';
 import { useLocation, useParams } from "react-router-dom";
@@ -29,7 +29,7 @@ import { useLibraryStore } from "@/stores/library-store";
 import { REMIXES_FLAG } from "@/utils/featureFlagUtils";
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
-import { useLibraryFilterStore } from "@/stores/library-filter-store";
+// import { useLibraryFilterStore } from "@/stores/library-filter-store";
 
 const LibraryLayout = ({ children }: { children: ReactNode }) => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
@@ -56,8 +56,7 @@ const LibraryLayout = ({ children }: { children: ReactNode }) => {
 
   const showBars =
     (pathname === "/library" ||
-      (pathname.startsWith("/library/folder") &&
-        !pathname.includes("metadata"))) &&
+      (pathname.startsWith("/folder") && !pathname.includes("metadata"))) &&
     !isMobile;
   const selectionContainerRef = useRef<HTMLDivElement>(null);
   const isRemixesEnabled = useFeatureFlag(REMIXES_FLAG);
@@ -123,7 +122,7 @@ const LibraryLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div
       className={cn(
-        "relative flex h-full min-h-0 flex-col gap-4",
+        "relative flex h-full min-h-0 flex-col",
         isMobile && "gap-0"
       )}
     >

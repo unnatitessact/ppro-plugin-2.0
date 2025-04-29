@@ -22,7 +22,7 @@ const config = {
     // "./features/**/*.{js,ts,jsx,tsx,mdx}",
     // "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    // "./data/colors.ts",
+    "./src/js/constants/data-colors/data-colors.ts",
   ],
   safelist: ["ProseMirror"],
   theme: {

@@ -27,7 +27,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex w-full items-center justify-center flex-col gap-11">
-      <div className="max-w-md mx-auto">
+      <div className="w-full">
         {!email || !selectedMechanism ? (
           <SelectLoginMechanism
             emailInput={emailInput}

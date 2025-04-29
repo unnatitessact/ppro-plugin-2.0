@@ -21,6 +21,8 @@ import {
   DropdownTrigger,
 } from "@/components/ui/Dropdown";
 import { Listbox, ListboxItem } from "@/components/ui/Listbox";
+
+import { cepBasename } from "@/main/main";
 // import { Link } from '@/components/ui/NextLink';
 
 import { ResourceSpecificCardProps } from "@/components/library/asset/ResourceCard";
@@ -31,6 +33,7 @@ import { AssetThumbnail } from "@/components/library/thumbnail/AssetThumbnail";
 import { ScrubThumbnail } from "@/components/library/thumbnail/ScrubThumbnail";
 
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { useNavigate } from "react-router-dom";
 
 import {
   FileStatus,
@@ -112,6 +115,8 @@ export const AssetCard = ({
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
   const { setSelectedAssetId, setFolderId } = useParamsStateStore();
+
+  const navigate = useNavigate();
 
   // const router = useRouter();
 
@@ -217,8 +222,9 @@ export const AssetCard = ({
           <motion.div
             layout="position"
             onClick={() => {
-              setSelectedAssetId(assetId);
-              setFolderId("");
+              navigate(`/asset/${assetId}`);
+              // setSelectedAssetId(assetId);
+              // setFolderId("");
             }}
             className={cn(
               "cursor-pointer rounded-[20px] p-3",

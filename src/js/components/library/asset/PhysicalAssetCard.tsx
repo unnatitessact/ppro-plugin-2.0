@@ -32,6 +32,7 @@ import {
 import { PhysicalAssetThumbnail } from "../thumbnail/PhysicalAssetThumbnail";
 import { VersionModalButton } from "./VersionModalButton";
 
+import { useNavigate } from "react-router-dom";
 import { useParamsStateStore } from "@/stores/params-state-store";
 
 interface PhysicalAssetCardProps extends Partial<ResourceSpecificCardProps> {
@@ -71,6 +72,8 @@ export const PhysicalAssetCard = ({
 }: PhysicalAssetCardProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
 
@@ -156,8 +159,10 @@ export const PhysicalAssetCard = ({
           <motion.div
             layout="position"
             onClick={() => {
-              setSelectedAssetId(assetId);
-              setFolderId("");
+              navigate(`/library/asset/${assetId}`);
+
+              // setSelectedAssetId(assetId);
+              // setFolderId("");
             }}
             className={cn(
               " cursor-pointer flex-col gap-2 rounded-[20px] p-3",

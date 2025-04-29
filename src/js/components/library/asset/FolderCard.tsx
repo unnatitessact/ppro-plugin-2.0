@@ -21,6 +21,8 @@ import { Listbox, ListboxItem } from "@/components/ui/Listbox";
 import { PermissionPayload } from "@/api-integration/types/library";
 import { ResourceCardActions } from "@/components/library/asset/ResourceCard";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   FolderSubContent,
   ImageSubContent,
@@ -95,6 +97,8 @@ export const FolderCard = ({
 
   const { setFolderId, setSelectedAssetId } = useParamsStateStore();
 
+  const navigate = useNavigate();
+
   const isSelected = selectedItems.some((item) => item.id === folderId);
 
   const shouldControlsBeVisible = isDropdownOpen || isSelected;
@@ -163,8 +167,7 @@ export const FolderCard = ({
           <motion.div
             layout="position"
             onClick={() => {
-              setFolderId(folderId);
-              setSelectedAssetId("");
+              navigate(`/folder/${folderId}`);
             }}
             className={cn(
               "flex cursor-pointer flex-col gap-2 rounded-[20px] p-3",

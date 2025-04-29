@@ -1,4 +1,6 @@
-import { Switch } from "@nextui-org/react";
+// import { Switch } from "@nextui-org/react";
+
+import { Switch } from "@/components/ui/Switch";
 
 import {
   ChevronDownSmall,

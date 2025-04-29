@@ -44,7 +44,7 @@ const PasswordLogin = ({ initialEmail, next }: PasswordLoginProps) => {
   const { setAuth } = useAuth();
 
   return (
-    <>
+    <div className="w-full flex flex-col gap-11">
       <FormHeading title="Log In" subtitle="Enter your password to step in" />
       <form
         className="flex flex-col gap-10"
@@ -102,7 +102,7 @@ const PasswordLogin = ({ initialEmail, next }: PasswordLoginProps) => {
           Log In
         </Button>
       </form>
-    </>
+    </div>
   );
 };
 

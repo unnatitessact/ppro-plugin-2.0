@@ -1,5 +1,3 @@
-("");
-
 import { extendVariants } from "@nextui-org/react";
 import { Tab as NextUITab, Tabs as NextUITabs } from "@nextui-org/tabs";
 

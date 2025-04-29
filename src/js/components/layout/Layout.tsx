@@ -49,14 +49,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   });
 
   return (
-    <div className="flex h-full overflow-hidden bg-default-50">
+    <div className="flex overflow-hidden h-screen bg-default-50">
       {auth.accessToken ? (
         <>
           {isSidebarOpen && <Sidebar />}
-          <div className="flex-1  flex flex-col overflow-hidden">
-            <main className="flex-1 overflow-x-hidden overflow-y-auto  p-4">
-              {children}
-            </main>
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 overflow-hidden h-full">{children}</main>
           </div>
         </>
       ) : (
