@@ -17,6 +17,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroller";
 const InfiniteScrollComponent = InfiniteScroll as any;
 
+import { useParams } from "react-router-dom";
+
 import { Button } from "@/components/ui/Button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow";
 
@@ -135,7 +137,9 @@ export const FolderPage = () => {
 
   // const { folderId } = useParams() as { folderId: string };
 
-  const { folderId } = useParamsStateStore();
+  // const { folderId } = useParamsStateStore();
+
+  const { id: folderId } = useParams() as { id: string };
 
   const { data: folderDetails } = useAssetDetailsQuery(folderId as string);
 

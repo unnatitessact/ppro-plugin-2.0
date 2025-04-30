@@ -46,6 +46,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { auth } = useAuth();
   const location = useLocation();
 
+  console.log({
+    location,
+  });
+
   if (!auth) {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
@@ -83,18 +87,18 @@ const Main = () => {
 
                       {/* Protected routes */}
                       <Route
-                        path="/"
+                        path="folder/:id"
                         element={
                           <ProtectedRoute>
-                            <LibraryPage />
+                            <FolderPage />
                           </ProtectedRoute>
                         }
                       />
                       <Route
-                        path="/folder/:folderId"
+                        path="/"
                         element={
                           <ProtectedRoute>
-                            <FolderPage />
+                            <LibraryPage />
                           </ProtectedRoute>
                         }
                       />
