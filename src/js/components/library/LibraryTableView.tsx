@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // import { useParams, useRouter } from 'next/navigation';
 
+import { useParams, useNavigate } from "react-router-dom";
+
 import { useMediaQuery } from "@mantine/hooks";
 import { cn, Image, Skeleton, useDisclosure } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -31,9 +33,9 @@ import {
 } from "@/components/ui/ToastContent";
 
 import { VersionModalButton } from "@/components/library/asset/VersionModalButton";
+import { FetchingNextPageIndicator } from "@/components/library/FetchNextPageIndicator";
 import { DeleteModal } from "@/components/library/modals/DeleteModal";
-import { FetchingNextPageIndicator } from "./FetchNextPageIndicator";
-import Table from "../table/Table";
+import Table from "@/components/table/Table";
 
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { useFileUpload } from "@/hooks/useFileUpload";
@@ -48,8 +50,6 @@ import { LibraryAsset, ResourceType } from "@/api-integration/types/library";
 
 import { useLibraryStore } from "@/stores/library-store";
 import { FileUpload, useUploadsStore } from "@/stores/uploads-store";
-
-import { useParamsStateStore } from "@/stores/params-state-store";
 
 import { Column } from "@/types/table";
 
@@ -126,9 +126,7 @@ export const LibraryTableView = ({
 
   const [selectedRow, setSelectedRow] = useState<LibraryAsset | null>(null);
 
-  // const { folderId } = useParams() as { folderId?: string };
-
-  const { folderId } = useParamsStateStore();
+  const { folderId } = useParams() as { folderId?: string };
 
   const [rightClickedFile, setRightClickedFile] = useState<{
     versionStackId: string;
@@ -179,6 +177,8 @@ export const LibraryTableView = ({
   );
 
   // const router = useRouter();
+
+  const navigate = useNavigate();
 
   const selectedData = useMemo(() => {
     return selectedItems
@@ -258,6 +258,7 @@ export const LibraryTableView = ({
         isResizable: true,
       },
     ];
+
     if (!isMobile) {
       baseColumns.push({
         header: "Uploaded on",
@@ -399,6 +400,11 @@ export const LibraryTableView = ({
   const { isOpen: isDeleteModalOpen, onOpenChange: onDeleteModalOpenChange } =
     useDisclosure();
 
+  console.log({
+    data,
+    columns,
+  });
+
   return (
     <div
       className={cn(
@@ -515,13 +521,19 @@ export const LibraryTableView = ({
                     key: "view-metadata",
                     onAction: () => {
                       // router.push(`/library/folder/${row?.id}/metadata`);
+                      navigate(`/folder/${row?.id}/metadata`);
                     },
                   },
                 ]),
             ...(hasDeletePermission
               ? [
                   {
-                    label: "Delete",
+                    label:
+                      row?.resourcetype === "Folder"
+                        ? // &&
+                          // !!row?.is_connected_folder_parent
+                          "Unmount"
+                        : "Delete",
                     key: "delete",
                     onAction: (id: string) => {
                       const row = data.find((item) => item.id === id);
@@ -536,22 +548,28 @@ export const LibraryTableView = ({
           ];
         }}
         onSearchQueryChange={() => {}}
-        onRowClick={(row: LibraryAsset) => {
+        onRowClick={(row) => {
           const isVersionStack = row?.resourcetype === "VersionStack";
           const resource = isVersionStack ? row?.versions?.[0].file : row;
           const versionParam = isVersionStack ? `?version=${resource?.id}` : "";
           if (row.resourcetype === "File" && row.file_extension === ".tdraft") {
             // router.push(`/library/video/${row?.id}${versionParam}`);
+            navigate(`/video/${row?.id}${versionParam}`);
           } else {
             // router.push(
             //   row.resourcetype === "Folder"
             //     ? `/library/folder/${row.id}`
             //     : `/library/asset/${row?.id}${versionParam}`
             // );
+            navigate(
+              row.resourcetype === "Folder"
+                ? `/folder/${row.id}`
+                : `/asset/${row?.id}${versionParam}`
+            );
           }
         }}
         selectedData={selectedData}
-        setSelectedData={(assets: LibraryAsset[]) => {
+        setSelectedData={(assets) => {
           const newSelectedItems = Array.from(
             new Set([
               ...(assets?.map((asset) => ({
@@ -831,6 +849,7 @@ const ThreeDotMenu = ({
   const hasDeletePermission = !!permissions.includes("can_delete_asset");
 
   // const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -880,6 +899,7 @@ const ThreeDotMenu = ({
             }
             if (key === "view-metadata") {
               // router.push(`/library/folder/${assetId}/metadata`);
+              navigate(`/folder/${assetId}/metadata`);
             }
           }}
         >

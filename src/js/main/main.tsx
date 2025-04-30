@@ -109,10 +109,7 @@ const Main = () => {
                       />
 
                       {/* Redirect root to library */}
-                      <Route
-                        path="/"
-                        element={<Navigate to="/library" replace />}
-                      />
+                      {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
                     </Routes>
                   </Layout>
                 </WorkspacesProvider>

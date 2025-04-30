@@ -280,7 +280,7 @@ export const LibraryActionbar = () => {
     if (data?.parent) {
       navigate(`/folder/${data.parent.id}`);
     } else {
-      navigate(`/library`);
+      navigate(`/`);
     }
   };
 

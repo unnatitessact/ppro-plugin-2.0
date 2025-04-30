@@ -44,6 +44,7 @@ import { REMIXES_FLAG } from "@/utils/featureFlagUtils";
 import { MOBILE_MEDIA_QUERY } from "@/utils/responsiveUtils";
 
 import { useWorkspace } from "@/hooks/useWorkspace";
+import { LibraryTableView } from "./LibraryTableView";
 
 export const Library = () => {
   const { workspace } = useWorkspace();
@@ -58,6 +59,7 @@ export const Library = () => {
     sorts,
     search,
     flattenFolders,
+    view,
   } = useLibraryStore();
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -70,6 +72,7 @@ export const Library = () => {
     });
 
   const { uploads } = useUploadsStore();
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const uploadsOnThisPage = useMemo(() => {
     return uploads.filter(
@@ -137,6 +140,20 @@ export const Library = () => {
 
   const scrollParentRef = useRef<HTMLDivElement>(null);
 
+  const showFileStatus = true;
+  const showCommentsCount = true;
+
+  const { uploadFile } = useFileUpload("library", null);
+
+  const uploadFiles = (files: File[]) => {
+    if (files) {
+      Array.from(files).forEach((file) => uploadFile(file));
+    }
+    if (inputFileRef.current) {
+      inputFileRef.current.value = "";
+    }
+  };
+
   const selectAllItems = () => {
     const allItems = allResults.map((resource) => ({
       id: resource.id,
@@ -154,6 +171,79 @@ export const Library = () => {
     }));
     setSelectedItems(allItems);
   };
+
+  if (view === "list") {
+    return (
+      <div className="border border-red-400">
+        <WithLibraryThreeDotMenu onLibraryRoot onSelectAll={selectAllItems}>
+          <motion.div
+            className={cn(
+              "h-full min-h-0 w-full pb-5",
+              isMobile ? "px-1" : "pr-6"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <LibraryTableView
+              data={allResults}
+              uploads={uploadsOnThisPage}
+              isLoading={isLoading}
+              hasNextPage={hasNextPage}
+              fetchNextPage={fetchNextPage}
+              isFetching={isFetchingNextPage}
+              showStatusDropdown={showFileStatus}
+              showCommentsCount={showCommentsCount}
+              emptyStateComponent={
+                !isLoading &&
+                !search &&
+                allResults.length === 0 &&
+                uploadsOnThisPage.length === 0 ? (
+                  <>
+                    <LibraryEmptyState
+                      title="Library is empty"
+                      description="Once you upload your assets, they will appear here."
+                      action={
+                        <Button
+                          onPress={() => {
+                            // console.log(inputFileRef?.current);
+                            inputFileRef.current?.click();
+                          }}
+                          color="secondary"
+                          className="mx-auto w-fit"
+                        >
+                          Upload files
+                        </Button>
+                      }
+                    />
+                    <input
+                      type="file"
+                      ref={inputFileRef}
+                      hidden
+                      multiple
+                      onChange={(e) =>
+                        uploadFiles(Array.from(e.target.files || []))
+                      }
+                    />
+                  </>
+                ) : !isLoading &&
+                  search &&
+                  allResults.length === 0 &&
+                  uploadsOnThisPage.length === 0 ? (
+                  <LibraryEmptyState
+                    title="No assets found"
+                    description={`There were no assets found matching "${search}" in this folder.`}
+                  />
+                ) : (
+                  <div />
+                )
+              }
+            />
+          </motion.div>
+        </WithLibraryThreeDotMenu>
+      </div>
+    );
+  }
+
   return (
     <ScrollShadow
       className={cn("h-full min-h-0 w-full pb-0", isMobile ? "px-1" : "pr-4")}

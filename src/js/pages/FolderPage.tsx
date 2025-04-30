@@ -125,7 +125,7 @@ export const FolderPage = () => {
     filterMatchType,
     sorts,
     search,
-    isFlattened,
+    flattenFolders,
   } = useLibraryStore();
 
   // const { filters, filterMatchType, sorts, search, isFlattened } =
@@ -153,7 +153,7 @@ export const FolderPage = () => {
       filters,
       sorts,
       searchQuery: search,
-      flatten: isFlattened,
+      flatten: flattenFolders,
       matchType: filterMatchType,
     });
 

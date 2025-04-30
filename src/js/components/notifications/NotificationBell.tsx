@@ -136,7 +136,9 @@ const NotificationBell = () => {
         const title = newNotificationData.title;
         const options = {
           body: newNotificationData.body,
+          // @ts-ignore
           icon: appIcon.src,
+          // @ts-ignore
           badge: appIcon.src,
           sound: "/notification-sound.mp3",
         };
@@ -589,13 +591,8 @@ const NotificationBellWithRoomProvider = () => {
         avatar: user?.profile?.profile_picture || "",
         color: user?.profile?.color || "red",
         cursor: null,
-        currentShape: defaultShape(
-          selectedShape,
-          selectedColor
-        ) as LiveShapePreview,
         isAddingReview: false,
         currentTime: 0,
-        drawings: [],
         leaderId: null,
         isPlaying: false,
       }}
