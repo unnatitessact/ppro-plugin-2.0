@@ -299,12 +299,6 @@ export const LibraryActionbar = () => {
   const onLibraryPage =
     pathname.startsWith("/library") && !onFolderPage && !onAssetPage;
 
-  console.log({
-    onFolderPage,
-    onAssetPage,
-    pathname,
-  });
-
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 

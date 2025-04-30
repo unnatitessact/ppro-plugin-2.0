@@ -9,6 +9,8 @@ import { Suspense } from "react";
 import { HomeSidebar } from "../sidebar/HomeSidebar";
 import { ChevronLeftSmall, ChevronRightSmall } from "@tessact/icons";
 
+import { useLocation } from "react-router-dom";
+
 import { Drawer, DrawerContent } from "../../components/ui/Drawer";
 
 export const transition = {
@@ -43,6 +45,8 @@ export type SidebarView =
 export const Sidebar = () => {
   const { toggle, isOpen } = useSidebarStore();
 
+  const { pathname } = useLocation();
+
   const [sidebarView, setSidebarView] = useState<SidebarView>("root");
   const [lastViewed, setLastViewed] = useState<SidebarView[]>([]);
 
@@ -53,7 +57,38 @@ export const Sidebar = () => {
 
   useEffect(() => {
     setLastViewed([]);
-  }, []);
+
+    if (pathname === "/") {
+      setSidebarView("root");
+    }
+
+    if (pathname.startsWith("/folder")) {
+      setSidebarView("library");
+    }
+
+    if (pathname.startsWith("/asset")) {
+      setSidebarView("library");
+    }
+  }, [pathname]);
+
+  const handleBackButton = (view: SidebarView, parentView: SidebarView) => {
+    // When user clicks back, we need to set the parent view as the current view
+    // and push the current view to the last viewed array
+    // so that we can use it when user clicks forward
+
+    setSidebarView(parentView);
+    setLastViewed((prev) => [...prev, view]);
+  };
+
+  const handleForwardButton = () => {
+    // When user clicks forward, we need to set the last view as the current view
+    // and remove the last view from the last viewed array
+
+    if (lastViewedView) {
+      setLastViewed((prev) => prev.slice(0, prev.length - 1));
+      setSidebarView(lastViewedView);
+    }
+  };
 
   const buttonActionCategoryMappings: Record<
     SidebarView,
@@ -67,13 +102,13 @@ export const Sidebar = () => {
     root: {
       Component: <HomeSidebar isUserTagger={false} isInternalUser={false} />,
       back: () => {},
-      forward: () => {},
+      forward: handleForwardButton,
       level: 0,
     },
     library: {
       Component: <LibrarySidebar />,
-      back: () => {},
-      forward: () => {},
+      back: () => handleBackButton("library", "root"),
+      forward: handleForwardButton,
       level: 0,
     },
     settings: { Component: null, back: () => {}, forward: () => {}, level: 0 },

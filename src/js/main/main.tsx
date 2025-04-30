@@ -46,10 +46,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { auth } = useAuth();
   const location = useLocation();
 
-  console.log({
-    location,
-  });
-
   if (!auth) {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
@@ -69,8 +65,6 @@ const Main = () => {
   const cepBasename = window.cep_node
     ? `${posix(window.cep_node.global.__dirname)}/`
     : "/main/";
-
-  console.log({ cepBasename });
 
   return (
     <div className="h-screen overflow-hidden">

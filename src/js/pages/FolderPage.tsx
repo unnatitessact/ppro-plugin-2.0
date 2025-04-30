@@ -152,6 +152,7 @@ export const FolderPage = () => {
       (upload) => upload?.parent === folderId && !upload.versionStackId
     );
   }, [uploads, folderId]);
+
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useLibraryContentsQuery(folderId as string, {
       filters,
