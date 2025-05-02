@@ -1,0 +1,27 @@
+.mentions--multiLine .mentions__control {
+  @apply w-full flex-1 border-0 text-base text-default-900;
+}
+.mentions--multiLine .mentions__highlighter {
+  border: 1px solid transparent;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+  @apply box-border  max-h-96 overflow-scroll text-base text-default-900;
+}
+.mentions--multiLine .mentions__input {
+  border: 1px solid transparent;
+  outline: 0;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+  @apply max-h-96 overflow-scroll text-base text-default-900;
+}
+
+.mentions__suggestions {
+  @apply mt-0 flex min-w-56 max-w-80 flex-col gap-2 rounded-2xl border border-ds-menu-border bg-transparent shadow-medium;
+  z-index: 100000 !important;
+  margin-top: 0.5rem !important;
+  background: transparent !important;
+}
+
+.mentions__suggestions__list {
+  @apply bg-ds-menu-bg;
+}

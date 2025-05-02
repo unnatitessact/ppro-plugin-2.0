@@ -1,0 +1,13 @@
+.mentions--multiLine .mentions__highlighter {
+  border: 1px solid transparent;
+  @apply box-border p-0 text-base text-default-900;
+  scrollbar-gutter: stable !important;
+}
+.mentions--multiLine .mentions__input {
+  pointer-events: none;
+  border: 1px solid transparent;
+  outline: 0;
+  overflow-y: visible;
+  scrollbar-gutter: stable !important;
+  @apply p-0 text-base text-default-900;
+}

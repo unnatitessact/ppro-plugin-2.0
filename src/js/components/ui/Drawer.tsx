@@ -123,7 +123,7 @@ const DrawerDescription = React.forwardRef<
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 interface DrawerItemProps {
-  label: string;
+  label: React.ReactNode;
   icon?: React.ReactNode;
   onClick?: () => void;
 }
@@ -135,13 +135,13 @@ const DrawerItem = ({ label, icon, onClick }: DrawerItemProps) => {
       onClick={onClick}
     >
       {icon && <span className="text-default-500">{icon}</span>}
-      <p>{label}</p>
+      {label}
     </div>
   );
 };
 
 interface DrawerNestedItemProps {
-  label: string;
+  label: React.ReactNode;
   icon?: React.ReactNode;
   drawerContent: React.ReactNode;
   triggerClassName?: string;

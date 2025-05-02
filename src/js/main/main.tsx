@@ -17,6 +17,8 @@ import nodeJs from "../assets/node-js.svg";
 import adobe from "../assets/adobe.svg";
 import bolt from "../assets/bolt-cep.svg";
 
+import { useParams } from "react-router-dom";
+
 import {
   HashRouter,
   Route,
@@ -66,6 +68,8 @@ const Main = () => {
     ? `${posix(window.cep_node.global.__dirname)}/`
     : "/main/";
 
+  const { id } = useParams();
+
   return (
     <div className="h-screen overflow-hidden">
       <AuthProvider>
@@ -98,7 +102,7 @@ const Main = () => {
                       />
 
                       <Route
-                        path="/asset/:id"
+                        path="/asset/:assetId"
                         element={
                           <ProtectedRoute>
                             <ReviewPage />

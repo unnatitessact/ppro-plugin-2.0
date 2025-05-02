@@ -64,69 +64,89 @@ export const reviewCommentsHashtagsQueryKey = (workspace_id: string) => [
 ];
 
 // Custom hooks
-// export const useReviewCommentsQueryKey = () => {
-//   // const searchParams = useSearchParams();
-//   const searchParams = "";
-//   const { fileId } = useComments();
-//   const [filters] = useReviewFilterParams();
+export const useReviewCommentsQueryKey = () => {
+  // const searchParams = useSearchParams();
+  const searchParams = "";
+  const { fileId } = useComments();
+  const filters = {
+    mentions: "",
+    tags: "",
+    commenter: "",
+    markedDone: false,
+    attachments: false,
+    sort: "created_on",
+    unread: false,
+    createdDate: "",
+  };
+  // const [filters] = useReviewFilterParams();
 
-//   return reviewCommentsQueryKey({
-//     file_id: fileId,
-//     mentioned_users: filters.mentions ? filters.mentions.split(",") : undefined,
-//     tags: filters.tags ? filters.tags.split(",") : undefined,
-//     created_by: filters.commenter ? filters.commenter.split(",") : undefined,
-//     marked_as_done: filters.markedDone,
-//     has_attachments: filters.attachments,
-//     // search: searchParams.get("query")?.toString(),
-//     search: "",
-//     sort_by: filters.sort as ReviewCommentSort,
-//     unread_by_user: filters.unread,
-//     created_date: filters.createdDate
-//       ? parseDate(filters.createdDate)
-//       : undefined,
-//   });
-// };
+  return reviewCommentsQueryKey({
+    file_id: fileId,
+    mentioned_users: filters.mentions ? filters.mentions.split(",") : undefined,
+    tags: filters.tags ? filters.tags.split(",") : undefined,
+    created_by: filters.commenter ? filters.commenter.split(",") : undefined,
+    marked_as_done: filters.markedDone,
+    has_attachments: filters.attachments,
+    // search: searchParams.get("query")?.toString(),
+    search: "",
+    sort_by: filters.sort as ReviewCommentSort,
+    unread_by_user: filters.unread,
+    created_date: filters.createdDate
+      ? parseDate(filters.createdDate)
+      : undefined,
+  });
+};
 
-// export const useReviewCommentsQuery = () => {
-//   const api = useApi();
-//   const queryKey = useReviewCommentsQueryKey();
-//   const { fileId } = useComments();
-//   const [filters] = useReviewFilterParams();
-//   const search = "";
-//   // const search = useSearchParams().get("query")?.toString() ?? "";
+export const useReviewCommentsQuery = () => {
+  const api = useApi();
+  const queryKey = useReviewCommentsQueryKey();
+  const { fileId } = useComments();
+  const filters = {
+    mentions: "",
+    tags: "",
+    commenter: "",
+    markedDone: false,
+    attachments: false,
+    sort: "created_on",
+    unread: false,
+    createdDate: "",
+  };
+  // const [filters] = useReviewFilterParams();
+  const search = "";
+  // const search = useSearchParams().get("query")?.toString() ?? "";
 
-//   // Create URL params for the API call
-//   const urlParams = createUrlParams({
-//     sort_by: filters.sort,
-//     search: search.trim(),
-//     has_attachments: filters.attachments ? true : undefined,
-//     marked_as_done: filters.markedDone ? true : undefined,
-//     created_by: filters.commenter,
-//     tag: filters.tags,
-//     mentioned_user: filters.mentions,
-//     file_id: fileId,
-//     unread_by_user: filters.unread ? true : undefined,
-//     page_size: "20",
-//     created_on: filters.createdDate,
-//   });
+  // Create URL params for the API call
+  const urlParams = createUrlParams({
+    sort_by: filters.sort,
+    search: search.trim(),
+    has_attachments: filters.attachments ? true : undefined,
+    marked_as_done: filters.markedDone ? true : undefined,
+    created_by: filters.commenter,
+    tag: filters.tags,
+    mentioned_user: filters.mentions,
+    file_id: fileId,
+    unread_by_user: filters.unread ? true : undefined,
+    page_size: "20",
+    created_on: filters.createdDate,
+  });
 
-//   return useInfiniteQuery({
-//     queryKey,
-//     queryFn: async ({ pageParam = 1 }) => {
-//       urlParams.append("page", pageParam.toString());
-//       const { data } = await api.get<GetReviewCommentResponse>(
-//         `/api/v1/review_comments/?${urlParams.toString()}`
-//       );
-//       return data.data;
-//     },
-//     enabled: !!fileId,
-//     initialPageParam: 1,
-//     getNextPageParam: (lastPage) =>
-//       lastPage.meta.next ? lastPage.meta.current_page + 1 : undefined,
-//     getPreviousPageParam: (lastPage) =>
-//       lastPage.meta.previous ? lastPage.meta.current_page - 1 : undefined,
-//   });
-// };
+  return useInfiniteQuery({
+    queryKey,
+    queryFn: async ({ pageParam = 1 }) => {
+      urlParams.append("page", pageParam.toString());
+      const { data } = await api.get<GetReviewCommentResponse>(
+        `/api/v1/review_comments/?${urlParams.toString()}`
+      );
+      return data.data;
+    },
+    enabled: !!fileId,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.meta.next ? lastPage.meta.current_page + 1 : undefined,
+    getPreviousPageParam: (lastPage) =>
+      lastPage.meta.previous ? lastPage.meta.current_page - 1 : undefined,
+  });
+};
 
 export const useReviewGetFiltersQuery = (file_id: string) => {
   const api = useApi();
